@@ -1,46 +1,168 @@
-# Getting Started with Create React App
+# Pokémon App 🐾
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Een moderne, responsive webapplicatie voor het verkennen van Pokémon, gebouwd met React, TypeScript en moderne webtechnologieën. Deze app maakt gebruik van de [PokeAPI](https://pokeapi.co/) om uitgebreide informatie over Pokémon op te halen en weer te geven.
 
-## Available Scripts
+![Pokemon App Preview](./public/pokemon-manifest.json) <!-- Placeholder voor screenshot -->
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+- **Moderne UI met Glassmorphism Design**: Hedendaagse visuele effecten met blur en transparantie
+- **Responsief Ontwerp**: Werkt perfect op desktop, tablet en mobiele apparaten
+- **Geoptimaliseerde Data Fetching**: TanStack Query voor efficiënt caching en achtergrond-updates
+- **Zoekfunctionaliteit**: Vind snel je favoriete Pokémon
+- **Favorieten Systeem**: Bewaar je favoriete Pokémon voor later
+- **Dark/Light Thema**: Automatische thema-detectie met handmatige schakelaar
+- **Paginatie**: Gemakkelijke navigatie door grote hoeveelheden Pokémon
+- **Detailweergave**: Uitgebreide informatie over elke Pokémon inclusief stats, types en evolutieketen
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 🛠️ Technologieën
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **Frontend Framework**: React 19 met TypeScript
+- **Build Tool**: Vite voor snelle development en productie-builds
+- **Styling**: Tailwind CSS met custom glassmorphism effecten
+- **Data Fetching**: TanStack React Query voor geoptimaliseerde API calls
+- **Routing**: React Router DOM voor client-side navigatie
+- **HTTP Client**: Axios voor API communicatie
+- **State Management**: React Context API voor thema en favorieten
+- **API**: PokeAPI voor Pokémon data
 
-### `npm test`
+## 🚀 Installatie
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Vereisten
 
-### `npm run build`
+- Node.js (versie 16 of hoger)
+- npm of yarn
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Stappen
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Repository klonen**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```bash
+   git clone https://github.com/HamedSadim1/pokemon-app.git
+   cd pokemon-app
+   ```
 
-### `npm run eject`
+2. **Dependencies installeren**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+   ```bash
+   npm install
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Development server starten**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   ```bash
+   npm run dev
+   ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+4. **Open in browser**
 
-## Learn More
+   ```text
+   http://localhost:5173
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📖 Gebruik
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Navigatie
+
+- **Home**: Overzicht van alle Pokémon met paginatie
+- **Zoeken**: Gebruik de zoekbalk om Pokémon te vinden op naam
+- **Favorieten**: Klik op het hart-icoon om Pokémon toe te voegen/verwijderen
+- **Details**: Klik op een Pokémon kaart voor gedetailleerde informatie
+
+### Thema Schakelaar
+
+Gebruik de thema-toggle in de navbar om tussen licht en donker modus te schakelen.
+
+## 🏃‍♂️ Scripts
+
+| Script            | Beschrijving                               |
+| ----------------- | ------------------------------------------ |
+| `npm run dev`     | Start development server op localhost:5173 |
+| `npm run build`   | Bouw applicatie voor productie             |
+| `npm run preview` | Preview productie build lokaal             |
+
+## 📁 Project Structuur
+
+```bash
+pokemon-app/
+├── public/
+│   ├── pokemon-manifest.json
+│   └── robots.txt
+├── src/
+│   ├── components/
+│   │   ├── Favorites.tsx
+│   │   ├── Footer.tsx
+│   │   ├── HomePage.tsx
+│   │   ├── LoadingSpinner.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Pagination.tsx
+│   │   ├── Pokemon.tsx
+│   │   ├── PokemonCard.tsx
+│   │   ├── PokemonDetail.tsx
+│   │   ├── Root.tsx
+│   │   ├── SearchBar.tsx
+│   │   └── Services/
+│   │       └── IPokemon.ts
+│   ├── contexts/
+│   │   ├── FavoritesContext.tsx
+│   │   └── ThemeContext.tsx
+│   ├── hooks/
+│   │   ├── usePokemonDetail.ts
+│   │   ├── usePokemonList.ts
+│   │   └── usePokemonSearch.ts
+│   ├── utils/
+│   │   └── helpers.ts
+│   ├── App.tsx
+│   ├── index.css
+│   └── index.tsx
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
+
+## 🔧 Ontwikkeling
+
+### Code Stijl
+
+- **TypeScript**: Strikt getypeerd voor betere ontwikkelervaring
+- **JSDoc**: Uitgebreide documentatie in het Nederlands
+- **DRY Principes**: Herbruikbare componenten en hooks
+- **ESLint**: Code kwaliteit en consistentie
+
+### Custom Hooks
+
+- `usePokemonList`: Ophalen van Pokémon lijsten met caching
+- `usePokemonDetail`: Gedetailleerde Pokémon informatie
+- `usePokemonSearch`: Zoekfunctionaliteit met debouncing
+
+## 🤝 Bijdragen
+
+1. Fork het project
+2. Maak een feature branch (`git checkout -b feature/nieuwe-feature`)
+3. Commit je wijzigingen (`git commit -m 'Voeg nieuwe feature toe'`)
+4. Push naar de branch (`git push origin feature/nieuwe-feature`)
+5. Open een Pull Request
+
+### Richtlijnen
+
+- Volg de bestaande code stijl
+- Voeg JSDoc commentaar toe voor nieuwe functies
+- Test je wijzigingen grondig
+- Update de README indien nodig
+
+## 📄 Licentie
+
+Dit project is ontwikkeld als onderdeel van een schoolopdracht voor AP Hogeschool. Alle rechten voorbehouden.
+
+## 🙏 Credits
+
+- **PokeAPI**: Voor de uitgebreide Pokémon database
+- **React Community**: Voor het geweldige React ecosysteem
+- **Tailwind CSS**: Voor het utility-first CSS framework
+
+---
+
+**Ontwikkeld door**: Hamed Sadim  
+**AP Hogeschool** - Webframeworks Labo 7  
+**Datum**: December 2025
