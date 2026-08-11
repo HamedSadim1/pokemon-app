@@ -102,9 +102,8 @@ const Pokemon = () => {
             <p>Try another name or number, or clear the search to browse again.</p>
             <button
               type="button"
-              className="button-secondary"
+              className="button-secondary mt-lg"
               onClick={() => handleSearchChange("")}
-              style={{ marginTop: "1.25rem" }}
             >
               Clear search
             </button>

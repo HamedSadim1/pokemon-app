@@ -75,12 +75,25 @@ interface BaseStatsSectionProps {
 const BaseStatsSection = ({ stats }: BaseStatsSectionProps) => (
   <section className="detail-section full-width">
     <h2>Base stats</h2>
-    {stats.length ? stats.map((stat) => (
-      <div className="stat-row" key={stat.stat?.name}>
-        <div className="stat-label"><span>{stat.stat?.name}</span><strong>{stat.base_stat}</strong></div>
-        <div className="stat-track"><div className="stat-fill" style={{ width: `${Math.min(stat.base_stat || 0, 100)}%` }} /></div>
-      </div>
-    )) : <span className="detail-chip">No stats listed</span>}
+    {stats.length ? stats.map((stat) => {
+      const value = Math.min(stat.base_stat || 0, 100);
+
+      return (
+        <div className="stat-row" key={stat.stat?.name}>
+          <div className="stat-label"><span>{stat.stat?.name}</span><strong>{stat.base_stat}</strong></div>
+          <div
+            className="stat-track"
+            role="progressbar"
+            aria-label={`${stat.stat?.name || "Unknown"} base stat`}
+            aria-valuenow={value}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div className="stat-fill" style={{ width: `${value}%` }} />
+          </div>
+        </div>
+      );
+    }) : <span className="detail-chip">No stats listed</span>}
   </section>
 );
 
@@ -109,7 +122,7 @@ const PokemonDetail = () => {
             <div className="empty-state-icon" aria-hidden="true">!</div>
             <h2>Profile unavailable.</h2>
             <p>{error || "This Pokémon could not be found."}</p>
-            <Link to="/Pokemon" className="button-secondary" style={{ marginTop: "1.25rem" }}>
+            <Link to="/Pokemon" className="button-secondary mt-lg">
               Back to Pokédex
             </Link>
           </div>
@@ -182,12 +195,12 @@ const PokemonDetail = () => {
         <div className="detail-sections">
           <section className="detail-section">
             <h2>At a glance</h2>
-            <div className="measure-grid">
-              <div className="measure"><strong>{pokemon.height}</strong><span>Height / dm</span></div>
-              <div className="measure"><strong>{pokemon.weight}</strong><span>Weight / hg</span></div>
-              <div className="measure"><strong>{species?.capture_rate ?? "—"}</strong><span>Capture rate</span></div>
-              <div className="measure"><strong>{species?.base_happiness ?? "—"}</strong><span>Base happiness</span></div>
-            </div>
+            <dl className="measure-grid">
+              <div className="measure"><dt>Height / dm</dt><dd>{pokemon.height}</dd></div>
+              <div className="measure"><dt>Weight / hg</dt><dd>{pokemon.weight}</dd></div>
+              <div className="measure"><dt>Capture rate</dt><dd>{species?.capture_rate ?? "—"}</dd></div>
+              <div className="measure"><dt>Base happiness</dt><dd>{species?.base_happiness ?? "—"}</dd></div>
+            </dl>
           </section>
 
           <section className="detail-section">

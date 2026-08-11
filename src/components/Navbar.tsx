@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { useTheme } from "../hooks/useTheme";
@@ -13,6 +13,9 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const { favorites } = useFavorites();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const wasMenuOpen = useRef(false);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -35,6 +38,16 @@ const Navbar = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      mobileNavRef.current?.focus();
+    } else if (wasMenuOpen.current && window.innerWidth <= 768) {
+      menuButtonRef.current?.focus();
+    }
+
+    wasMenuOpen.current = menuOpen;
+  }, [menuOpen]);
 
   return (
     <header className="site-header">
@@ -78,6 +91,7 @@ const Navbar = () => {
               {theme === "dark" ? "☀" : "☾"}
             </button>
             <button
+              ref={menuButtonRef}
               type="button"
               className="mobile-menu-button"
               onClick={() => setMenuOpen((open) => !open)}
@@ -93,8 +107,10 @@ const Navbar = () => {
         {menuOpen && (
           <nav
             id="mobile-navigation"
+            ref={mobileNavRef}
             className="mobile-nav"
             aria-label="Mobile navigation"
+            tabIndex={-1}
           >
             {navigation.map(({ to, label, icon, end }) => (
               <NavLink

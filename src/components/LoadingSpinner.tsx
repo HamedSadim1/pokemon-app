@@ -8,7 +8,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message = "Loading Pokémon...",
 }) => {
   return (
-    <div className="loading-state" role="status" aria-live="polite">
+    <div className="loading-state" role="status" aria-live="polite" aria-busy="true">
       <div>
         <div className="loading-ring" aria-hidden="true" />
         <p className="loading-copy">{message}</p>

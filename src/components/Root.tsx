@@ -5,8 +5,9 @@ import Navbar from "./Navbar";
 const Root = () => {
   return (
     <div className="app-shell">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Navbar />
-      <main className="main-content">
+      <main id="main-content" className="main-content">
         <Outlet />
       </main>
       <Footer />

@@ -20,7 +20,7 @@ const Favorites = () => {
               Keep the Pokémon that catch your eye close by saving them from a
               profile page.
             </p>
-            <Link to="/Pokemon" className="button-primary" style={{ marginTop: "1.25rem" }}>
+            <Link to="/Pokemon" className="button-primary mt-lg">
               Start exploring <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -70,7 +70,7 @@ const Favorites = () => {
               </Link>
               <div className="pokemon-card-content">
                 <h3>{pokemon.name}</h3>
-                <div className="type-list" style={{ marginTop: "0.6rem" }}>
+                <div className="type-list mt-sm">
                   {pokemon.types?.slice(0, 2).map((type) => (
                     <span
                       key={type.type?.name}
@@ -82,8 +82,7 @@ const Favorites = () => {
                 </div>
                 <button
                   type="button"
-                  className="button-danger"
-                  style={{ width: "100%", marginTop: "0.8rem" }}
+                  className="button-danger w-full mt-md"
                   onClick={() => removeFavorite(pokemon.id)}
                   aria-label={`Remove ${pokemon.name} from favorites`}
                 >
