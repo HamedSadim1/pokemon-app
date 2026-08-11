@@ -113,6 +113,13 @@
   background: var(--accent-soft);
 }
 
+.query-refresh-status {
+  margin: -1rem 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: var(--font-weight-bold);
+}
+
 .search-hint {
   margin: 0.4rem 0 0;
   color: var(--ink-soft);

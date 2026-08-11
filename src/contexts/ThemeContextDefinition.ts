@@ -1,6 +1,7 @@
 import { createContext } from "react";
+import type { AppTheme } from "../utils/theme";
 
-export type Theme = "light" | "dark";
+export type Theme = AppTheme;
 
 export interface ThemeContextType {
   theme: Theme;
@@ -8,5 +9,5 @@ export interface ThemeContextType {
 }
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(
-  undefined
+  undefined,
 );

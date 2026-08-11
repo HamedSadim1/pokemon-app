@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPokemon, type PokemonResult } from "../components/Services/IPokemon";
+import { type PokemonResult } from "../components/Services/IPokemon";
+import { pokemonListOptions } from "../query/pokemonQueries";
 import { useQueryState, type QueryState } from "./useQueryState";
 
 interface UsePokemonListResult {
   pokemon: PokemonResult;
   loading: boolean;
   fetching: boolean;
+  placeholder: boolean;
   error: string;
   retry: QueryState<PokemonResult>["retry"];
 }
@@ -15,10 +17,8 @@ export const usePokemonList = (
   itemsPerPage: number = 20,
   enabled = true,
 ): UsePokemonListResult => {
-  const offset = currentPage * itemsPerPage - itemsPerPage;
   const query = useQuery({
-    queryKey: ["pokemon-list", currentPage, itemsPerPage],
-    queryFn: ({ signal }) => getPokemon(offset, itemsPerPage, signal),
+    ...pokemonListOptions(currentPage, itemsPerPage),
     enabled,
   });
   const state = useQueryState(query);
@@ -27,6 +27,7 @@ export const usePokemonList = (
     pokemon: state.data || ({} as PokemonResult),
     loading: state.loading,
     fetching: state.fetching,
+    placeholder: state.placeholder,
     error: state.error,
     retry: state.retry,
   };

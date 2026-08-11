@@ -30,4 +30,22 @@ describe("useQueryState", () => {
     await waitFor(() => expect(result.current.data).toBe("ok"));
     expect(queryFn).toHaveBeenCalledTimes(2);
   });
+
+  it("does not report a disabled query as actively loading", () => {
+    const client = new QueryClient();
+    const { result } = renderHook(
+      () =>
+        useQueryState(
+          useQuery({
+            queryKey: ["disabled-state"],
+            queryFn: async () => "never",
+            enabled: false,
+          }),
+        ),
+      { wrapper: createWrapper(client) },
+    );
+
+    expect(result.current.loading).toBe(false);
+    expect(result.current.fetching).toBe(false);
+  });
 });

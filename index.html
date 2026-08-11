@@ -5,6 +5,7 @@
     <link rel="icon" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f97316" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="description" content="Explore Pokémon species, stats, abilities, evolutions, and favorites in a fast Pokédex." />
     <link rel="preconnect" href="https://pokeapi.co" />
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin />
@@ -16,6 +17,37 @@
     -->
     <link rel="manifest" href="/pokemon-manifest.json" />
     <title>Pokédex — Explore Pokémon</title>
+    <script>
+      (() => {
+        let storedTheme = null;
+        try {
+          const rawValue = window.localStorage.getItem("theme");
+          const parsedValue = rawValue ? JSON.parse(rawValue) : null;
+          storedTheme = parsedValue === "dark" || parsedValue === "light"
+            ? parsedValue
+            : rawValue === "dark" || rawValue === "light"
+              ? rawValue
+              : null;
+        } catch {
+          storedTheme = null;
+        }
+
+        let systemPrefersDark = false;
+        try {
+          systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        } catch {
+          systemPrefersDark = false;
+        }
+
+        const theme = storedTheme || (systemPrefersDark ? "dark" : "light");
+        document.documentElement.classList.toggle("dark", theme === "dark");
+        document.documentElement.style.colorScheme = theme;
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        if (themeColor) {
+          themeColor.setAttribute("content", theme === "dark" ? "#0d1521" : "#f97316");
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

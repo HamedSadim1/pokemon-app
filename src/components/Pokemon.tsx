@@ -22,7 +22,7 @@ const Pokemon = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = (searchParams.get("q") || "").trim();
   const currentPage = parsePage(searchParams.get("page"));
-  const { pokemon, loading, error, retry: retryList } = usePokemonList(
+  const { pokemon, loading, fetching, placeholder, error, retry: retryList } = usePokemonList(
     currentPage,
     itemsPerPage,
     !searchTerm.trim(),
@@ -54,6 +54,7 @@ const Pokemon = () => {
       )
     : pageResults;
   const isLoading = loading || catalogSearch.loading;
+  const isRefreshing = fetching || catalogSearch.fetching || placeholder;
   const searchNeedsMoreCharacters = searchTerm.trim().length === 1;
   const activeError = isSearching
     ? catalogSearch.error
@@ -163,6 +164,12 @@ const Pokemon = () => {
           />
         )}
 
+        {!isLoading && isRefreshing && (
+          <p className="query-refresh-status" role="status" aria-live="polite">
+            Updating results...
+          </p>
+        )}
+
         {!isLoading && activeError && (
           <div className="error-state" role="alert">
             <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
@@ -197,9 +204,8 @@ const Pokemon = () => {
           <>
             <div className="pokemon-grid">
               {visibleResults.map((pokemon, index) => {
-                const id = isSearching
-                  ? getPokemonIdFromUrl(pokemon.url)
-                  : currentPage * itemsPerPage - itemsPerPage + index + 1;
+                const id = getPokemonIdFromUrl(pokemon.url) ||
+                  (currentPage * itemsPerPage - itemsPerPage + index + 1);
                 return <PokemonCard key={pokemon.name} pokemon={pokemon} id={id} />;
               })}
             </div>

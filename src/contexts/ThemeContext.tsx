@@ -1,24 +1,21 @@
 import React, { useEffect } from "react";
-import { ThemeContext, type Theme } from "./ThemeContextDefinition";
+import { ThemeContext } from "./ThemeContextDefinition";
 import { usePersistentState } from "../hooks/usePersistentState";
+import { applyTheme, getInitialTheme, isAppTheme, type AppTheme } from "../utils/theme";
 
-const isTheme = (value: unknown): value is Theme =>
-  value === "light" || value === "dark";
-
-const getSystemTheme = (): Theme =>
-  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+export type { AppTheme as Theme };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = usePersistentState(
+  const [theme, setTheme] = usePersistentState<AppTheme>(
     "theme",
-    getSystemTheme(),
-    isTheme,
+    getInitialTheme(),
+    isAppTheme,
   );
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
+    applyTheme(theme);
   }, [theme]);
 
   const toggleTheme = () => {

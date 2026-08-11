@@ -32,7 +32,8 @@ const LegacyPokemonRedirect = () => {
  * Configureert TanStack Query client met optimale instellingen voor de Pokémon app.
  * - staleTime: 5 minuten - data blijft vers in cache
  * - gcTime: 10 minuten - cache wordt na 10 minuten geleegd
- * - retry: 2 - pogingen bij falende requests
+ * - retry: predicate met maximaal twee pogingen voor tijdelijke fouten
+ * - retryDelay: exponentiële backoff tot maximaal 30 seconden
  * - refetchOnWindowFocus: false - geen refetch bij window focus
  */
 const queryClient = createAppQueryClient();
