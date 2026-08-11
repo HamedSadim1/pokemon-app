@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useFavorites } from "../contexts/FavoritesContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useFavorites } from "../hooks/useFavorites";
+import { useTheme } from "../hooks/useTheme";
 import { usePokemonDetail } from "../hooks/usePokemonDetail";
 import LoadingSpinner from "./LoadingSpinner";
 

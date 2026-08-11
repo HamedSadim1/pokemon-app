@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "../hooks/useTheme";
 import { usePokemonList } from "../hooks/usePokemonList";
 import { usePokemonSearch } from "../hooks/usePokemonSearch";
 import SearchBar from "./SearchBar";

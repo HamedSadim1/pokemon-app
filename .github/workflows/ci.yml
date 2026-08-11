@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Commit message check
+        env:
+          COMMITLINT_FROM: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          COMMITLINT_TO: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if [ "$COMMITLINT_FROM" = "0000000000000000000000000000000000000000" ]; then
+            git rev-list --reverse "$COMMITLINT_TO" | while read -r commit; do
+              git show -s --format=%B "$commit" | npx --no-install commitlint --verbose
+            done
+          else
+            npx --no-install commitlint --from "$COMMITLINT_FROM" --to "$COMMITLINT_TO" --verbose
+          fi
+
+      - name: TypeScript check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build

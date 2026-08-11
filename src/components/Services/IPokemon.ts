@@ -25,7 +25,7 @@ export interface PokemonDex {
   moves: Move[];
   name: string;
   order: number;
-  pastTypes: any[];
+  pastTypes: unknown[];
   species: Species;
   sprites: Sprites;
   stats: Stat[];

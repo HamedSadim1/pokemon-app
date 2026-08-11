@@ -1,48 +1,16 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-
-interface Pokemon {
-  id: number;
-  name: string;
-  sprites?: {
-    front_default?: string;
-  };
-  types?: Array<{
-    type?: {
-      name?: string;
-    };
-  }>;
-}
-
-interface FavoritesContextType {
-  favorites: Pokemon[];
-  addFavorite: (pokemon: Pokemon) => void;
-  removeFavorite: (id: number) => void;
-  isFavorite: (id: number) => boolean;
-}
-
-const FavoritesContext = createContext<FavoritesContextType | undefined>(
-  undefined
-);
-
-export const useFavorites = () => {
-  const context = useContext(FavoritesContext);
-  if (!context) {
-    throw new Error("useFavorites must be used within a FavoritesProvider");
-  }
-  return context;
-};
+import React, { useState, useEffect } from "react";
+import {
+  FavoritesContext,
+  type Pokemon,
+} from "./FavoritesContextDefinition";
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [favorites, setFavorites] = useState<Pokemon[]>([]);
-
-  useEffect(() => {
+  const [favorites, setFavorites] = useState<Pokemon[]>(() => {
     const saved = localStorage.getItem("pokemon-favorites");
-    if (saved) {
-      setFavorites(JSON.parse(saved));
-    }
-  }, []);
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("pokemon-favorites", JSON.stringify(favorites));

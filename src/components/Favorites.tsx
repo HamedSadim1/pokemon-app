@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useFavorites } from "../contexts/FavoritesContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useFavorites } from "../hooks/useFavorites";
+import { useTheme } from "../hooks/useTheme";
 
 const Favorites = () => {
   const { favorites, removeFavorite } = useFavorites();
