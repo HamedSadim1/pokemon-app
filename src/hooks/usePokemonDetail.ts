@@ -4,7 +4,7 @@ import {
   type PokemonDex,
   type PokemonSpecies,
 } from "../components/Services/IPokemon";
-import { pokemonDetailOptions, type PokemonDetailData } from "../query/pokemonQueries";
+import { pokemonDetailOptions, type PokemonDetailData } from "../query";
 import { useQueryState, type QueryState } from "./useQueryState";
 
 interface UsePokemonDetailResult {

@@ -2,20 +2,20 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import PokemonCard from "./PokemonCard";
-import { FavoritesContext } from "../contexts/FavoritesContextDefinition";
-import type { Pokemon } from "../contexts/FavoritesContextDefinition";
-import type { Result } from "./Services/IPokemon";
+import { FavoritesContext } from "../contexts";
+import type { FavoritePokemon, Result } from "./Services/IPokemon";
+import { API_CONFIG } from "../config";
 
-const pokemon: Pokemon = {
+const pokemon: FavoritePokemon = {
   id: 25,
   name: "pikachu",
-  types: [{ type: { name: "electric" } }],
+  types: [{ type: { name: "electric", url: `${API_CONFIG.pokeApiBaseUrl}/type/13/` } }],
   sprites: { front_default: "/pikachu.png" },
 };
 
 const catalogPokemon: Result = {
   name: "pikachu",
-  url: "https://pokeapi.co/api/v2/pokemon/25/",
+  url: `${API_CONFIG.pokeApiBaseUrl}/pokemon/25/`,
 };
 
 const renderCard = (action: "favorite-toggle" | "remove") =>

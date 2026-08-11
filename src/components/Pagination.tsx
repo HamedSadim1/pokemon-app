@@ -1,5 +1,6 @@
 import React from "react";
 import Icon from "./Icon";
+import { ICON_CONFIG, UI_COPY } from "../config";
 
 interface PaginationProps {
   currentPage: number;
@@ -13,15 +14,15 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
 }) => {
   return (
-    <nav className="pagination" aria-label="Pokémon list pagination">
+    <nav className="pagination" aria-label={UI_COPY.pagination.navLabel}>
       <button
         type="button"
         className="pagination-button"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        aria-label="Previous page"
+        aria-label={UI_COPY.pagination.previousLabel}
       >
-        <Icon name="arrow-left" size={16} /> Previous
+        <Icon name="arrow-left" size={ICON_CONFIG.sizes.small} /> Previous
       </button>
       <div className="pagination-status" aria-live="polite">
         Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
@@ -31,9 +32,9 @@ const Pagination: React.FC<PaginationProps> = ({
         className="pagination-button"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        aria-label="Next page"
+        aria-label={UI_COPY.pagination.nextLabel}
       >
-        Next <Icon name="arrow-right" size={16} />
+        Next <Icon name="arrow-right" size={ICON_CONFIG.sizes.small} />
       </button>
     </nav>
   );

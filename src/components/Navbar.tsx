@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useFavorites } from "../hooks/useFavorites";
-import { useTheme } from "../hooks/useTheme";
+import { useFavorites, useTheme } from "../hooks";
 import Icon from "./Icon";
-
-const navigation = [
-  { to: "/", label: "Home", end: true },
-  { to: "/pokemon", label: "Pokédex" },
-  { to: "/favorites", label: "Favorites" },
-];
+import {
+  ICON_CONFIG,
+  KEYBOARD_CONFIG,
+  NAV_ITEMS,
+  RESPONSIVE_CONFIG,
+  ROUTES,
+  UI_COPY,
+} from "../config";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -22,19 +23,19 @@ const Navbar = () => {
 
   const closeMenu = () => setMenuOpen(false);
   const handleBrandClick = () => {
-    menuNavigationStarted.current = location.pathname !== "/";
+    menuNavigationStarted.current = location.pathname !== ROUTES.home;
     closeMenu();
   };
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > RESPONSIVE_CONFIG.mobileBreakpointPx) {
         menuNavigationStarted.current = false;
         setMenuOpen(false);
       }
     };
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === KEYBOARD_CONFIG.escapeKey) {
         menuNavigationStarted.current = false;
         setMenuOpen(false);
       }
@@ -54,7 +55,7 @@ const Navbar = () => {
       mobileNavRef.current?.focus();
     } else if (
       wasMenuOpen.current &&
-      window.innerWidth <= 768 &&
+      window.innerWidth <= RESPONSIVE_CONFIG.mobileBreakpointPx &&
       !menuNavigationStarted.current
     ) {
       menuButtonRef.current?.focus();
@@ -68,7 +69,7 @@ const Navbar = () => {
     <header className="site-header">
       <div className="page-container">
         <div className="header-inner">
-          <NavLink to="/" className="brand" onClick={handleBrandClick}>
+          <NavLink to={ROUTES.home} className="brand" onClick={handleBrandClick}>
             <span className="brand-mark" aria-hidden="true" />
             <span className="brand-wordmark">
               <strong>Pokédex</strong>
@@ -76,8 +77,8 @@ const Navbar = () => {
             </span>
           </NavLink>
 
-          <nav className="nav-links desktop-nav" aria-label="Primary navigation">
-            {navigation.map(({ to, label, end }) => (
+          <nav className="nav-links desktop-nav" aria-label={UI_COPY.navigation.primaryLabel}>
+            {NAV_ITEMS.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -86,9 +87,9 @@ const Navbar = () => {
                   `nav-link${isActive ? " active" : ""}`
                 }
               >
-                {to === "/favorites" && <Icon name="heart" size={16} />}
+                {to === ROUTES.favorites && <Icon name="heart" size={ICON_CONFIG.sizes.small} />}
                 {label}
-                {to === "/favorites" && favorites.length > 0 && (
+                {to === ROUTES.favorites && favorites.length > 0 && (
                   <span className="favorite-count">{favorites.length}</span>
                 )}
               </NavLink>
@@ -100,8 +101,8 @@ const Navbar = () => {
               type="button"
               className="icon-button"
               onClick={toggleTheme}
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-              title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+              aria-label={UI_COPY.navigation.switchThemeLabel(theme === "dark" ? "light" : "dark")}
+              title={UI_COPY.navigation.switchThemeLabel(theme === "dark" ? "light" : "dark")}
             >
               <Icon name={theme === "dark" ? "sun" : "moon"} />
             </button>
@@ -112,7 +113,7 @@ const Navbar = () => {
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
-              aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+              aria-label={menuOpen ? UI_COPY.navigation.closeMenuLabel : UI_COPY.navigation.openMenuLabel}
             >
               <Icon name={menuOpen ? "close" : "menu"} />
             </button>
@@ -124,10 +125,10 @@ const Navbar = () => {
             id="mobile-navigation"
             ref={mobileNavRef}
             className="mobile-nav"
-            aria-label="Mobile navigation"
+            aria-label={UI_COPY.navigation.mobileLabel}
             tabIndex={-1}
           >
-            {navigation.map(({ to, label, end }) => (
+            {NAV_ITEMS.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -140,9 +141,9 @@ const Navbar = () => {
                   `nav-link${isActive ? " active" : ""}`
                 }
               >
-                {to === "/favorites" && <Icon name="heart" size={16} />}
+                {to === ROUTES.favorites && <Icon name="heart" size={ICON_CONFIG.sizes.small} />}
                 {label}
-                {to === "/favorites" && favorites.length > 0 && (
+                {to === ROUTES.favorites && favorites.length > 0 && (
                   <span className="favorite-count">{favorites.length}</span>
                 )}
               </NavLink>

@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createAppQueryClient } from "./query/queryClient";
+import { createAppQueryClient } from "./query";
 import {
   createBrowserRouter,
   Navigate,
@@ -11,8 +11,8 @@ import HomePage from "./components/HomePage";
 import Root from "./components/Root";
 import NotFound from "./components/NotFound";
 import RouteErrorBoundary from "./components/RouteErrorBoundary";
-import { FavoritesProvider } from "./contexts/FavoritesContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { FavoritesProvider, ThemeProvider } from "./contexts";
+import { LEGACY_ROUTES, ROUTES } from "./config";
 
 const Favorites = lazy(() => import("./components/Favorites"));
 const Pokemon = lazy(() => import("./components/Pokemon"));
@@ -25,17 +25,9 @@ const ReactQueryDevtools = lazy(() =>
 
 const LegacyPokemonRedirect = () => {
   const { id } = useParams();
-  return <Navigate replace to={id ? `/pokemon/${id}` : "/pokemon"} />;
+  return <Navigate replace to={id ? ROUTES.pokemonDetail(id) : ROUTES.pokedex} />;
 };
 
-/**
- * Configureert TanStack Query client met optimale instellingen voor de Pokémon app.
- * - staleTime: 5 minuten - data blijft vers in cache
- * - gcTime: 10 minuten - cache wordt na 10 minuten geleegd
- * - retry: predicate met maximaal twee pogingen voor tijdelijke fouten
- * - retryDelay: exponentiële backoff tot maximaal 30 seconden
- * - refetchOnWindowFocus: false - geen refetch bij window focus
- */
 const queryClient = createAppQueryClient();
 
 /**
@@ -61,26 +53,26 @@ function App() {
           element: <HomePage />,
         },
         {
-          path: "pokemon",
+          path: ROUTES.pokedex,
           caseSensitive: true,
           element: <Pokemon />,
         },
         {
-          path: "pokemon/:id",
+          path: ROUTES.pokedexDetail,
           caseSensitive: true,
           element: <PokemonDetail />,
         },
         {
-          path: "favorites",
+          path: ROUTES.favorites,
           element: <Favorites />,
         },
         {
-          path: "Pokemon",
+          path: LEGACY_ROUTES.pokedex,
           caseSensitive: true,
-          element: <Navigate replace to="/pokemon" />,
+          element: <Navigate replace to={ROUTES.pokedex} />,
         },
         {
-          path: "Pokemon/:id",
+          path: LEGACY_ROUTES.pokedexDetail,
           caseSensitive: true,
           element: <LegacyPokemonRedirect />,
         },

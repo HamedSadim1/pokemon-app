@@ -5,6 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { PokemonDetailSkeleton, PokemonPageSkeleton } from "./LoadingSkeletons";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import { ROUTES, UI_COPY } from "../config";
 
 const Root = () => {
   const location = useLocation();
@@ -18,11 +19,11 @@ const Root = () => {
     }
   }, [location.pathname]);
 
-  const routeLoadingFallback = location.pathname.startsWith("/pokemon/")
+  const routeLoadingFallback = location.pathname.startsWith(`${ROUTES.pokedex}/`)
     ? <PokemonDetailSkeleton />
-    : location.pathname === "/pokemon"
+    : location.pathname === ROUTES.pokedex
       ? <PokemonPageSkeleton />
-      : <LoadingSpinner message="Loading Pokédex..." />;
+      : <LoadingSpinner message={UI_COPY.loading.routeFallback} />;
 
   return (
     <div className="app-shell">

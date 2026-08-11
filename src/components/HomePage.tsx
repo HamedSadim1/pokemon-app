@@ -1,17 +1,23 @@
 import { Link } from "react-router-dom";
-import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
+import { formatDexNumber, getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
+import { usePokemonList } from "../hooks";
+import { FORMAT_CONFIG, ICON_CONFIG, POKEMON_CONFIG, ROUTES, resolveTotalSpecies } from "../config";
 
-const heroArtwork = getPokemonArtworkUrl(25);
+const heroArtwork = getPokemonArtworkUrl(POKEMON_CONFIG.featuredPokemonId);
 
 const HomePage = () => {
+  // Live species-count uit de gedeelde list-query (gecachet met de Pokédex-pagina).
+  const { pokemon } = usePokemonList(1, POKEMON_CONFIG.itemsPerPage);
+  const totalSpecies = resolveTotalSpecies(pokemon.count);
+
   return (
     <>
       <section className="hero-section">
         <div className="page-container hero-grid">
           <div>
-            <span className="eyebrow">National dex / 001—1025</span>
+            <span className="eyebrow">National dex / 001—{totalSpecies}</span>
             <h1 className="display-heading">
               Find your next <span className="highlight">favorite</span> Pokémon.
             </h1>
@@ -20,20 +26,20 @@ const HomePage = () => {
               learn the details, and keep the ones you want close.
             </p>
             <div className="hero-actions">
-              <Link to="/pokemon" className="button-primary">
-                Explore the Pokédex <Icon name="arrow-right" size={17} />
+              <Link to={ROUTES.pokedex} className="button-primary">
+                Explore the Pokédex <Icon name="arrow-right" size={ICON_CONFIG.sizes.button} />
               </Link>
-              <Link to="/favorites" className="button-secondary">
-                View favorites <Icon name="heart" size={17} />
+              <Link to={ROUTES.favorites} className="button-secondary">
+                View favorites <Icon name="heart" size={ICON_CONFIG.sizes.button} />
               </Link>
             </div>
             <div className="hero-stats" aria-label="Pokédex highlights">
               <div className="hero-stat">
-                <strong>1,025</strong>
+                <strong>{totalSpecies.toLocaleString("en-US")}</strong>
                 <span>Species to discover</span>
               </div>
               <div className="hero-stat">
-                <strong>18</strong>
+                <strong>{POKEMON_CONFIG.typeCount}</strong>
                 <span>Type families</span>
               </div>
               <div className="hero-stat">
@@ -45,12 +51,13 @@ const HomePage = () => {
 
           <div className="hero-art-panel" aria-label="Featured Pokémon artwork">
             <div className="hero-art-grid" aria-hidden="true" />
-            <span className="hero-art-label">Featured today / #025</span>
+            {/* FORMAT_CONFIG.idWidth houdt de 3-cijferige hero-stijl aan, parallel aan de eyebrow ("001—1351"). */}
+            <span className="hero-art-label">Featured today / {formatDexNumber(POKEMON_CONFIG.featuredPokemonId, FORMAT_CONFIG.idWidth)}</span>
             <ImageWithFallback
               key={heroArtwork}
               className="hero-art-image"
               src={heroArtwork}
-              fallbackSrc={getPokemonSpriteUrl(25)}
+              fallbackSrc={getPokemonSpriteUrl(POKEMON_CONFIG.featuredPokemonId)}
               alt="Pikachu official artwork"
             />
           </div>

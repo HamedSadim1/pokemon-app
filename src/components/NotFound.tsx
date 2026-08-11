@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { EmptyState } from "./FeedbackState";
+import { ROUTES, UI_COPY } from "../config";
 
 const NotFound = () => (
   <section className="not-found-page">
@@ -12,8 +13,8 @@ const NotFound = () => (
         description="The page you requested is not part of this Pokédex. Return to the index and keep exploring."
         action={(
           <>
-            <Link to="/pokemon" className="button-primary">Open Pokédex</Link>
-            <Link to="/" className="button-quiet">Back home</Link>
+            <Link to={ROUTES.pokedex} className="button-primary">{UI_COPY.shared.openPokedex}</Link>
+            <Link to={ROUTES.home} className="button-quiet">Back home</Link>
           </>
         )}
         actionClassName="not-found-actions"

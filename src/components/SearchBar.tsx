@@ -1,5 +1,6 @@
 import React from "react";
 import Icon from "./Icon";
+import { ICON_CONFIG, UI_COPY } from "../config";
 
 interface SearchBarProps {
   value: string;
@@ -32,9 +33,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type="button"
           className="search-clear"
           onClick={() => onChange("")}
-          aria-label="Clear search"
+          aria-label={UI_COPY.search.clearLabel}
         >
-          <Icon name="close" size={16} />
+          <Icon name="close" size={ICON_CONFIG.sizes.small} />
         </button>
       )}
     </div>

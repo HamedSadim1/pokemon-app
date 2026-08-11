@@ -1,4 +1,6 @@
 import axios from "axios";
+import { API_CONFIG, ERROR_CONFIG, POKEMON_CONFIG } from "../../config";
+import { isRecord } from "../../utils";
 
 export interface PokemonResult {
   count: number;
@@ -244,10 +246,12 @@ export interface Type {
   type?: Species;
 }
 
-//! Pokemon
+export type FavoritePokemon = Pick<PokemonDex, "id" | "name"> & {
+  sprites?: Pick<Sprites, "front_default">;
+  types?: Type[];
+};
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null;
+//! Pokemon
 
 const isSpeciesReference = (value: unknown): value is Species =>
   isRecord(value) && typeof value.name === "string" && typeof value.url === "string";
@@ -264,7 +268,7 @@ const validatePokemonResult = (value: unknown): PokemonResult => {
         typeof result.url === "string"
     )
   ) {
-    throw new Error("Invalid Pokémon list response");
+    throw new Error(ERROR_CONFIG.messages.invalidList);
   }
 
   return value as unknown as PokemonResult;
@@ -291,7 +295,7 @@ const validatePokemonDex = (value: unknown): PokemonDex => {
     !Array.isArray(value.moves) ||
     !value.moves.every((move) => isRecord(move) && isSpeciesReference(move.move))
   ) {
-    throw new Error("Invalid Pokémon detail response");
+    throw new Error(ERROR_CONFIG.messages.invalidDetail);
   }
 
   return value as unknown as PokemonDex;
@@ -306,7 +310,7 @@ const validatePokemonSpecies = (value: unknown): PokemonSpecies => {
       (!isRecord(value.evolution_chain) ||
         typeof value.evolution_chain.url !== "string"))
   ) {
-    throw new Error("Invalid Pokémon species response");
+    throw new Error(ERROR_CONFIG.messages.invalidSpecies);
   }
 
   return value as unknown as PokemonSpecies;
@@ -324,7 +328,7 @@ const validateEvolutionChain = (value: unknown): EvolutionChain => {
     typeof value.id !== "number" ||
     !isEvolutionNode(value.chain)
   ) {
-    throw new Error("Invalid evolution chain response");
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChain);
   }
 
   return value as unknown as EvolutionChain;
@@ -332,11 +336,11 @@ const validateEvolutionChain = (value: unknown): EvolutionChain => {
 
 export const getPokemon = async (
   offset: number = 0,
-  limit: number = 20,
+  limit: number = POKEMON_CONFIG.itemsPerPage,
   signal?: AbortSignal,
 ) => {
   const response = await axios.get<unknown>(
-    `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon?limit=${limit}&offset=${offset}`,
     { signal },
   );
   return validatePokemonResult(response.data);
@@ -344,7 +348,7 @@ export const getPokemon = async (
 
 export const getPokemonByName = async (name: string, signal?: AbortSignal) => {
   const response = await axios.get<unknown>(
-    `https://pokeapi.co/api/v2/pokemon/${name}`,
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon/${name}`,
     { signal },
   );
   return validatePokemonDex(response.data);
@@ -352,7 +356,7 @@ export const getPokemonByName = async (name: string, signal?: AbortSignal) => {
 
 export const getPokemonById = async (id: number, signal?: AbortSignal) => {
   const response = await axios.get<unknown>(
-    `https://pokeapi.co/api/v2/pokemon/${id}`,
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon/${id}`,
     { signal },
   );
   return validatePokemonDex(response.data);
@@ -360,18 +364,11 @@ export const getPokemonById = async (id: number, signal?: AbortSignal) => {
 
 export const getPokemonSpecies = async (id: number, signal?: AbortSignal) => {
   const response = await axios.get<unknown>(
-    `https://pokeapi.co/api/v2/pokemon-species/${id}`,
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon-species/${id}`,
     { signal },
   );
   return validatePokemonSpecies(response.data);
 };
-
-export const isPokemonRequestCancellation = (error: unknown): boolean =>
-  axios.isCancel(error) ||
-  (isRecord(error) && error.name === "CanceledError");
-
-const POKEAPI_ORIGIN = "https://pokeapi.co";
-const EVOLUTION_CHAIN_PATH = /^\/api\/v2\/evolution-chain\/\d+\/?$/;
 
 export const getEvolutionChain = async (url: string, signal?: AbortSignal) => {
   let parsedUrl: URL;
@@ -379,15 +376,15 @@ export const getEvolutionChain = async (url: string, signal?: AbortSignal) => {
   try {
     parsedUrl = new URL(url);
   } catch {
-    throw new Error("Invalid evolution chain URL");
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChainUrl);
   }
 
   if (
-    parsedUrl.protocol !== "https:" ||
-    parsedUrl.origin !== POKEAPI_ORIGIN ||
-    !EVOLUTION_CHAIN_PATH.test(parsedUrl.pathname)
+    parsedUrl.protocol !== API_CONFIG.secureProtocol ||
+    parsedUrl.origin !== API_CONFIG.pokeApiOrigin ||
+    !API_CONFIG.evolutionChainPathPattern.test(parsedUrl.pathname)
   ) {
-    throw new Error("Invalid evolution chain URL");
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChainUrl);
   }
 
   const response = await axios.get<unknown>(parsedUrl.toString(), { signal });

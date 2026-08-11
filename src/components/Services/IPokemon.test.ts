@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import axios from "axios";
+import { API_CONFIG } from "../../config";
 import {
   getEvolutionChain,
   getPokemon,
@@ -47,7 +48,7 @@ describe("Pokémon service validation", () => {
     });
 
     await expect(
-      getEvolutionChain("https://pokeapi.co/api/v2/evolution-chain/1"),
+      getEvolutionChain(`${API_CONFIG.pokeApiBaseUrl}/evolution-chain/1`),
     ).rejects.toThrow("Invalid evolution chain response");
   });
 });

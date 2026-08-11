@@ -11,6 +11,8 @@ const browserStorage: StorageAdapter = {
 const getStorage = (adapter?: StorageAdapter): StorageAdapter =>
   adapter || browserStorage;
 
+const rawFallbackReadCache = new WeakMap<StorageAdapter, Map<string, unknown>>();
+
 export const readRawStorage = (
   key: string,
   fallback: string | null = null,
@@ -28,16 +30,42 @@ export const readStorage = <T>(
   fallback: T,
   validate: (value: unknown) => value is T,
   adapter?: StorageAdapter,
+  fallbackFromRaw?: (rawValue: string | null) => T,
 ): T => {
-  try {
-    const saved = getStorage(adapter).getItem(key);
-    if (!saved) return fallback;
+  const storage = getStorage(adapter);
+  const cachedFallbackRead = fallbackFromRaw
+    ? rawFallbackReadCache.get(storage)
+    : undefined;
 
-    const parsed: unknown = JSON.parse(saved);
-    return validate(parsed) ? parsed : fallback;
-  } catch {
-    return fallback;
+  if (cachedFallbackRead?.has(key)) {
+    return cachedFallbackRead.get(key) as T;
   }
+
+  let saved: string | null = null;
+  const resolveFallback = () => fallbackFromRaw ? fallbackFromRaw(saved) : fallback;
+  let value: T;
+  let readSucceeded = false;
+
+  try {
+    saved = storage.getItem(key);
+    readSucceeded = true;
+    if (!saved) {
+      value = resolveFallback();
+    } else {
+      const parsed: unknown = JSON.parse(saved);
+      value = validate(parsed) ? parsed : resolveFallback();
+    }
+  } catch {
+    value = readSucceeded ? resolveFallback() : fallback;
+  }
+
+  if (fallbackFromRaw && readSucceeded) {
+    const cache = cachedFallbackRead || new Map<string, unknown>();
+    cache.set(key, value);
+    rawFallbackReadCache.set(storage, cache);
+  }
+
+  return value;
 };
 
 export const writeStorage = <T>(
@@ -45,8 +73,11 @@ export const writeStorage = <T>(
   value: T,
   adapter?: StorageAdapter,
 ): boolean => {
+  const storage = getStorage(adapter);
+
   try {
-    getStorage(adapter).setItem(key, JSON.stringify(value));
+    storage.setItem(key, JSON.stringify(value));
+    rawFallbackReadCache.get(storage)?.delete(key);
     return true;
   } catch {
     return false;

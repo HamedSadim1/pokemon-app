@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Icon, { type IconName } from "./Icon";
+import { ICON_CONFIG } from "../config";
 
 export interface FeedbackStateProps {
   icon: IconName;
@@ -35,7 +36,7 @@ const FeedbackState = ({
       {...(variant === "error" ? { role: "alert" } : {})}
     >
       <div className="empty-state-icon">
-        <Icon name={icon} size={24} />
+        <Icon name={icon} size={ICON_CONFIG.sizes.large} />
       </div>
       {kicker && <div className="page-kicker">{kicker}</div>}
       <Heading className={headingLevel === "h1" ? "page-title" : undefined}>{title}</Heading>

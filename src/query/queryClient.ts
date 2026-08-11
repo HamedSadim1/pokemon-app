@@ -1,42 +1,38 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-
-const MAX_QUERY_RETRIES = 2;
+import { ERROR_CONFIG, QUERY_CONFIG } from "../config";
+import { isRequestCancellation } from "../utils";
 
 export const isNonRetryableQueryError = (error: unknown): boolean => {
-  if (axios.isCancel(error)) return true;
-  if (error instanceof Error && error.name === "AbortError") return true;
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "name" in error &&
-    ["AbortError", "CanceledError"].includes(
-      (error as { name?: unknown }).name as string,
-    )
-  ) {
-    return true;
-  }
+  if (isRequestCancellation(error)) return true;
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
-    return status !== undefined && status >= 400 && status < 500;
+    return (
+      status !== undefined &&
+      status >= ERROR_CONFIG.clientErrorMinStatus &&
+      status < ERROR_CONFIG.clientErrorMaxStatus
+    );
   }
 
   if (error instanceof Error) {
-    return error.message.startsWith("Invalid ");
+    return error.message.startsWith(ERROR_CONFIG.invalidDataPrefix);
   }
 
   return false;
 };
 
 export const shouldRetryQuery = (failureCount: number, error: unknown) =>
-  !isNonRetryableQueryError(error) && failureCount < MAX_QUERY_RETRIES;
+  !isNonRetryableQueryError(error) && failureCount < QUERY_CONFIG.maxRetries;
 
 export const queryRetryDelay = (attemptIndex: number) =>
-  Math.min(1000 * 2 ** attemptIndex, 30_000);
+  Math.min(
+    QUERY_CONFIG.retryDelayBaseMs * 2 ** attemptIndex,
+    QUERY_CONFIG.retryDelayMaxMs,
+  );
 
 export const queryDefaults = {
-  staleTime: 1000 * 60 * 5,
-  gcTime: 1000 * 60 * 10,
+  staleTime: QUERY_CONFIG.defaultStaleTimeMs,
+  gcTime: QUERY_CONFIG.defaultGcTimeMs,
   retry: shouldRetryQuery,
   retryDelay: queryRetryDelay,
   refetchOnWindowFocus: false,
@@ -44,12 +40,12 @@ export const queryDefaults = {
 
 export const queryPolicies = {
   catalogSearch: {
-    staleTime: 1000 * 60 * 30,
-    gcTime: 1000 * 60 * 60,
+    staleTime: QUERY_CONFIG.catalogStaleTimeMs,
+    gcTime: QUERY_CONFIG.catalogGcTimeMs,
   },
   pokemonDetail: {
-    staleTime: 1000 * 60 * 10,
-    gcTime: 1000 * 60 * 30,
+    staleTime: QUERY_CONFIG.detailStaleTimeMs,
+    gcTime: QUERY_CONFIG.detailGcTimeMs,
   },
 } as const;
 

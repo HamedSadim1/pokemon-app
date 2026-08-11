@@ -1,8 +1,8 @@
-import type { Pokemon } from "../contexts/FavoritesContextDefinition";
-import { getPokemonTypeClass } from "../utils/helpers";
+import type { FavoritePokemon } from "./Services/IPokemon";
+import { getPokemonTypeClass } from "../utils";
 
 interface PokemonTypeListProps {
-  types?: Pokemon["types"];
+  types?: FavoritePokemon["types"];
   limit?: number;
 }
 

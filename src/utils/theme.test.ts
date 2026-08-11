@@ -1,17 +1,32 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   applyTheme,
   getInitialTheme,
   getSystemTheme,
   isAppTheme,
+  THEME_COLOR_VARIABLES,
 } from "./theme";
 import { createMemoryStorage } from "./storage";
+
+// Waarden uit src/styles/tokens.css (--color-theme-light / --color-theme-dark).
+const cssVariableValues: Record<string, string> = {
+  [THEME_COLOR_VARIABLES.light]: "#f97316",
+  [THEME_COLOR_VARIABLES.dark]: "#0d1521",
+};
 
 describe("theme initialization", () => {
   beforeEach(() => {
     document.documentElement.className = "";
     document.documentElement.style.colorScheme = "";
     document.head.innerHTML = '<meta name="theme-color" content="#f97316">';
+    // jsdom laadt geen CSS; simuleer de tokens.css variabelen.
+    vi.spyOn(window, "getComputedStyle").mockReturnValue({
+      getPropertyValue: (property: string) => cssVariableValues[property] ?? "",
+    } as CSSStyleDeclaration);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("accepts only supported theme values", () => {

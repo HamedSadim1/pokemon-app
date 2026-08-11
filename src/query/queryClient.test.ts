@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { QUERY_CONFIG } from "../config";
 import {
   createAppQueryClient,
   isNonRetryableQueryError,
@@ -20,9 +21,9 @@ describe("app query client", () => {
   });
 
   it("uses bounded exponential retry behavior", () => {
-    expect(queryRetryDelay(0)).toBe(1000);
-    expect(queryRetryDelay(1)).toBe(2000);
-    expect(queryRetryDelay(10)).toBe(30000);
+    expect(queryRetryDelay(0)).toBe(QUERY_CONFIG.retryDelayBaseMs);
+    expect(queryRetryDelay(1)).toBe(QUERY_CONFIG.retryDelayBaseMs * 2);
+    expect(queryRetryDelay(10)).toBe(QUERY_CONFIG.retryDelayMaxMs);
     expect(shouldRetryQuery(0, new Error("temporary failure"))).toBe(true);
     expect(shouldRetryQuery(2, new Error("temporary failure"))).toBe(false);
     expect(isNonRetryableQueryError(new Error("Invalid Pokémon list response"))).toBe(true);

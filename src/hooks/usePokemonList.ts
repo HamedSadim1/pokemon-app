@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { type PokemonResult } from "../components/Services/IPokemon";
-import { pokemonListOptions } from "../query/pokemonQueries";
+import { pokemonListOptions } from "../query";
 import { useQueryState, type QueryState } from "./useQueryState";
+import { POKEMON_CONFIG } from "../config";
 
 interface UsePokemonListResult {
   pokemon: PokemonResult;
@@ -14,7 +15,7 @@ interface UsePokemonListResult {
 
 export const usePokemonList = (
   currentPage: number,
-  itemsPerPage: number = 20,
+  itemsPerPage: number = POKEMON_CONFIG.itemsPerPage,
   enabled = true,
 ): UsePokemonListResult => {
   const query = useQuery({

@@ -1,4 +1,5 @@
 import type { QueryObserverResult, UseQueryResult } from "@tanstack/react-query";
+import { getErrorMessage } from "../utils";
 
 export interface QueryState<TData, TError = Error> {
   data: TData | undefined;
@@ -8,16 +9,6 @@ export interface QueryState<TData, TError = Error> {
   error: string;
   retry: () => Promise<QueryObserverResult<TData, TError>>;
 }
-
-const getErrorMessage = (error: unknown): string => {
-  if (!error) return "";
-  if (error instanceof Error) return error.message;
-  if (typeof error === "object" && "message" in error) {
-    const message = (error as { message?: unknown }).message;
-    if (typeof message === "string") return message;
-  }
-  return "Request failed";
-};
 
 export const useQueryState = <TData, TError = Error>(
   query: UseQueryResult<TData, TError>,

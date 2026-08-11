@@ -46,6 +46,9 @@
   --color-type-steel-foreground: #233041;
   --color-type-fairy-foreground: #632b50;
   --color-type-pill-foreground: #ffffff;
+  /* Browser chrome kleur (theme-color meta) per modus */
+  --color-theme-light: #f97316;
+  --color-theme-dark: #0d1521;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -79,6 +82,12 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Responsive breakpoints — single source of truth voor media queries */
+@custom-media --mq-tablet-landscape (max-width: 1024px);
+@custom-media --mq-tablet (max-width: 768px);
+@custom-media --mq-phone (max-width: 560px);
+@custom-media --mq-small-phone (max-width: 360px);
 
 :root {
   --canvas: var(--color-background);
@@ -115,17 +124,5 @@
   --color-success: #46c99f;
   --color-ink-shadow: rgb(0 0 0 / 0.3);
   --color-ink-shadow-soft: rgb(0 0 0 / 0.24);
-  --canvas: var(--color-background);
-  --canvas-muted: var(--color-muted);
-  --surface: var(--color-card);
-  --surface-raised: var(--color-card);
-  --ink: var(--color-foreground);
-  --ink-soft: var(--color-muted-foreground);
-  --line: var(--color-border);
-  --accent: var(--color-primary);
-  --accent-strong: var(--color-primary-strong);
-  --accent-soft: var(--color-primary-soft);
-  --navy: var(--color-foreground);
-  --success: var(--color-success);
-  --danger: var(--color-danger);
+  /* De --canvas/--ink/... aliassen uit :root resolven automatisch naar de dark-waarden. */
 }

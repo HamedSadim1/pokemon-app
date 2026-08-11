@@ -1,9 +1,9 @@
-@media (max-width: 1024px) {
+@media (--mq-tablet-landscape) {
   .pokemon-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .hero-grid { gap: 2rem; }
 }
 
-@media (max-width: 768px) {
+@media (--mq-tablet) {
   .page-container { width: min(100% - 1.5rem, 680px); }
   .desktop-nav { display: none; }
   .mobile-menu-button { display: inline-grid; }
@@ -54,7 +54,7 @@
   .footer-inner { align-items: flex-start; flex-direction: column; }
 }
 
-@media (max-width: 560px) {
+@media (--mq-phone) {
   .header-inner { min-height: 68px; }
   .brand-wordmark span { display: none; }
   .hero-section { padding-top: 3rem; }
@@ -83,7 +83,7 @@
   }
 }
 
-@media (max-width: 360px) {
+@media (--mq-small-phone) {
   .page-container { width: min(100% - 1rem, 680px); }
   .pokemon-grid { gap: 0.5rem; }
   .pokemon-card-top { padding-inline: 0.65rem; }

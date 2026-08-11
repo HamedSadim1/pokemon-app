@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { AppTheme } from "../utils/theme";
+import type { AppTheme } from "../utils";
 
 export type Theme = AppTheme;
 

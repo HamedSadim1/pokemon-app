@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "./Icon";
+import { ICON_CONFIG } from "../config";
 
 interface ImageWithFallbackProps {
   src: string;
@@ -25,7 +26,7 @@ const ImageWithFallback = ({
         className={`${className} image-fallback`.trim()}
         {...(alt ? { role: "img", "aria-label": alt } : { "aria-hidden": true })}
       >
-        <Icon name="sparkle" size={28} />
+        <Icon name="sparkle" size={ICON_CONFIG.sizes.hero} />
       </span>
     );
   }

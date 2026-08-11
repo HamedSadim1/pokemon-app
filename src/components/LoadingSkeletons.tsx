@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { POKEMON_CONFIG, SKELETON_CONFIG, UI_COPY } from "../config";
 
 interface SkeletonBlockProps {
   className?: string;
@@ -35,7 +36,7 @@ const PokemonCardSkeleton = () => (
 const PokemonListSkeletonContent = () => (
   <div aria-hidden="true">
     <div className="pokemon-grid pokemon-grid-skeleton">
-      {Array.from({ length: 20 }, (_, index) => <PokemonCardSkeleton key={index} />)}
+      {Array.from({ length: POKEMON_CONFIG.itemsPerPage }, (_, index) => <PokemonCardSkeleton key={index} />)}
     </div>
     <div className="pagination pagination-skeleton">
       <SkeletonBlock className="skeleton-pagination-button" />
@@ -45,11 +46,11 @@ const PokemonListSkeletonContent = () => (
   </div>
 );
 
-export const PokemonListSkeleton = ({ message = "Loading Pokémon list" }: { message?: string }) => (
+export const PokemonListSkeleton = ({ message = UI_COPY.loading.pokemonList }: { message?: string }) => (
   <SkeletonStatus message={message}><PokemonListSkeletonContent /></SkeletonStatus>
 );
 
-export const PokemonPageSkeleton = ({ message = "Loading the Pokédex" }: { message?: string }) => (
+export const PokemonPageSkeleton = ({ message = UI_COPY.loading.pokedex }: { message?: string }) => (
   <SkeletonStatus message={message}>
     <section className="pokedex-page pokemon-page-skeleton" aria-hidden="true">
       <div className="page-container">
@@ -74,7 +75,7 @@ const DetailSectionSkeleton = ({ className = "", children }: { className?: strin
 );
 
 export const PokemonDetailSkeleton = () => (
-  <SkeletonStatus message="Loading Pokémon profile">
+  <SkeletonStatus message={UI_COPY.loading.profile}>
     <section className="detail-page detail-page-skeleton" aria-hidden="true">
       <div className="page-container">
         <SkeletonBlock className="skeleton-breadcrumb" />
@@ -88,8 +89,8 @@ export const PokemonDetailSkeleton = () => (
               <SkeletonBlock className="skeleton-type-pill" />
               <SkeletonBlock className="skeleton-type-pill skeleton-type-pill-short" />
             </div>
-            {Array.from({ length: 4 }, (_, index) => (
-              <SkeletonBlock className={`skeleton-detail-description${index === 0 ? " skeleton-detail-description-first" : ""}${index === 3 ? " skeleton-detail-description-short" : ""}`} key={index} />
+            {Array.from({ length: SKELETON_CONFIG.descriptionLines }, (_, index) => (
+              <SkeletonBlock className={`skeleton-detail-description${index === 0 ? " skeleton-detail-description-first" : ""}${index === SKELETON_CONFIG.descriptionLines - 1 ? " skeleton-detail-description-short" : ""}`} key={index} />
             ))}
             <div className="detail-actions skeleton-detail-actions">
               <SkeletonBlock className="skeleton-detail-button" />
@@ -101,29 +102,29 @@ export const PokemonDetailSkeleton = () => (
           <DetailSectionSkeleton>
             <SkeletonBlock className="skeleton-section-title" />
             <div className="measure-grid">
-              {Array.from({ length: 4 }, (_, index) => <div className="measure" key={index}><SkeletonBlock className="skeleton-measure-label" /><SkeletonBlock className="skeleton-measure-value" /></div>)}
+              {Array.from({ length: SKELETON_CONFIG.measureCount }, (_, index) => <div className="measure" key={index}><SkeletonBlock className="skeleton-measure-label" /><SkeletonBlock className="skeleton-measure-value" /></div>)}
             </div>
           </DetailSectionSkeleton>
           <DetailSectionSkeleton>
             <SkeletonBlock className="skeleton-section-title" />
             <div className="skeleton-metadata-list">
-              {Array.from({ length: 4 }, (_, index) => <div key={index}><SkeletonBlock className="skeleton-metadata-label" /><SkeletonBlock className="skeleton-metadata-value" /></div>)}
+              {Array.from({ length: SKELETON_CONFIG.metadataCount }, (_, index) => <div key={index}><SkeletonBlock className="skeleton-metadata-label" /><SkeletonBlock className="skeleton-metadata-value" /></div>)}
             </div>
           </DetailSectionSkeleton>
           <DetailSectionSkeleton>
             <SkeletonBlock className="skeleton-section-title" />
-            <div className="detail-list">{Array.from({ length: 4 }, (_, index) => <SkeletonBlock className="skeleton-chip" key={index} />)}</div>
+            <div className="detail-list">{Array.from({ length: SKELETON_CONFIG.abilityChips }, (_, index) => <SkeletonBlock className="skeleton-chip" key={index} />)}</div>
           </DetailSectionSkeleton>
           <DetailSectionSkeleton>
             <SkeletonBlock className="skeleton-section-title" />
-            <div className="detail-list">{Array.from({ length: 16 }, (_, index) => <SkeletonBlock className="skeleton-chip" key={index} />)}</div>
+            <div className="detail-list">{Array.from({ length: POKEMON_CONFIG.visibleMoves }, (_, index) => <SkeletonBlock className="skeleton-chip" key={index} />)}</div>
           </DetailSectionSkeleton>
           <DetailSectionSkeleton className="full-width evolution-section-skeleton">
             <SkeletonBlock className="skeleton-section-title" />
             <div className="evolution-viewport">
               <div className="evolution-paths">
                 <div className="skeleton-evolution-list">
-                  {Array.from({ length: 3 }, (_, index) => (
+                  {Array.from({ length: SKELETON_CONFIG.evolutionSteps }, (_, index) => (
                     <div className="skeleton-evolution-step" key={index}>
                       {index > 0 && <SkeletonBlock className="skeleton-evolution-arrow" />}
                       <div className="skeleton-evolution-card">
@@ -136,12 +137,12 @@ export const PokemonDetailSkeleton = () => (
                   ))}
                 </div>
               </div>
-              <p className="evolution-swipe-hint">Swipe to view the full path</p>
+              <p className="evolution-swipe-hint">{UI_COPY.shared.swipeHint}</p>
             </div>
           </DetailSectionSkeleton>
           <DetailSectionSkeleton className="full-width">
             <SkeletonBlock className="skeleton-section-title" />
-            {Array.from({ length: 6 }, (_, index) => <div className="skeleton-stat-row" key={index}><div className="stat-label"><SkeletonBlock className="skeleton-stat-label" /><SkeletonBlock className="skeleton-stat-value" /></div><SkeletonBlock className="skeleton-stat-track" /></div>)}
+            {Array.from({ length: SKELETON_CONFIG.statRows }, (_, index) => <div className="skeleton-stat-row" key={index}><div className="stat-label"><SkeletonBlock className="skeleton-stat-label" /><SkeletonBlock className="skeleton-stat-value" /></div><SkeletonBlock className="skeleton-stat-track" /></div>)}
           </DetailSectionSkeleton>
         </div>
       </div>

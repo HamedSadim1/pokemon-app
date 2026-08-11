@@ -1,30 +1,20 @@
 import React from "react";
-import {
-  FavoritesContext,
-  type Pokemon,
-} from "./FavoritesContextDefinition";
+import { FavoritesContext } from "./FavoritesContextDefinition";
+import type { FavoritePokemon } from "../components/Services/IPokemon";
 import { usePersistentState } from "../hooks/usePersistentState";
-
-const isPokemon = (value: unknown): value is Pokemon => {
-  if (!value || typeof value !== "object") return false;
-
-  const candidate = value as Partial<Pokemon>;
-  return typeof candidate.id === "number" && typeof candidate.name === "string";
-};
-
-const isPokemonList = (value: unknown): value is Pokemon[] =>
-  Array.isArray(value) && value.every(isPokemon);
+import { isPokemonList } from "../utils";
+import { STORAGE_KEYS } from "../config";
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [favorites, setFavorites] = usePersistentState(
-    "pokemon-favorites",
+    STORAGE_KEYS.favorites,
     [],
     isPokemonList,
   );
 
-  const addFavorite = (pokemon: Pokemon) => {
+  const addFavorite = (pokemon: FavoritePokemon) => {
     setFavorites((prev) => {
       if (prev.find((fav) => fav.id === pokemon.id)) {
         return prev;

@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
-import { useFavorites } from "../hooks/useFavorites";
+import { useFavorites } from "../hooks";
 import {
   formatDexNumber,
   getPokemonArtworkUrl,
-  getPokemonIdFromUrl,
+  getIdFromUrl,
   getPokemonSpriteUrl,
-} from "../utils/helpers";
-import type { Pokemon } from "../contexts/FavoritesContextDefinition";
-import type { Result } from "./Services/IPokemon";
+} from "../utils";
+import type { FavoritePokemon, Result } from "./Services/IPokemon";
+import { ICON_CONFIG, POKEMON_CONFIG, ROUTES } from "../config";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
 import PokemonTypeList from "./PokemonTypeList";
 
-export type CardPokemon = Result | Pokemon;
+export type CardPokemon = Result | FavoritePokemon;
 
 type CatalogCardProps = {
   pokemon: Result;
@@ -22,7 +22,7 @@ type CatalogCardProps = {
 };
 
 type FavoriteCardProps = {
-  pokemon: Pokemon;
+  pokemon: FavoritePokemon;
   id: number;
   variant: "favorite";
   action?: "remove";
@@ -38,7 +38,7 @@ const PokemonCard = (props: PokemonCardProps) => {
   const action = props.action || (isFavoriteCard ? "remove" : "favorite-toggle");
   const catalogId = isFavoriteCard
     ? id
-    : getPokemonIdFromUrl(props.pokemon.url) || id;
+    : getIdFromUrl(props.pokemon.url, "pokemon") || id;
 
   const toggleFavorite = () => {
     if (favorite) {
@@ -66,13 +66,13 @@ const PokemonCard = (props: PokemonCardProps) => {
               aria-label={`${favorite ? "Remove" : "Add"} ${props.pokemon.name} ${favorite ? "from" : "to"} favorites`}
               aria-pressed={favorite}
             >
-              <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={16} />
+              <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={ICON_CONFIG.sizes.small} />
             </button>
           </div>
         )}
       </div>
       <Link
-        to={`/pokemon/${id}`}
+        to={ROUTES.pokemonDetail(id)}
         className="pokemon-card-main"
         aria-label={`View ${props.pokemon.name} details`}
       >
@@ -93,12 +93,12 @@ const PokemonCard = (props: PokemonCardProps) => {
         <div className="pokemon-card-content">
           <h3>{props.pokemon.name}</h3>
           {isFavoriteCard ? (
-            <PokemonTypeList types={props.pokemon.types} limit={2} />
+            <PokemonTypeList types={props.pokemon.types} limit={POKEMON_CONFIG.cardVisibleTypes} />
           ) : (
             <p>View Pokémon profile</p>
           )}
           <span className="card-arrow" aria-hidden="true">
-            <Icon name="arrow-up-right" size={16} />
+            <Icon name="arrow-up-right" size={ICON_CONFIG.sizes.small} />
           </span>
         </div>
       </Link>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { pokemonCatalogOptions } from "../query/pokemonQueries";
+import { pokemonCatalogOptions } from "../query";
 import { type PokemonResult, type Result } from "../components/Services/IPokemon";
 import { useQueryState, type QueryState } from "./useQueryState";
+import { SEARCH_CONFIG } from "../config";
 
 interface UsePokemonCatalogSearchResult {
   results: Result[];
@@ -14,9 +15,6 @@ interface UsePokemonCatalogSearchResult {
   retry: QueryState<PokemonResult>["retry"];
 }
 
-const MIN_SEARCH_LENGTH = 2;
-const SEARCH_DEBOUNCE_MS = 250;
-
 export const usePokemonCatalogSearch = (
   searchTerm: string,
 ): UsePokemonCatalogSearchResult => {
@@ -26,13 +24,13 @@ export const usePokemonCatalogSearch = (
   useEffect(() => {
     const timer = window.setTimeout(
       () => setDebouncedTerm(normalizedTerm),
-      SEARCH_DEBOUNCE_MS,
+      SEARCH_CONFIG.debounceMs,
     );
     return () => window.clearTimeout(timer);
   }, [normalizedTerm]);
 
-  const ready = normalizedTerm.length >= MIN_SEARCH_LENGTH;
-  const debouncedReady = debouncedTerm.length >= MIN_SEARCH_LENGTH;
+  const ready = normalizedTerm.length >= SEARCH_CONFIG.minLength;
+  const debouncedReady = debouncedTerm.length >= SEARCH_CONFIG.minLength;
   const query = useQuery({
     ...pokemonCatalogOptions(),
     enabled: debouncedReady,

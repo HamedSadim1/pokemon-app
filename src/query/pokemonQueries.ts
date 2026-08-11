@@ -7,13 +7,14 @@ import {
   getPokemon,
   getPokemonById,
   getPokemonSpecies,
-  isPokemonRequestCancellation,
   type EvolutionChain,
   type PokemonDex,
   type PokemonResult,
   type PokemonSpecies,
 } from "../components/Services/IPokemon";
 import { queryPolicies } from "./queryClient";
+import { POKEMON_CONFIG } from "../config";
+import { isRequestCancellation } from "../utils";
 
 export const pokemonQueryKeys = {
   all: ["pokemon"] as const,
@@ -35,7 +36,8 @@ export const pokemonListOptions = (page: number, limit: number) =>
 export const pokemonCatalogOptions = () =>
   queryOptions<PokemonResult>({
     queryKey: pokemonQueryKeys.catalog(),
-    queryFn: ({ signal }) => getPokemon(0, 1025, signal),
+    // Volledige catalogus (alle soorten én vormen) zodat client-side zoeken alles dekt.
+    queryFn: ({ signal }) => getPokemon(0, POKEMON_CONFIG.maxCatalogFetchLimit, signal),
     ...queryPolicies.catalogSearch,
   });
 
@@ -58,7 +60,7 @@ export const pokemonDetailOptions = (pokemonId: number) =>
       try {
         species = await getPokemonSpecies(pokemonId, signal);
       } catch (speciesError) {
-        if (isPokemonRequestCancellation(speciesError)) throw speciesError;
+        if (isRequestCancellation(speciesError)) throw speciesError;
         speciesUnavailable = true;
       }
 
@@ -69,7 +71,7 @@ export const pokemonDetailOptions = (pokemonId: number) =>
         try {
           evolution = await getEvolutionChain(species.evolution_chain.url, signal);
         } catch (evolutionError) {
-          if (isPokemonRequestCancellation(evolutionError)) throw evolutionError;
+          if (isRequestCancellation(evolutionError)) throw evolutionError;
           evolutionUnavailable = true;
         }
       }

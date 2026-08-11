@@ -1,5 +1,6 @@
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
 import { ErrorState } from "./FeedbackState";
+import { ROUTES, UI_COPY } from "../config";
 
 const getErrorMessage = (error: unknown) => {
   if (isRouteErrorResponse(error)) {
@@ -36,10 +37,10 @@ const RouteErrorBoundary = () => {
                 className="button-primary"
                 onClick={() => window.location.reload()}
               >
-                Try again
+                {UI_COPY.shared.tryAgain}
               </button>
-              <Link to="/pokemon" className="button-secondary">
-                Open Pokédex
+              <Link to={ROUTES.pokedex} className="button-secondary">
+                {UI_COPY.shared.openPokedex}
               </Link>
             </>
           )}

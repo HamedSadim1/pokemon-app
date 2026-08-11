@@ -1,4 +1,5 @@
 import type { ReactNode, SVGProps } from "react";
+import { ICON_CONFIG } from "../config";
 
 export type IconName =
   | "arrow-left"
@@ -39,12 +40,17 @@ const paths: Record<IconName, ReactNode> = {
   warning: <><path d="m12 3 9 17H3L12 3Z" /><path d="M12 9v4M12 16h.01" /></>,
 };
 
-const Icon = ({ name, size = 18, strokeWidth = 1.9, ...props }: IconProps) => (
+const Icon = ({
+  name,
+  size = ICON_CONFIG.defaultSize,
+  strokeWidth = ICON_CONFIG.defaultStrokeWidth,
+  ...props
+}: IconProps) => (
   <svg
     {...props}
     width={size}
     height={size}
-    viewBox="0 0 24 24"
+    viewBox={`0 0 ${ICON_CONFIG.viewBoxSize} ${ICON_CONFIG.viewBoxSize}`}
     fill="none"
     stroke="currentColor"
     strokeWidth={strokeWidth}

@@ -4,9 +4,9 @@ import {
   formatPokemonId,
   getPokemonTypeClass,
   humanizeSlug,
-} from "./helpers";
+} from "./format";
 
-describe("Pokémon presentation helpers", () => {
+describe("format helpers", () => {
   it("formats National Dex numbers consistently", () => {
     expect(formatPokemonId(1)).toBe("001");
     expect(formatDexNumber(25)).toBe("#0025");

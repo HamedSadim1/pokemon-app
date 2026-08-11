@@ -385,7 +385,7 @@
   border-radius: 999px;
 }
 
-@media (max-width: 768px) {
+@media (--mq-tablet) {
   .pokemon-page-skeleton-heading {
     min-height: 182px;
   }
@@ -443,7 +443,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (--mq-phone) {
   .pokemon-page-skeleton-heading {
     min-height: 205px;
   }
@@ -499,7 +499,7 @@
   }
 }
 
-@media (max-width: 360px) {
+@media (--mq-small-phone) {
   .pokemon-page-skeleton-heading {
     min-height: 220px;
   }

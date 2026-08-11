@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Icon from "./Icon";
+import { API_CONFIG, ICON_CONFIG, NAV_ITEMS, UI_COPY } from "../config";
 
 const Footer = () => {
   return (
@@ -9,12 +10,12 @@ const Footer = () => {
           <div className="footer-brand">Pokédex / Field notes for trainers</div>
           <p className="footer-copy">Data provided by PokeAPI · Built for curious explorers.</p>
         </div>
-        <nav className="footer-links" aria-label="Footer navigation">
-          <Link to="/">Home</Link>
-          <Link to="/pokemon">Pokédex</Link>
-          <Link to="/favorites">Favorites</Link>
-          <a href="https://pokeapi.co/" target="_blank" rel="noreferrer">
-            PokeAPI <Icon name="arrow-up-right" size={14} />
+        <nav className="footer-links" aria-label={UI_COPY.navigation.footerLabel}>
+          {NAV_ITEMS.map(({ to, label }) => (
+            <Link key={to} to={to}>{label}</Link>
+          ))}
+          <a href={API_CONFIG.pokeApiWebsite} target="_blank" rel="noreferrer">
+            PokeAPI <Icon name="arrow-up-right" size={ICON_CONFIG.sizes.inline} />
           </a>
         </nav>
       </div>
