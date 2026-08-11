@@ -50,28 +50,35 @@ const Favorites = () => {
         <div className="pokemon-grid">
           {favorites.map((pokemon) => (
             <article key={pokemon.id} className="pokemon-card">
-              <Link to={`/pokemon/${pokemon.id}`} className="pokemon-card-top">
+              <div className="pokemon-card-top">
                 <span className="pokemon-number">
                   #{String(pokemon.id).padStart(4, "0")}
                 </span>
-                <span className="card-arrow"><Icon name="arrow-up-right" size={16} /></span>
-              </Link>
-              <Link to={`/pokemon/${pokemon.id}`} className="pokemon-art-wrap">
-                <ImageWithFallback
-                  key={pokemon.id}
-                  className="pokemon-art"
-                  src={getPokemonArtworkUrl(pokemon.id)}
-                  fallbackSrc={
-                    pokemon.sprites?.front_default ||
-                    getPokemonSpriteUrl(pokemon.id)
-                  }
-                  alt={`${pokemon.name} artwork`}
-                  loading="lazy"
-                />
-              </Link>
-              <div className="pokemon-card-content">
-                <h3>{pokemon.name}</h3>
-                <div className="type-list mt-sm">
+                <span className="card-arrow" aria-hidden="true">
+                  <Icon name="arrow-up-right" size={16} />
+                </span>
+              </div>
+              <Link
+                to={`/pokemon/${pokemon.id}`}
+                className="pokemon-card-main"
+                aria-label={`View ${pokemon.name} details`}
+              >
+                <div className="pokemon-art-wrap">
+                  <ImageWithFallback
+                    key={pokemon.id}
+                    className="pokemon-art"
+                    src={getPokemonArtworkUrl(pokemon.id)}
+                    fallbackSrc={
+                      pokemon.sprites?.front_default ||
+                      getPokemonSpriteUrl(pokemon.id)
+                    }
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
+                <div className="pokemon-card-content">
+                  <h3>{pokemon.name}</h3>
+                  <div className="type-list mt-sm">
                   {pokemon.types?.slice(0, 2).map((type) => (
                     <span
                       key={type.type?.name}
@@ -80,16 +87,17 @@ const Favorites = () => {
                       {type.type?.name}
                     </span>
                   ))}
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="button-danger w-full mt-md"
-                  onClick={() => removeFavorite(pokemon.id)}
-                  aria-label={`Remove ${pokemon.name} from favorites`}
-                >
-                  Remove from favorites
-                </button>
-              </div>
+              </Link>
+              <button
+                type="button"
+                className="button-danger w-full mt-md"
+                onClick={() => removeFavorite(pokemon.id)}
+                aria-label={`Remove ${pokemon.name} from favorites`}
+              >
+                Remove from favorites
+              </button>
             </article>
           ))}
         </div>

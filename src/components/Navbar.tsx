@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { useTheme } from "../hooks/useTheme";
 import Icon from "./Icon";
@@ -13,21 +13,29 @@ const navigation = [
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const { favorites } = useFavorites();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
   const wasMenuOpen = useRef(false);
+  const menuNavigationStarted = useRef(false);
 
   const closeMenu = () => setMenuOpen(false);
+  const handleBrandClick = () => {
+    menuNavigationStarted.current = location.pathname !== "/";
+    closeMenu();
+  };
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
+        menuNavigationStarted.current = false;
         setMenuOpen(false);
       }
     };
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        menuNavigationStarted.current = false;
         setMenuOpen(false);
       }
     };
@@ -42,9 +50,15 @@ const Navbar = () => {
 
   useEffect(() => {
     if (menuOpen) {
+      menuNavigationStarted.current = false;
       mobileNavRef.current?.focus();
-    } else if (wasMenuOpen.current && window.innerWidth <= 768) {
+    } else if (
+      wasMenuOpen.current &&
+      window.innerWidth <= 768 &&
+      !menuNavigationStarted.current
+    ) {
       menuButtonRef.current?.focus();
+      menuNavigationStarted.current = false;
     }
 
     wasMenuOpen.current = menuOpen;
@@ -54,7 +68,7 @@ const Navbar = () => {
     <header className="site-header">
       <div className="page-container">
         <div className="header-inner">
-          <NavLink to="/" className="brand" onClick={closeMenu}>
+          <NavLink to="/" className="brand" onClick={handleBrandClick}>
             <span className="brand-mark" aria-hidden="true" />
             <span className="brand-wordmark">
               <strong>Pokédex</strong>
@@ -118,7 +132,10 @@ const Navbar = () => {
                 key={to}
                 to={to}
                 end={end}
-                onClick={closeMenu}
+                onClick={() => {
+                  menuNavigationStarted.current = location.pathname !== to;
+                  closeMenu();
+                }}
                 className={({ isActive }) =>
                   `nav-link${isActive ? " active" : ""}`
                 }

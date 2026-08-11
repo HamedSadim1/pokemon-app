@@ -46,29 +46,31 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
           >
             <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={16} />
           </button>
-          <Link
-            to={`/pokemon/${id}`}
-            className="card-arrow"
-            aria-label={`View ${pokemon.name} details`}
-          >
+          <span className="card-arrow" aria-hidden="true">
             <Icon name="arrow-up-right" size={16} />
-          </Link>
+          </span>
         </div>
       </div>
-      <Link to={`/pokemon/${id}`} className="pokemon-art-wrap">
-        <ImageWithFallback
-          key={catalogId}
-          className="pokemon-art"
-          src={getPokemonArtworkUrl(catalogId)}
-          fallbackSrc={getPokemonSpriteUrl(catalogId)}
-          alt={`${pokemon.name} artwork`}
-          loading="lazy"
-        />
+      <Link
+        to={`/pokemon/${id}`}
+        className="pokemon-card-main"
+        aria-label={`View ${pokemon.name} details`}
+      >
+        <div className="pokemon-art-wrap">
+          <ImageWithFallback
+            key={catalogId}
+            className="pokemon-art"
+            src={getPokemonArtworkUrl(catalogId)}
+            fallbackSrc={getPokemonSpriteUrl(catalogId)}
+            alt=""
+            loading="lazy"
+          />
+        </div>
+        <div className="pokemon-card-content">
+          <h3>{pokemon.name}</h3>
+          <p>View Pokémon profile</p>
+        </div>
       </Link>
-      <div className="pokemon-card-content">
-        <h3>{pokemon.name}</h3>
-        <p>View Pokémon profile</p>
-      </div>
     </article>
   );
 };

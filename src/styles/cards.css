@@ -26,6 +26,15 @@
   transform: translateY(-6px);
 }
 
+.pokemon-card-main {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
 .pokemon-card-top {
   display: flex;
   align-items: center;
