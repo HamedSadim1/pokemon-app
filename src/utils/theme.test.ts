@@ -1,0 +1,74 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  applyTheme,
+  getInitialTheme,
+  getSystemTheme,
+  isAppTheme,
+  THEME_COLOR_VARIABLES,
+} from "./theme";
+import { createMemoryStorage } from "./storage";
+
+// Waarden uit src/styles/tokens.css (--color-theme-light / --color-theme-dark).
+const cssVariableValues: Record<string, string> = {
+  [THEME_COLOR_VARIABLES.light]: "#f97316",
+  [THEME_COLOR_VARIABLES.dark]: "#0d1521",
+};
+
+describe("theme initialization", () => {
+  beforeEach(() => {
+    document.documentElement.className = "";
+    document.documentElement.style.colorScheme = "";
+    document.head.innerHTML = '<meta name="theme-color" content="#f97316">';
+    // jsdom laadt geen CSS; simuleer de tokens.css variabelen.
+    vi.spyOn(window, "getComputedStyle").mockReturnValue({
+      getPropertyValue: (property: string) => cssVariableValues[property] ?? "",
+    } as CSSStyleDeclaration);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("accepts only supported theme values", () => {
+    expect(isAppTheme("dark")).toBe(true);
+    expect(isAppTheme("light")).toBe(true);
+    expect(isAppTheme("system")).toBe(false);
+  });
+
+  it("prefers a valid stored theme over the system preference", () => {
+    expect(getInitialTheme(JSON.stringify("dark"), false)).toBe("dark");
+    expect(getInitialTheme(JSON.stringify("light"), true)).toBe("light");
+    expect(getInitialTheme("dark", false)).toBe("dark");
+  });
+
+  it("falls back to the system preference when storage is missing or invalid", () => {
+    expect(getInitialTheme(null, true)).toBe("dark");
+    expect(getInitialTheme(JSON.stringify("invalid"), false)).toBe("light");
+    expect(getInitialTheme("invalid", false)).toBe("light");
+    expect(getSystemTheme(true)).toBe("dark");
+  });
+
+  it("supports raw and encoded themes through the storage adapter", () => {
+    expect(getInitialTheme(undefined, false, createMemoryStorage({ theme: "dark" }))).toBe("dark");
+    expect(getInitialTheme(undefined, true, createMemoryStorage({ theme: JSON.stringify("light") }))).toBe("light");
+    expect(getInitialTheme(undefined, true, createMemoryStorage({ theme: "{invalid" }))).toBe("dark");
+  });
+
+  it("applies the class and color scheme before rendering", () => {
+    applyTheme("dark");
+    expect(document.documentElement).toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("dark");
+    expect(document.querySelector('meta[name="theme-color"]')).toHaveAttribute(
+      "content",
+      "#0d1521",
+    );
+
+    applyTheme("light");
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(document.querySelector('meta[name="theme-color"]')).toHaveAttribute(
+      "content",
+      "#f97316",
+    );
+  });
+});

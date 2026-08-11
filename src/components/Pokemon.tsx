@@ -1,135 +1,184 @@
-import { useState } from "react";
-import { useTheme } from "../hooks/useTheme";
-import { usePokemonList } from "../hooks/usePokemonList";
-import { usePokemonSearch } from "../hooks/usePokemonSearch";
-import SearchBar from "./SearchBar";
-import LoadingSpinner from "./LoadingSpinner";
-import PokemonCard from "./PokemonCard";
-import Pagination from "./Pagination";
-import { calculateTotalPages } from "../utils/helpers";
+import { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { usePokemonCatalogSearch, usePokemonList } from "@/hooks";
+import { getIdFromUrl } from "@/utils";
+import { PokemonPageSkeleton } from "./LoadingSkeletons";
+import CatalogResults, { type CatalogCard } from "./CatalogResults";
+import CatalogToolbar from "./CatalogToolbar";
+import { POKEMON_CONFIG, SEARCH_CONFIG, UI_COPY, resolveTotalSpecies } from "@/config";
 
-/**
- * Hoofdcomponent voor de Pokémon lijst pagina.
- * Toont een lijst met Pokémon met zoek- en pagineringsfunctionaliteit.
- * Gebruikt glassmorphism styling voor een moderne uitstraling.
- *
- * Features:
- * - Zoeken door Pokémon namen
- * - Paginering (20 Pokémon per pagina)
- * - Responsive grid layout
- * - Loading states en error handling
- * - Dark/light theme ondersteuning
- *
- * @returns JSX element voor de Pokémon lijst pagina
- */
+const itemsPerPage = POKEMON_CONFIG.itemsPerPage;
+
+// Alleen integer-validatie (geen vaste bovengrens meer): de dynamische correctie
+// van een te hoge pagina gebeurt via het effect zodra de live API-count bekend is.
+const parsePage = (value: string | null) => {
+  const page = Number.parseInt(value || "1", 10);
+  if (!Number.isInteger(page) || page < 1) return 1;
+  return page;
+};
+
 const Pokemon = () => {
-  const { theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 20;
-
-  const { pokemon, loading, error } = usePokemonList(currentPage, itemsPerPage);
-  const { searchTerm, setSearchTerm, filteredResults } = usePokemonSearch(
-    pokemon.results || []
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = (searchParams.get("q") || "").trim();
+  const currentPage = parsePage(searchParams.get("page"));
+  const { pokemon, loading, fetching, placeholder, error, retry: retryList } = usePokemonList(
+    currentPage,
+    itemsPerPage,
+    !searchTerm.trim(),
   );
+  const catalogSearch = usePokemonCatalogSearch(searchTerm);
+  const pageResults = pokemon.results || [];
+  const searchedResults = useMemo(() => {
+    const normalizedTerm = searchTerm.trim().toLowerCase();
+    if (!normalizedTerm) return [];
 
-  const totalPages = calculateTotalPages(pokemon.count || 0, itemsPerPage);
+    return catalogSearch.results.filter((item) => {
+      const id = getIdFromUrl(item.url, "pokemon");
+      return (
+        item.name.toLowerCase().includes(normalizedTerm) ||
+        String(id).includes(normalizedTerm)
+      );
+    });
+  }, [catalogSearch.results, searchTerm]);
+  const normalizedSearchTerm = searchTerm.trim();
+  const isSearching = normalizedSearchTerm.length >= SEARCH_CONFIG.minLength;
+  const hasSearchInput = normalizedSearchTerm.length > 0;
+  const activeResults = isSearching ? searchedResults : pageResults;
+  const activeTotal = isSearching
+    ? searchedResults.length
+    : resolveTotalSpecies(pokemon.count);
+  const totalPages = Math.max(1, Math.ceil(activeTotal / itemsPerPage));
+  const visibleResults = isSearching
+    ? searchedResults.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage,
+      )
+    : pageResults;
+  const isLoading = loading || catalogSearch.loading;
+  const showListSkeleton = isLoading && visibleResults.length === 0;
+  const isRefreshing = fetching || catalogSearch.fetching || placeholder || (isLoading && visibleResults.length > 0);
+  const searchNeedsMoreCharacters =
+    searchTerm.trim().length === SEARCH_CONFIG.minLength - 1;
+  const activeError = isSearching
+    ? catalogSearch.error
+    : searchNeedsMoreCharacters
+      ? ""
+      : error;
+  const retryActiveQuery = isSearching ? catalogSearch.retry : retryList;
+  const cards: CatalogCard[] = visibleResults.map((pokemon, index) => {
+    const id =
+      getIdFromUrl(pokemon.url, "pokemon") ||
+      (currentPage * itemsPerPage - itemsPerPage + index + 1);
+    return { pokemon, id };
+  });
+  // Toon de empty-state enkel wanneer de huidige pagina binnen het bereik ligt;
+  // een tijdelijke out-of-range pagina wordt daarna door het effect gecorrigeerd.
+  const showEmptyState =
+    !activeError &&
+    !searchNeedsMoreCharacters &&
+    cards.length === 0 &&
+    currentPage <= totalPages;
+
+  useEffect(() => {
+    const hasKnownTotal = isSearching
+      ? !catalogSearch.loading
+      : !loading && pokemon.count > 0;
+
+    if (hasKnownTotal && currentPage > totalPages) {
+      setSearchParams((previous) => {
+        const next = new URLSearchParams(previous);
+        next.set("page", String(totalPages));
+        return next;
+      }, { replace: true });
+    }
+  }, [
+    catalogSearch.loading,
+    currentPage,
+    isSearching,
+    loading,
+    pokemon.count,
+    setSearchParams,
+    totalPages,
+  ]);
+
+  const updateSearchParams = (nextValues: {
+    query?: string;
+    page?: number;
+  }) => {
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous);
+
+      const normalizedQuery = nextValues.query?.trim();
+      if (normalizedQuery) {
+        next.set("q", normalizedQuery);
+      } else if (nextValues.query !== undefined) {
+        next.delete("q");
+      }
+
+      if (nextValues.page !== undefined) {
+        if (nextValues.page > 1) {
+          next.set("page", String(nextValues.page));
+        } else {
+          next.delete("page");
+        }
+      }
+
+      return next;
+    }, { replace: true });
+  };
+
+  const handleSearchChange = (value: string) => {
+    updateSearchParams({ query: value, page: 1 });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateSearchParams({ page: Math.max(1, page) });
+  };
+
+  if (showListSkeleton) {
+    return (
+      <PokemonPageSkeleton
+        message={isSearching ? UI_COPY.loading.searchingCatalog : UI_COPY.loading.listMessage}
+      />
+    );
+  }
 
   return (
-    <div
-      className={`min-h-screen py-8 pt-24 ${
-        theme === "dark"
-          ? "bg-linear-to-br from-gray-900 via-purple-900 to-violet-900"
-          : "bg-linear-to-br from-blue-400 via-purple-500 to-pink-500"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Search Bar */}
-        <div className="mb-12">
-          <SearchBar
-            value={searchTerm}
-            onChange={setSearchTerm}
-            theme={theme}
-            placeholder="Search Pokémon..."
-          />
+    <section className="pokedex-page">
+      <div className="page-container">
+        <div>
+          <div className="page-kicker">The national index</div>
+          <h1 className="page-title">Choose your next discovery.</h1>
+          <p className="page-intro">
+            Search all Pokémon by name or National Dex number, or browse the
+            index {POKEMON_CONFIG.itemsPerPage} at a time.
+          </p>
         </div>
 
-        {/* Loading State */}
-        {loading && (
-          <LoadingSpinner theme={theme} message="Loading Pokémon..." />
-        )}
+        <CatalogToolbar
+          isSearching={isSearching}
+          hasSearchInput={hasSearchInput}
+          foundCount={activeResults.length}
+          shownCount={pageResults.length}
+          totalCount={pokemon.count}
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          searchNeedsMoreCharacters={searchNeedsMoreCharacters}
+        />
 
-        {/* No Results */}
-        {!loading && filteredResults.length === 0 && (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3
-              className={`text-2xl font-bold mb-2 ${
-                theme === "dark" ? "text-white" : "text-gray-900"
-              }`}
-            >
-              No Pokémon Found
-            </h3>
-            <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
-              Try searching for a different Pokémon name
-            </p>
-          </div>
-        )}
-
-        {/* Pokémon Grid */}
-        {!loading && filteredResults.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-12">
-            {filteredResults.map((p, index) => (
-              <PokemonCard
-                key={p.name}
-                pokemon={p}
-                id={currentPage * itemsPerPage - itemsPerPage + index + 1}
-                theme={theme}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Pagination */}
-        {!loading && filteredResults.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            theme={theme}
-          />
-        )}
-
-        {/* Error State */}
-        {error && (
-          <div
-            className={`mt-8 p-6 rounded-2xl shadow-lg border-l-4 border-red-500 ${
-              theme === "dark"
-                ? "bg-red-900/20 border-red-500/50 text-red-200"
-                : "bg-red-50 border-red-500 text-red-700"
-            }`}
-          >
-            <div className="flex items-center">
-              <div className="shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
+        <CatalogResults
+          isRefreshing={isRefreshing}
+          error={activeError}
+          onRetry={retryActiveQuery}
+          showEmptyState={showEmptyState}
+          onClearSearch={() => handleSearchChange("")}
+          cards={cards}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
-    </div>
+    </section>
   );
 };
 

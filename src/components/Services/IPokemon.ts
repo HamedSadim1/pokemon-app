@@ -1,9 +1,11 @@
 import axios from "axios";
+import { API_CONFIG, ERROR_CONFIG, POKEMON_CONFIG } from "@/config";
+import { isRecord } from "@/utils";
 
 export interface PokemonResult {
   count: number;
-  next: null;
-  previous?: null;
+  next: string | null;
+  previous?: string | null;
   results: Result[];
 }
 
@@ -12,20 +14,67 @@ export interface Result {
   url: string;
 }
 
+export interface FlavorTextEntry {
+  flavor_text: string;
+  language: Species;
+  version: Species;
+}
+
+export interface GenusEntry {
+  genus: string;
+  language: Species;
+}
+
+export interface PokemonSpecies {
+  id: number;
+  name: string;
+  base_happiness?: number;
+  capture_rate?: number;
+  gender_rate?: number;
+  hatch_counter?: number;
+  egg_groups?: Species[];
+  evolution_chain?: { url: string };
+  flavor_text_entries?: FlavorTextEntry[];
+  genera?: GenusEntry[];
+  generation?: Species;
+  growth_rate?: Species;
+  habitat?: Species | null;
+  is_baby?: boolean;
+  is_legendary?: boolean;
+  is_mythical?: boolean;
+}
+
+export interface EvolutionDetail {
+  min_level?: number | null;
+  trigger?: Species;
+  item?: Species | null;
+}
+
+export interface EvolutionNode {
+  species: Species;
+  evolves_to: EvolutionNode[];
+  evolution_details?: EvolutionDetail[];
+}
+
+export interface EvolutionChain {
+  id: number;
+  chain: EvolutionNode;
+}
+
 export interface PokemonDex {
   abilities: Ability[];
-  baseExperience: number;
+  base_experience: number;
   forms: Species[];
-  gameIndices: GameIndex[];
+  game_indices: GameIndex[];
   height: number;
-  heldItems: HeldItem[];
+  held_items: HeldItem[];
   id: number;
-  isDefault: boolean;
-  locationAreaEncounters: string;
+  is_default: boolean;
+  location_area_encounters: string;
   moves: Move[];
   name: string;
   order: number;
-  pastTypes: unknown[];
+  past_types: unknown[];
   species: Species;
   sprites: Sprites;
   stats: Stat[];
@@ -156,10 +205,10 @@ export interface Emerald {
 }
 
 export interface Home {
-  frontDefault?: string;
-  frontFemale?: null;
-  frontShiny?: string;
-  frontShinyFemale?: null;
+  front_default?: string | null;
+  front_female?: string | null;
+  front_shiny?: string | null;
+  front_shiny_female?: string | null;
 }
 
 export interface GenerationVii {
@@ -168,8 +217,8 @@ export interface GenerationVii {
 }
 
 export interface DreamWorld {
-  frontDefault?: string;
-  frontFemale?: null;
+  front_default?: string | null;
+  front_female?: string | null;
 }
 
 export interface GenerationViii {
@@ -177,13 +226,13 @@ export interface GenerationViii {
 }
 
 export interface Other {
-  dreamWorld?: DreamWorld;
+  dream_world?: DreamWorld;
   home?: Home;
-  officialArtwork?: OfficialArtwork;
+  "official-artwork"?: OfficialArtwork;
 }
 
 export interface OfficialArtwork {
-  frontDefault?: string;
+  front_default?: string | null;
 }
 
 export interface Stat {
@@ -197,25 +246,147 @@ export interface Type {
   type?: Species;
 }
 
+export type FavoritePokemon = Pick<PokemonDex, "id" | "name"> & {
+  sprites?: Pick<Sprites, "front_default">;
+  types?: Type[];
+};
+
 //! Pokemon
 
-export const getPokemon = async (offset: number = 0, limit: number = 20) => {
-  const response = await axios.get<PokemonResult>(
-    `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
-  );
-  return response.data;
+const isSpeciesReference = (value: unknown): value is Species =>
+  isRecord(value) && typeof value.name === "string" && typeof value.url === "string";
+
+const validatePokemonResult = (value: unknown): PokemonResult => {
+  if (
+    !isRecord(value) ||
+    typeof value.count !== "number" ||
+    !Array.isArray(value.results) ||
+    !value.results.every(
+      (result) =>
+        isRecord(result) &&
+        typeof result.name === "string" &&
+        typeof result.url === "string"
+    )
+  ) {
+    throw new Error(ERROR_CONFIG.messages.invalidList);
+  }
+
+  return value as unknown as PokemonResult;
 };
 
-export const getPokemonByName = async (name: string) => {
-  const response = await axios.get<PokemonDex>(
-    `https://pokeapi.co/api/v2/pokemon/${name}`
-  );
-  return response.data;
+const validatePokemonDex = (value: unknown): PokemonDex => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    typeof value.name !== "string" ||
+    typeof value.height !== "number" ||
+    typeof value.weight !== "number" ||
+    !isRecord(value.sprites) ||
+    !Array.isArray(value.stats) ||
+    !value.stats.every(
+      (stat) => isRecord(stat) && typeof stat.base_stat === "number" && isSpeciesReference(stat.stat),
+    ) ||
+    !Array.isArray(value.types) ||
+    !value.types.every((type) => isRecord(type) && isSpeciesReference(type.type)) ||
+    !Array.isArray(value.abilities) ||
+    !value.abilities.every(
+      (ability) => isRecord(ability) && isSpeciesReference(ability.ability),
+    ) ||
+    !Array.isArray(value.moves) ||
+    !value.moves.every((move) => isRecord(move) && isSpeciesReference(move.move))
+  ) {
+    throw new Error(ERROR_CONFIG.messages.invalidDetail);
+  }
+
+  return value as unknown as PokemonDex;
 };
 
-export const getPokemonById = async (id: number) => {
-  const response = await axios.get<PokemonDex>(
-    `https://pokeapi.co/api/v2/pokemon/${id}`
+const validatePokemonSpecies = (value: unknown): PokemonSpecies => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    typeof value.name !== "string" ||
+    (value.evolution_chain !== undefined &&
+      (!isRecord(value.evolution_chain) ||
+        typeof value.evolution_chain.url !== "string"))
+  ) {
+    throw new Error(ERROR_CONFIG.messages.invalidSpecies);
+  }
+
+  return value as unknown as PokemonSpecies;
+};
+
+const isEvolutionNode = (value: unknown): value is EvolutionNode =>
+  isRecord(value) &&
+  isSpeciesReference(value.species) &&
+  Array.isArray(value.evolves_to) &&
+  value.evolves_to.every(isEvolutionNode);
+
+const validateEvolutionChain = (value: unknown): EvolutionChain => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    !isEvolutionNode(value.chain)
+  ) {
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChain);
+  }
+
+  return value as unknown as EvolutionChain;
+};
+
+export const getPokemon = async (
+  offset: number = 0,
+  limit: number = POKEMON_CONFIG.itemsPerPage,
+  signal?: AbortSignal,
+) => {
+  const response = await axios.get<unknown>(
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon?limit=${limit}&offset=${offset}`,
+    { signal },
   );
-  return response.data;
+  return validatePokemonResult(response.data);
+};
+
+export const getPokemonByName = async (name: string, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon/${name}`,
+    { signal },
+  );
+  return validatePokemonDex(response.data);
+};
+
+export const getPokemonById = async (id: number, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon/${id}`,
+    { signal },
+  );
+  return validatePokemonDex(response.data);
+};
+
+export const getPokemonSpecies = async (id: number, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `${API_CONFIG.pokeApiBaseUrl}/pokemon-species/${id}`,
+    { signal },
+  );
+  return validatePokemonSpecies(response.data);
+};
+
+export const getEvolutionChain = async (url: string, signal?: AbortSignal) => {
+  let parsedUrl: URL;
+
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChainUrl);
+  }
+
+  if (
+    parsedUrl.protocol !== API_CONFIG.secureProtocol ||
+    parsedUrl.origin !== API_CONFIG.pokeApiOrigin ||
+    !API_CONFIG.evolutionChainPathPattern.test(parsedUrl.pathname)
+  ) {
+    throw new Error(ERROR_CONFIG.messages.invalidEvolutionChainUrl);
+  }
+
+  const response = await axios.get<unknown>(parsedUrl.toString(), { signal });
+  return validateEvolutionChain(response.data);
 };

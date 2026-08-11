@@ -1,0 +1,128 @@
+@theme {
+  --color-background: #f6f7f9;
+  --color-foreground: #172235;
+  --color-card: #ffffff;
+  --color-card-foreground: #172235;
+  --color-muted: #edf0f4;
+  --color-muted-foreground: #526072;
+  --color-primary: #c2410c;
+  --color-primary-strong: #9a3412;
+  --color-primary-soft: #fff1e8;
+  --color-on-primary: #ffffff;
+  --color-border: #dbe1e8;
+  --color-ring: #9a3412;
+  --color-danger: #dc4055;
+  --color-danger-soft: rgb(220 64 85 / 0.11);
+  --color-success: #159570;
+  --color-blue-accent: #2d70b4;
+  --color-gold: #fbbf24;
+  --color-brand-mark-light: #e6ebf0;
+  --color-ink-shadow: rgb(23 34 53 / 0.22);
+  --color-ink-shadow-soft: rgb(23 34 53 / 0.15);
+  --color-type-default: #667085;
+  --color-type-fire: #c2410c;
+  --color-type-water: #2b6cb0;
+  --color-type-grass: #387a4b;
+  --color-type-electric: #f1c84b;
+  --color-type-ice: #8dd9e8;
+  --color-type-fighting: #b8443b;
+  --color-type-poison: #9956a9;
+  --color-type-ground: #d29a52;
+  --color-type-flying: #9ba9e4;
+  --color-type-psychic: #b23f67;
+  --color-type-bug: #9bbf42;
+  --color-type-rock: #725e2d;
+  --color-type-ghost: #66548d;
+  --color-type-dragon: #5d62b6;
+  --color-type-dark: #4e4d55;
+  --color-type-steel: #9aa7b7;
+  --color-type-fairy: #e9a0c2;
+  --color-type-default-foreground: #ffffff;
+  --color-type-electric-foreground: #4b3a00;
+  --color-type-ice-foreground: #164b61;
+  --color-type-ground-foreground: #4c3219;
+  --color-type-flying-foreground: #273a75;
+  --color-type-bug-foreground: #253a1d;
+  --color-type-steel-foreground: #233041;
+  --color-type-fairy-foreground: #632b50;
+  --color-type-pill-foreground: #ffffff;
+  /* Browser chrome kleur (theme-color meta) per modus */
+  --color-theme-light: #f97316;
+  --color-theme-dark: #0d1521;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --control-sm: 28px;
+  --control-md: 42px;
+  --control-lg: 46px;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  --shadow-sm: 0 2px 10px rgb(23 34 53 / 0.06);
+  --shadow-md: 0 14px 35px rgb(23 34 53 / 0.1);
+  --shadow-lg: 0 24px 60px rgb(23 34 53 / 0.14);
+  --animate-spin: spin 800ms linear infinite;
+  --animate-float-art: float-art 5s ease-in-out infinite;
+  --evolution-card-size: 148px;
+  --evolution-art-size: 76px;
+  --evolution-list-height: 11.5rem;
+  --evolution-mobile-viewport-height: 13.25rem;
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes float-art {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-12px) rotate(1deg); }
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Responsive breakpoints — single source of truth voor media queries */
+@custom-media --mq-tablet-landscape (max-width: 1024px);
+@custom-media --mq-tablet (max-width: 768px);
+@custom-media --mq-phone (max-width: 560px);
+@custom-media --mq-small-phone (max-width: 360px);
+
+:root {
+  --canvas: var(--color-background);
+  --canvas-muted: var(--color-muted);
+  --surface: var(--color-card);
+  --surface-raised: var(--color-card);
+  --ink: var(--color-foreground);
+  --ink-soft: var(--color-muted-foreground);
+  --line: var(--color-border);
+  --accent: var(--color-primary);
+  --accent-strong: var(--color-primary-strong);
+  --accent-soft: var(--color-primary-soft);
+  --navy: var(--color-foreground);
+  --success: var(--color-success);
+  --danger: var(--color-danger);
+}
+
+.dark {
+  --color-background: #0d1521;
+  --color-foreground: #f5f7fa;
+  --color-card: #142235;
+  --color-card-foreground: #f5f7fa;
+  --color-muted: #121e2e;
+  --color-muted-foreground: #aab7c8;
+  --color-primary: #fb923c;
+  --color-primary-strong: #f97316;
+  --color-primary-soft: rgb(249 115 22 / 0.13);
+  --color-on-primary: #172235;
+  --color-type-pill-foreground: #ffffff;
+  --color-border: #2b3d52;
+  --color-ring: #fb923c;
+  --color-danger: #fb7185;
+  --color-danger-soft: rgb(251 113 133 / 0.12);
+  --color-success: #46c99f;
+  --color-ink-shadow: rgb(0 0 0 / 0.3);
+  --color-ink-shadow-soft: rgb(0 0 0 / 0.24);
+  /* De --canvas/--ink/... aliassen uit :root resolven automatisch naar de dark-waarden. */
+}

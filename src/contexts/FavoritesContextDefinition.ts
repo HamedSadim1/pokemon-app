@@ -1,21 +1,9 @@
 import { createContext } from "react";
-
-export interface Pokemon {
-  id: number;
-  name: string;
-  sprites?: {
-    front_default?: string;
-  };
-  types?: Array<{
-    type?: {
-      name?: string;
-    };
-  }>;
-}
+import type { FavoritePokemon } from "@/components/Services/IPokemon";
 
 export interface FavoritesContextType {
-  favorites: Pokemon[];
-  addFavorite: (pokemon: Pokemon) => void;
+  favorites: FavoritePokemon[];
+  addFavorite: (pokemon: FavoritePokemon) => void;
   removeFavorite: (id: number) => void;
   isFavorite: (id: number) => boolean;
 }

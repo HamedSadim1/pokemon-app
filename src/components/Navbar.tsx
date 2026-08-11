@@ -1,119 +1,157 @@
-import { NavLink } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useFavorites, useTheme } from "@/hooks";
+import Icon from "./Icon";
+import {
+  ICON_CONFIG,
+  KEYBOARD_CONFIG,
+  NAV_ITEMS,
+  RESPONSIVE_CONFIG,
+  ROUTES,
+  UI_COPY,
+} from "@/config";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { favorites } = useFavorites();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const wasMenuOpen = useRef(false);
+  const menuNavigationStarted = useRef(false);
+
+  const closeMenu = () => setMenuOpen(false);
+  const handleBrandClick = () => {
+    menuNavigationStarted.current = location.pathname !== ROUTES.home;
+    closeMenu();
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > RESPONSIVE_CONFIG.mobileBreakpointPx) {
+        menuNavigationStarted.current = false;
+        setMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === KEYBOARD_CONFIG.escapeKey) {
+        menuNavigationStarted.current = false;
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      menuNavigationStarted.current = false;
+      mobileNavRef.current?.focus();
+    } else if (
+      wasMenuOpen.current &&
+      window.innerWidth <= RESPONSIVE_CONFIG.mobileBreakpointPx &&
+      !menuNavigationStarted.current
+    ) {
+      menuButtonRef.current?.focus();
+      menuNavigationStarted.current = false;
+    }
+
+    wasMenuOpen.current = menuOpen;
+  }, [menuOpen]);
+
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b transition-all duration-300 ${
-        theme === "dark"
-          ? "bg-black/20 border-gray-700/50 shadow-2xl shadow-black/20"
-          : "bg-white/10 border-white/20 shadow-2xl shadow-black/5"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <NavLink
-              to="/"
-              className="group relative text-2xl font-bold transition-all duration-300 hover:scale-105"
-            >
-              <span
-                className={`bg-linear-to-r ${
-                  theme === "dark"
-                    ? "from-yellow-400 via-red-500 to-pink-500"
-                    : "from-blue-600 via-purple-600 to-pink-600"
-                } bg-clip-text text-transparent`}
+    <header className="site-header">
+      <div className="page-container">
+        <div className="header-inner">
+          <NavLink to={ROUTES.home} className="brand" onClick={handleBrandClick}>
+            <span className="brand-mark" aria-hidden="true" />
+            <span className="brand-wordmark">
+              <strong>Pokédex</strong>
+              <span>Explore the living index</span>
+            </span>
+          </NavLink>
+
+          <nav className="nav-links desktop-nav" aria-label={UI_COPY.navigation.primaryLabel}>
+            {NAV_ITEMS.map(({ to, label, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  `nav-link${isActive ? " active" : ""}`
+                }
               >
-                Pokédex
-              </span>
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-r ${
-                  theme === "dark"
-                    ? "from-yellow-400 to-pink-500"
-                    : "from-blue-600 to-pink-600"
-                } transition-all duration-300 group-hover:w-full`}
-              ></div>
-            </NavLink>
-          </div>
-          <div className="flex items-center space-x-2">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                  isActive
-                    ? `bg-linear-to-r ${
-                        theme === "dark"
-                          ? "from-yellow-400 to-pink-500"
-                          : "from-blue-600 to-pink-600"
-                      } text-white shadow-lg`
-                    : theme === "dark"
-                    ? "text-gray-300 hover:text-white hover:bg-white/10"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-black/5"
-                }`
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/Pokemon"
-              className={({ isActive }) =>
-                `relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                  isActive
-                    ? `bg-linear-to-r ${
-                        theme === "dark"
-                          ? "from-yellow-400 to-pink-500"
-                          : "from-blue-600 to-pink-600"
-                      } text-white shadow-lg`
-                    : theme === "dark"
-                    ? "text-gray-300 hover:text-white hover:bg-white/10"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-black/5"
-                }`
-              }
-            >
-              Pokémon
-            </NavLink>
-            <NavLink
-              to="/favorites"
-              className={({ isActive }) =>
-                `relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                  isActive
-                    ? `bg-linear-to-r ${
-                        theme === "dark"
-                          ? "from-yellow-400 to-pink-500"
-                          : "from-blue-600 to-pink-600"
-                      } text-white shadow-lg`
-                    : theme === "dark"
-                    ? "text-gray-300 hover:text-white hover:bg-white/10"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-black/5"
-                }`
-              }
-            >
-              ❤️ Favorites
-            </NavLink>
+                {to === ROUTES.favorites && <Icon name="heart" size={ICON_CONFIG.sizes.small} />}
+                {label}
+                {to === ROUTES.favorites && favorites.length > 0 && (
+                  <span className="favorite-count">{favorites.length}</span>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="header-actions">
             <button
+              type="button"
+              className="icon-button"
               onClick={toggleTheme}
-              className={`group relative p-3 rounded-xl transition-all duration-300 hover:scale-110 hover:shadow-lg ${
-                theme === "dark"
-                  ? "text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10"
-                  : "text-gray-800 hover:text-gray-600 hover:bg-gray-800/10"
-              }`}
+              aria-label={UI_COPY.navigation.switchThemeLabel(theme === "dark" ? "light" : "dark")}
+              title={UI_COPY.navigation.switchThemeLabel(theme === "dark" ? "light" : "dark")}
             >
-              <span className="text-lg transition-transform duration-300 group-hover:rotate-12">
-                {theme === "dark" ? "☀️" : "🌙"}
-              </span>
-              <div
-                className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                  theme === "dark"
-                    ? "bg-linear-to-r from-yellow-400/20 to-pink-500/20"
-                    : "bg-linear-to-r from-blue-600/20 to-purple-600/20"
-                }`}
-              ></div>
+              <Icon name={theme === "dark" ? "sun" : "moon"} />
+            </button>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              className="mobile-menu-button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              aria-label={menuOpen ? UI_COPY.navigation.closeMenuLabel : UI_COPY.navigation.openMenuLabel}
+            >
+              <Icon name={menuOpen ? "close" : "menu"} />
             </button>
           </div>
         </div>
+
+        {menuOpen && (
+          <nav
+            id="mobile-navigation"
+            ref={mobileNavRef}
+            className="mobile-nav"
+            aria-label={UI_COPY.navigation.mobileLabel}
+            tabIndex={-1}
+          >
+            {NAV_ITEMS.map(({ to, label, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                onClick={() => {
+                  menuNavigationStarted.current = location.pathname !== to;
+                  closeMenu();
+                }}
+                className={({ isActive }) =>
+                  `nav-link${isActive ? " active" : ""}`
+                }
+              >
+                {to === ROUTES.favorites && <Icon name="heart" size={ICON_CONFIG.sizes.small} />}
+                {label}
+                {to === ROUTES.favorites && favorites.length > 0 && (
+                  <span className="favorite-count">{favorites.length}</span>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+        )}
       </div>
-    </nav>
+    </header>
   );
 };
 

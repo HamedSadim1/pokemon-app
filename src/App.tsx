@@ -1,31 +1,34 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Favorites from "./components/Favorites";
-import HomePage from "./components/HomePage";
-import Pokemon from "./components/Pokemon";
-import PokemonDetail from "./components/PokemonDetail";
-import Root from "./components/Root";
-import { FavoritesProvider } from "./contexts/FavoritesContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createAppQueryClient } from "@/query";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  useParams,
+} from "react-router-dom";
+import { lazy, Suspense } from "react";
+import HomePage from "@/components/HomePage";
+import Root from "@/components/Root";
+import NotFound from "@/components/NotFound";
+import RouteErrorBoundary from "@/components/RouteErrorBoundary";
+import { FavoritesProvider, ThemeProvider } from "@/contexts";
+import { LEGACY_ROUTES, ROUTES } from "@/config";
 
-/**
- * Configureert TanStack Query client met optimale instellingen voor de Pokémon app.
- * - staleTime: 5 minuten - data blijft vers in cache
- * - gcTime: 10 minuten - cache wordt na 10 minuten geleegd
- * - retry: 2 - pogingen bij falende requests
- * - refetchOnWindowFocus: false - geen refetch bij window focus
- */
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const Favorites = lazy(() => import("@/components/Favorites"));
+const Pokemon = lazy(() => import("@/components/Pokemon"));
+const PokemonDetail = lazy(() => import("@/components/PokemonDetail"));
+const ReactQueryDevtools = lazy(() =>
+  import("@tanstack/react-query-devtools").then(({ ReactQueryDevtools: Devtools }) => ({
+    default: Devtools,
+  }))
+);
+
+const LegacyPokemonRedirect = () => {
+  const { id } = useParams();
+  return <Navigate replace to={id ? ROUTES.pokemonDetail(id) : ROUTES.pokedex} />;
+};
+
+const queryClient = createAppQueryClient();
 
 /**
  * Hoofdcomponent van de applicatie.
@@ -39,27 +42,43 @@ const queryClient = new QueryClient({
  * 4. RouterProvider - React Router voor navigatie
  */
 function App() {
-  console.log("App rendering");
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
+      errorElement: <RouteErrorBoundary />,
       children: [
         {
           path: "",
           element: <HomePage />,
         },
         {
-          path: "/Pokemon",
+          path: ROUTES.pokedex,
+          caseSensitive: true,
           element: <Pokemon />,
         },
         {
-          path: "/Pokemon/:id",
+          path: ROUTES.pokedexDetail,
+          caseSensitive: true,
           element: <PokemonDetail />,
         },
         {
-          path: "/favorites",
+          path: ROUTES.favorites,
           element: <Favorites />,
+        },
+        {
+          path: LEGACY_ROUTES.pokedex,
+          caseSensitive: true,
+          element: <Navigate replace to={ROUTES.pokedex} />,
+        },
+        {
+          path: LEGACY_ROUTES.pokedexDetail,
+          caseSensitive: true,
+          element: <LegacyPokemonRedirect />,
+        },
+        {
+          path: "*",
+          element: <NotFound />,
         },
       ],
     },
@@ -73,7 +92,11 @@ function App() {
           </div>
         </FavoritesProvider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && (
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Suspense>
+      )}
     </QueryClientProvider>
   );
 }

@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
-import {
-  FavoritesContext,
-  type Pokemon,
-} from "./FavoritesContextDefinition";
+import React from "react";
+import { FavoritesContext } from "./FavoritesContextDefinition";
+import type { FavoritePokemon } from "@/components/Services/IPokemon";
+import { usePersistentState } from "@/hooks/usePersistentState";
+import { isPokemonList } from "@/utils";
+import { STORAGE_KEYS } from "@/config";
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [favorites, setFavorites] = useState<Pokemon[]>(() => {
-    const saved = localStorage.getItem("pokemon-favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [favorites, setFavorites] = usePersistentState(
+    STORAGE_KEYS.favorites,
+    [],
+    isPokemonList,
+  );
 
-  useEffect(() => {
-    localStorage.setItem("pokemon-favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  const addFavorite = (pokemon: Pokemon) => {
+  const addFavorite = (pokemon: FavoritePokemon) => {
     setFavorites((prev) => {
       if (prev.find((fav) => fav.id === pokemon.id)) {
-        return prev; // Already in favorites
+        return prev;
       }
       return [...prev, pokemon];
     });
@@ -29,9 +27,7 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
     setFavorites((prev) => prev.filter((fav) => fav.id !== id));
   };
 
-  const isFavorite = (id: number) => {
-    return favorites.some((fav) => fav.id === id);
-  };
+  const isFavorite = (id: number) => favorites.some((fav) => fav.id === id);
 
   return (
     <FavoritesContext.Provider

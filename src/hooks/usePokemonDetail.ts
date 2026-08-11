@@ -1,46 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPokemonById, PokemonDex } from "../components/Services/IPokemon";
+import {
+  type EvolutionChain,
+  type PokemonDex,
+  type PokemonSpecies,
+} from "@/components/Services/IPokemon";
+import { pokemonDetailOptions, type PokemonDetailData } from "@/query";
+import { useQueryState, type QueryState } from "./useQueryState";
 
-/**
- * Interface voor het resultaat van de usePokemonDetail hook
- */
 interface UsePokemonDetailResult {
-  /** De opgehaalde Pokémon detail data */
-  pokemon: PokemonDex;
-  /** Of de data nog wordt geladen */
+  pokemon: PokemonDex | null;
+  species: PokemonSpecies | null;
+  evolution: EvolutionChain | null;
+  speciesUnavailable: boolean;
+  evolutionUnavailable: boolean;
   loading: boolean;
-  /** Foutmelding indien er iets misging, of null bij geen fout */
+  fetching: boolean;
+  placeholder: boolean;
   error: string | null;
+  retry: QueryState<PokemonDetailData>["retry"];
 }
 
-/**
- * Custom hook voor het ophalen van gedetailleerde informatie over een specifieke Pokémon
- * gebruikmakend van TanStack Query voor caching en automatische refetching.
- *
- * @param pokemonId - Het ID van de Pokémon om details voor op te halen
- * @returns Object met pokemon detail data, loading state en error state
- *
- * @example
- * ```tsx
- * const { pokemon, loading, error } = usePokemonDetail(25); // Pikachu
- * ```
- */
 export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
-  const {
-    data: pokemon,
-    isLoading: loading,
-    error,
-  } = useQuery({
-    queryKey: ["pokemon-detail", pokemonId],
-    queryFn: () => getPokemonById(pokemonId),
-    enabled: pokemonId > 0, // Only run query if pokemonId is valid
-    staleTime: 1000 * 60 * 10, // 10 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
-  });
+  const query = useQuery(pokemonDetailOptions(pokemonId));
+  const state = useQueryState(query);
 
   return {
-    pokemon: pokemon || ({} as PokemonDex),
-    loading,
-    error: error?.message || null,
+    pokemon: state.data?.pokemon || null,
+    species: state.data?.species || null,
+    evolution: state.data?.evolution || null,
+    speciesUnavailable: state.data?.speciesUnavailable || false,
+    evolutionUnavailable: state.data?.evolutionUnavailable || false,
+    loading: state.loading,
+    fetching: state.fetching,
+    placeholder: state.placeholder,
+    error: state.error || null,
+    retry: state.retry,
   };
 };
