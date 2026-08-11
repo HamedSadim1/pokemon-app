@@ -6,6 +6,7 @@ import {
   getPokemonSpriteUrl,
 } from "../utils/helpers";
 import { Result } from "./Services/IPokemon";
+import Icon from "./Icon";
 
 interface PokemonCardProps {
   pokemon: Result;
@@ -42,14 +43,14 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
             aria-label={`${favorite ? "Remove" : "Add"} ${pokemon.name} ${favorite ? "from" : "to"} favorites`}
             aria-pressed={favorite}
           >
-            {favorite ? "♥" : "♡"}
+            <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={16} />
           </button>
           <Link
             to={`/Pokemon/${id}`}
             className="card-arrow"
             aria-label={`View ${pokemon.name} details`}
           >
-            ↗
+            <Icon name="arrow-up-right" size={16} />
           </Link>
         </div>
       </div>

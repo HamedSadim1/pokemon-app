@@ -1,0 +1,14 @@
+.app-shell {
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 28rem),
+    radial-gradient(circle at 92% 14%, color-mix(in srgb, var(--color-blue-accent) 8%, transparent), transparent 30rem),
+    var(--canvas);
+}
+
+.page-container {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+

@@ -6,6 +6,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 import SearchBar from "./SearchBar";
+import Icon from "./Icon";
 
 const itemsPerPage = 20;
 
@@ -89,7 +90,7 @@ const Pokemon = () => {
 
         {!isLoading && activeError && (
           <div className="error-state" role="alert">
-            <div className="empty-state-icon" aria-hidden="true">!</div>
+            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
             <h2>We lost the signal.</h2>
             <p>{activeError}</p>
           </div>
@@ -97,7 +98,7 @@ const Pokemon = () => {
 
         {!isLoading && !activeError && visibleResults.length === 0 && (
           <div className="empty-state">
-            <div className="empty-state-icon" aria-hidden="true">⌕</div>
+            <div className="empty-state-icon"><Icon name="search" size={24} /></div>
             <h2>No Pokémon found.</h2>
             <p>Try another name or number, or clear the search to browse again.</p>
             <button

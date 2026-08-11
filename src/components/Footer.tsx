@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Icon from "./Icon";
 
 const Footer = () => {
   return (
@@ -13,7 +14,7 @@ const Footer = () => {
           <Link to="/Pokemon">Pokédex</Link>
           <Link to="/favorites">Favorites</Link>
           <a href="https://pokeapi.co/" target="_blank" rel="noreferrer">
-            PokeAPI ↗
+            PokeAPI <Icon name="arrow-up-right" size={14} />
           </a>
         </nav>
       </div>

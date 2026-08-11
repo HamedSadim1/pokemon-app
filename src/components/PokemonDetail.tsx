@@ -7,6 +7,7 @@ import {
 } from "../utils/helpers";
 import LoadingSpinner from "./LoadingSpinner";
 import type { EvolutionNode, Stat } from "./Services/IPokemon";
+import Icon from "./Icon";
 
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
@@ -52,7 +53,7 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
 
             return (
               <div className="evolution-step" key={node.species.name}>
-                {index > 0 && <span className="evolution-arrow" aria-hidden="true">→</span>}
+                {index > 0 && <span className="evolution-arrow"><Icon name="arrow-right" size={20} /></span>}
                 <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
                   <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
                   <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
@@ -119,7 +120,7 @@ const PokemonDetail = () => {
       <section className="detail-page">
         <div className="page-container">
           <div className="error-state" role="alert">
-            <div className="empty-state-icon" aria-hidden="true">!</div>
+            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
             <h2>Profile unavailable.</h2>
             <p>{error || "This Pokémon could not be found."}</p>
             <Link to="/Pokemon" className="button-secondary mt-lg">
@@ -146,7 +147,7 @@ const PokemonDetail = () => {
     <section className="detail-page">
       <div className="page-container">
         <Link to="/Pokemon" className="detail-breadcrumb">
-          <span aria-hidden="true">←</span> Back to Pokédex
+          <Icon name="arrow-left" size={16} /> Back to Pokédex
         </Link>
 
         <div className="detail-hero">
@@ -184,7 +185,7 @@ const PokemonDetail = () => {
                   favorite ? removeFavorite(pokemon.id) : addFavorite(pokemon)
                 }
               >
-                <span aria-hidden="true">{favorite ? "♥" : "♡"}</span>
+                <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={17} />
                 {favorite ? "Remove favorite" : "Save to favorites"}
               </button>
               <Link to="/Pokemon" className="button-quiet">Browse more</Link>

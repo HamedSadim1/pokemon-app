@@ -1,13 +1,19 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Favorites from "./components/Favorites";
+import { lazy, Suspense } from "react";
 import HomePage from "./components/HomePage";
-import Pokemon from "./components/Pokemon";
-import PokemonDetail from "./components/PokemonDetail";
 import Root from "./components/Root";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+
+const Favorites = lazy(() => import("./components/Favorites"));
+const Pokemon = lazy(() => import("./components/Pokemon"));
+const PokemonDetail = lazy(() => import("./components/PokemonDetail"));
+const ReactQueryDevtools = lazy(() =>
+  import("@tanstack/react-query-devtools").then(({ ReactQueryDevtools: Devtools }) => ({
+    default: Devtools,
+  }))
+);
 
 /**
  * Configureert TanStack Query client met optimale instellingen voor de Pokémon app.
@@ -72,7 +78,11 @@ function App() {
           </div>
         </FavoritesProvider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && (
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Suspense>
+      )}
     </QueryClientProvider>
   );
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
+import Icon from "./Icon";
 
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
@@ -13,7 +14,7 @@ const Favorites = () => {
       <section className="favorites-page">
         <div className="page-container">
           <div className="empty-state">
-            <div className="empty-state-icon" aria-hidden="true">♡</div>
+            <div className="empty-state-icon"><Icon name="heart" size={24} /></div>
             <div className="page-kicker">Your collection</div>
             <h1 className="page-title">Nothing saved yet.</h1>
             <p>
@@ -21,7 +22,7 @@ const Favorites = () => {
               profile page.
             </p>
             <Link to="/Pokemon" className="button-primary mt-lg">
-              Start exploring <span aria-hidden="true">→</span>
+              Start exploring <Icon name="arrow-right" size={17} />
             </Link>
           </div>
         </div>
@@ -52,7 +53,7 @@ const Favorites = () => {
                 <span className="pokemon-number">
                   #{String(pokemon.id).padStart(4, "0")}
                 </span>
-                <span className="card-arrow" aria-hidden="true">↗</span>
+                <span className="card-arrow"><Icon name="arrow-up-right" size={16} /></span>
               </Link>
               <Link to={`/Pokemon/${pokemon.id}`} className="pokemon-art-wrap">
                 <img

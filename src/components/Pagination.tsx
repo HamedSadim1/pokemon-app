@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "./Icon";
 
 interface PaginationProps {
   currentPage: number;
@@ -20,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === 1}
         aria-label="Previous page"
       >
-        <span aria-hidden="true">←</span> Previous
+        <Icon name="arrow-left" size={16} /> Previous
       </button>
       <div className="pagination-status" aria-live="polite">
         Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
@@ -32,7 +33,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === totalPages}
         aria-label="Next page"
       >
-        Next <span aria-hidden="true">→</span>
+        Next <Icon name="arrow-right" size={16} />
       </button>
     </nav>
   );

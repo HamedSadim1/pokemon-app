@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
+import Icon from "./Icon";
 
 const heroArtwork = getPokemonArtworkUrl(25);
 
@@ -19,10 +20,10 @@ const HomePage = () => {
             </p>
             <div className="hero-actions">
               <Link to="/Pokemon" className="button-primary">
-                Explore the Pokédex <span aria-hidden="true">→</span>
+                Explore the Pokédex <Icon name="arrow-right" size={17} />
               </Link>
               <Link to="/favorites" className="button-secondary">
-                View favorites <span aria-hidden="true">♡</span>
+                View favorites <Icon name="heart" size={17} />
               </Link>
             </div>
             <div className="hero-stats" aria-label="Pokédex highlights">
@@ -67,17 +68,17 @@ const HomePage = () => {
           </div>
           <div className="feature-grid">
             <article className="feature-card">
-              <div className="feature-icon" aria-hidden="true">⌕</div>
+              <div className="feature-icon"><Icon name="search" /></div>
               <h3>Search without friction</h3>
               <p>Find a Pokémon by name in a clean, focused list built for quick scanning.</p>
             </article>
             <article className="feature-card">
-              <div className="feature-icon" aria-hidden="true">◈</div>
+              <div className="feature-icon"><Icon name="checkered" /></div>
               <h3>Details that matter</h3>
               <p>See types, abilities, physical details, and base stats in one clear view.</p>
             </article>
             <article className="feature-card">
-              <div className="feature-icon" aria-hidden="true">♡</div>
+              <div className="feature-icon"><Icon name="heart" /></div>
               <h3>Build your collection</h3>
               <p>Save favorites locally and return to the Pokémon you want to remember.</p>
             </article>

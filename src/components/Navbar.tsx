@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { useTheme } from "../hooks/useTheme";
+import Icon from "./Icon";
 
 const navigation = [
   { to: "/", label: "Home", end: true },
   { to: "/Pokemon", label: "Pokédex" },
-  { to: "/favorites", label: "Favorites", icon: "♡" },
+  { to: "/favorites", label: "Favorites" },
 ];
 
 const Navbar = () => {
@@ -62,7 +63,7 @@ const Navbar = () => {
           </NavLink>
 
           <nav className="nav-links desktop-nav" aria-label="Primary navigation">
-            {navigation.map(({ to, label, icon, end }) => (
+            {navigation.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -71,7 +72,7 @@ const Navbar = () => {
                   `nav-link${isActive ? " active" : ""}`
                 }
               >
-                {icon && <span aria-hidden="true">{icon}</span>}
+                {to === "/favorites" && <Icon name="heart" size={16} />}
                 {label}
                 {to === "/favorites" && favorites.length > 0 && (
                   <span className="favorite-count">{favorites.length}</span>
@@ -88,7 +89,7 @@ const Navbar = () => {
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
               title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
             >
-              {theme === "dark" ? "☀" : "☾"}
+              <Icon name={theme === "dark" ? "sun" : "moon"} />
             </button>
             <button
               ref={menuButtonRef}
@@ -99,7 +100,7 @@ const Navbar = () => {
               aria-controls="mobile-navigation"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
             >
-              {menuOpen ? "×" : "☰"}
+              <Icon name={menuOpen ? "close" : "menu"} />
             </button>
           </div>
         </div>
@@ -112,7 +113,7 @@ const Navbar = () => {
             aria-label="Mobile navigation"
             tabIndex={-1}
           >
-            {navigation.map(({ to, label, icon, end }) => (
+            {navigation.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -122,7 +123,7 @@ const Navbar = () => {
                   `nav-link${isActive ? " active" : ""}`
                 }
               >
-                {icon && <span aria-hidden="true">{icon}</span>}
+                {to === "/favorites" && <Icon name="heart" size={16} />}
                 {label}
                 {to === "/favorites" && favorites.length > 0 && (
                   <span className="favorite-count">{favorites.length}</span>

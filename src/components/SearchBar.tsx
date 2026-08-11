@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "./Icon";
 
 interface SearchBarProps {
   value: string;
@@ -13,8 +14,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div className="search-control">
-      <span className="search-icon" aria-hidden="true">
-        ⌕
+      <span className="search-icon">
+        <Icon name="search" />
       </span>
       <input
         className="search-input"
@@ -31,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onClick={() => onChange("")}
           aria-label="Clear search"
         >
-          ×
+          <Icon name="close" size={16} />
         </button>
       )}
     </div>
