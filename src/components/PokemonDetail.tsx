@@ -53,12 +53,21 @@ interface EvolutionPathsSectionProps {
 }
 
 const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
-  <section className="detail-section full-width">
+  <section className="detail-section full-width evolution-section">
     <h2>Evolution paths</h2>
     {paths.length ? (
-      <div className="evolution-paths">
-        {paths.map((path) => (
-          <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
+      <div className="evolution-viewport">
+        <div
+          className="evolution-paths"
+          role="region"
+          aria-label="Evolution paths"
+          tabIndex={0}
+        >
+          {paths.map((path) => (
+            <div
+              className="evolution-list"
+              key={path.map((node) => node.species.name).join("-")}
+            >
             {path.map((node, index) => {
               const evolutionId = getSpeciesId(node.species.url);
               if (!evolutionId) return null;
@@ -80,7 +89,9 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
               );
             })}
           </div>
-        ))}
+          ))}
+        </div>
+        <p className="evolution-swipe-hint">Swipe to view the full path</p>
       </div>
     ) : (
       <span className="detail-chip">No evolution path listed</span>

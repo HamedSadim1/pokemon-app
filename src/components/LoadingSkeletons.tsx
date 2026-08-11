@@ -179,19 +179,22 @@ export const PokemonDetailSkeleton = () => (
             ))}
           </div>
         </DetailSectionSkeleton>
-        <DetailSectionSkeleton className="full-width">
+        <DetailSectionSkeleton className="full-width evolution-section-skeleton">
           <SkeletonBlock className="skeleton-section-title" />
-          {Array.from({ length: 2 }, (_, pathIndex) => (
-            <div className="skeleton-evolution-list" key={pathIndex}>
-              {Array.from({ length: 3 }, (_, index) => (
-                <div className="skeleton-evolution-card" key={index}>
-                  <SkeletonBlock className="skeleton-evolution-art" />
-                  <SkeletonBlock className="skeleton-evolution-number" />
-                  <SkeletonBlock className="skeleton-evolution-name" />
-                </div>
-              ))}
+          <div className="evolution-viewport">
+            <div className="evolution-paths">
+              <div className="skeleton-evolution-list">
+                {Array.from({ length: 3 }, (_, index) => (
+                  <div className="skeleton-evolution-card" key={index}>
+                    <SkeletonBlock className="skeleton-evolution-art" />
+                    <SkeletonBlock className="skeleton-evolution-number" />
+                    <SkeletonBlock className="skeleton-evolution-name" />
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+            <p className="evolution-swipe-hint">Swipe to view the full path</p>
+          </div>
         </DetailSectionSkeleton>
         <DetailSectionSkeleton className="full-width">
           <SkeletonBlock className="skeleton-section-title" />

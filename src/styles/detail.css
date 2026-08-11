@@ -132,7 +132,7 @@
 
 .detail-sections {
   display: grid;
-  min-height: 1020px;
+  min-height: 0;
   gap: 1rem;
   margin-top: 1rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -147,8 +147,11 @@
 }
 
 .detail-section.full-width {
-  min-height: 420px;
   grid-column: 1 / -1;
+}
+
+.evolution-section {
+  min-height: 0;
 }
 
 .detail-section h2 {
@@ -205,27 +208,38 @@
   font-size: 0.75rem;
 }
 
+.evolution-viewport {
+  height: 11.5rem;
+  box-sizing: border-box;
+}
+
 .evolution-paths {
   display: grid;
-  max-height: 8.7rem;
+  height: 100%;
   gap: 0.9rem;
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 0.25rem;
 }
 
-.evolution-paths::after {
+.evolution-swipe-hint {
+  display: none;
+  margin: 0.25rem 0 0;
   color: var(--ink-soft);
-  content: "Swipe to view the full path";
   font-size: 0.72rem;
   font-weight: var(--font-weight-bold);
 }
 
 .evolution-list {
   display: flex;
+  flex: 0 0 11.5rem;
+  min-height: 11.5rem;
   align-items: center;
   gap: 0.7rem;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-inline: contain;
   padding: 0.3rem 0 0.5rem;
   scrollbar-width: thin;
@@ -233,6 +247,7 @@
 
 .evolution-step {
   display: flex;
+  flex: 0 0 auto;
   min-width: 132px;
   align-items: center;
   gap: 0.7rem;
@@ -246,7 +261,9 @@
 
 .evolution-card {
   display: grid;
-  width: 132px;
+  flex: 0 0 148px;
+  width: 148px;
+  min-height: 148px;
   justify-items: center;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -267,8 +284,8 @@
 
 .evolution-card img,
 .evolution-card .image-fallback {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   object-fit: contain;
 }
 

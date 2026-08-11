@@ -20,10 +20,21 @@
   .detail-art::before { width: 250px; height: 250px; }
   .feature-grid,
   .detail-sections {
-    min-height: 1450px;
     grid-template-columns: 1fr;
   }
   .detail-section.full-width { grid-column: auto; }
+  .evolution-viewport {
+    height: 13.25rem;
+  }
+
+  .evolution-paths {
+    height: 11.5rem;
+    overflow-y: auto;
+  }
+
+  .evolution-swipe-hint {
+    display: block;
+  }
   .list-toolbar { align-items: stretch; flex-direction: column; }
   .search-field { width: 100%; }
   .search-control { width: 100%; }

@@ -48,6 +48,9 @@ describe("loading skeletons", () => {
     expect(container.querySelectorAll(".skeleton-stat-row")).toHaveLength(6);
     expect(container.querySelectorAll(".skeleton-detail-description")).toHaveLength(4);
     expect(container.querySelectorAll(".skeleton-chip")).toHaveLength(20);
-    expect(container.querySelectorAll(".skeleton-evolution-list")).toHaveLength(2);
+    expect(container.querySelectorAll(".evolution-viewport")).toHaveLength(1);
+    expect(container.querySelectorAll(".evolution-paths")).toHaveLength(1);
+    expect(container.querySelectorAll(".skeleton-evolution-list")).toHaveLength(1);
+    expect(container.querySelectorAll(".evolution-swipe-hint")).toHaveLength(1);
   });
 });
