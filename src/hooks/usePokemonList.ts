@@ -28,7 +28,8 @@ interface UsePokemonListResult {
  */
 export const usePokemonList = (
   currentPage: number,
-  itemsPerPage: number = 20
+  itemsPerPage: number = 20,
+  enabled = true
 ): UsePokemonListResult => {
   const offset = currentPage * itemsPerPage - itemsPerPage;
 
@@ -39,6 +40,7 @@ export const usePokemonList = (
   } = useQuery({
     queryKey: ["pokemon-list", currentPage, itemsPerPage],
     queryFn: () => getPokemon(offset, itemsPerPage),
+    enabled,
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
   });
