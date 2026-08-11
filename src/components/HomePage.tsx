@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { formatDexNumber, getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils";
+import { formatDexNumber, getPokemonArtworkUrl, getPokemonSpriteUrl } from "@/utils";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
-import { usePokemonList } from "../hooks";
-import { FORMAT_CONFIG, ICON_CONFIG, POKEMON_CONFIG, ROUTES, resolveTotalSpecies } from "../config";
+import { usePokemonList } from "@/hooks";
+import { FORMAT_CONFIG, ICON_CONFIG, POKEMON_CONFIG, ROUTES, resolveTotalSpecies } from "@/config";
 
 const heroArtwork = getPokemonArtworkUrl(POKEMON_CONFIG.featuredPokemonId);
 

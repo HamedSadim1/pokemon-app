@@ -11,10 +11,10 @@ import {
   type PokemonDex,
   type PokemonResult,
   type PokemonSpecies,
-} from "../components/Services/IPokemon";
+} from "@/components/Services/IPokemon";
 import { queryPolicies } from "./queryClient";
-import { POKEMON_CONFIG } from "../config";
-import { isRequestCancellation } from "../utils";
+import { POKEMON_CONFIG } from "@/config";
+import { isRequestCancellation } from "@/utils";
 
 export const pokemonQueryKeys = {
   all: ["pokemon"] as const,

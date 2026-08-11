@@ -5,13 +5,13 @@ import {
   getEvolutionRequirement,
   getIdFromUrl,
   getPokemonSpriteUrl,
-} from "../utils";
+} from "@/utils";
 import type { EvolutionChain } from "./Services/IPokemon";
 import DetailChips from "./DetailChips";
 import DetailSection from "./DetailSection";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
-import { ICON_CONFIG, ROUTES, UI_COPY } from "../config";
+import { ICON_CONFIG, ROUTES, UI_COPY } from "@/config";
 
 const SECTION_TITLE = "Evolution paths";
 

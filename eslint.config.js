@@ -47,6 +47,18 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["../**"],
+              message:
+                "Use the '@/...' path alias instead of relative parent imports.",
+            },
+          ],
+        },
+      ],
     },
   },
 );

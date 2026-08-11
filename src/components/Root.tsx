@@ -5,7 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { PokemonDetailSkeleton, PokemonPageSkeleton } from "./LoadingSkeletons";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import { ROUTES, UI_COPY } from "../config";
+import { ROUTES, UI_COPY } from "@/config";
 
 const Root = () => {
   const location = useLocation();

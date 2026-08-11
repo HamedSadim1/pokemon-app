@@ -2,8 +2,8 @@ import { act, renderHook } from "@testing-library/react";
 import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
 import { ThemeProvider } from "./ThemeContext";
-import { useTheme } from "../hooks";
-import { createMemoryStorage } from "../utils";
+import { useTheme } from "@/hooks";
+import { createMemoryStorage } from "@/utils";
 
 describe("ThemeProvider", () => {
   it("reads the stored theme once during initialization", () => {

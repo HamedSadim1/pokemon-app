@@ -1,5 +1,5 @@
 import type { FavoritePokemon } from "./Services/IPokemon";
-import { getPokemonTypeClass } from "../utils";
+import { getPokemonTypeClass } from "@/utils";
 
 interface PokemonTypeListProps {
   types?: FavoritePokemon["types"];

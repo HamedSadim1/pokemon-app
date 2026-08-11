@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { QUERY_CONFIG } from "../config";
+import { QUERY_CONFIG } from "@/config";
 import {
   createAppQueryClient,
   isNonRetryableQueryError,

@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from "./Icon";
-import { ICON_CONFIG, UI_COPY } from "../config";
+import { ICON_CONFIG, UI_COPY } from "@/config";
 
 interface SearchBarProps {
   value: string;

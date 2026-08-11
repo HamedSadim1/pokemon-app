@@ -2,7 +2,7 @@
  * Formatting helpers for numbers, slugs and CSS classes.
  */
 
-import { FORMAT_CONFIG } from "../config";
+import { FORMAT_CONFIG } from "@/config";
 
 export const formatPokemonId = (id: number, width: number = FORMAT_CONFIG.idWidth): string =>
   String(id).padStart(width, FORMAT_CONFIG.paddingCharacter);

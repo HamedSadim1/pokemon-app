@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-import { useFavorites } from "../hooks";
+import { useFavorites } from "@/hooks";
 import {
   formatDexNumber,
   getPokemonArtworkUrl,
   getIdFromUrl,
   getPokemonSpriteUrl,
-} from "../utils";
+} from "@/utils";
 import type { FavoritePokemon, Result } from "./Services/IPokemon";
-import { ICON_CONFIG, POKEMON_CONFIG, ROUTES } from "../config";
+import { ICON_CONFIG, POKEMON_CONFIG, ROUTES } from "@/config";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
 import PokemonTypeList from "./PokemonTypeList";

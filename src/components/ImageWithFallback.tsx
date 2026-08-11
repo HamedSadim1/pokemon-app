@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "./Icon";
-import { ICON_CONFIG } from "../config";
+import { ICON_CONFIG } from "@/config";
 
 interface ImageWithFallbackProps {
   src: string;

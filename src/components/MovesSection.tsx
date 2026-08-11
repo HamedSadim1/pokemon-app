@@ -1,7 +1,7 @@
 import type { Move } from "./Services/IPokemon";
 import DetailChips from "./DetailChips";
 import DetailSection from "./DetailSection";
-import { UI_COPY } from "../config";
+import { UI_COPY } from "@/config";
 
 interface MovesSectionProps {
   moves: Move[];

@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { createMemoryStorage } from "../utils";
+import { createMemoryStorage } from "@/utils";
 import { usePersistentState } from "./usePersistentState";
 
 const isCounter = (value: unknown): value is number => typeof value === "number";

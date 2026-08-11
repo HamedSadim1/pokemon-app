@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Icon, { type IconName } from "./Icon";
-import { ICON_CONFIG } from "../config";
+import { ICON_CONFIG } from "@/config";
 
 export interface FeedbackStateProps {
   icon: IconName;

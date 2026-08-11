@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import axios from "axios";
-import { API_CONFIG } from "../../config";
+import { API_CONFIG } from "@/config";
 import {
   getEvolutionChain,
   getPokemon,

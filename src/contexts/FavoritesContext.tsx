@@ -1,9 +1,9 @@
 import React from "react";
 import { FavoritesContext } from "./FavoritesContextDefinition";
-import type { FavoritePokemon } from "../components/Services/IPokemon";
-import { usePersistentState } from "../hooks/usePersistentState";
-import { isPokemonList } from "../utils";
-import { STORAGE_KEYS } from "../config";
+import type { FavoritePokemon } from "@/components/Services/IPokemon";
+import { usePersistentState } from "@/hooks/usePersistentState";
+import { isPokemonList } from "@/utils";
+import { STORAGE_KEYS } from "@/config";
 
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

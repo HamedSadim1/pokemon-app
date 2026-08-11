@@ -1,5 +1,5 @@
 import type { QueryObserverResult, UseQueryResult } from "@tanstack/react-query";
-import { getErrorMessage } from "../utils";
+import { getErrorMessage } from "@/utils";
 
 export interface QueryState<TData, TError = Error> {
   data: TData | undefined;

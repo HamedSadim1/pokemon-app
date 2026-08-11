@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   FavoritesContext,
   type FavoritesContextType,
-} from "../contexts/FavoritesContextDefinition";
+} from "@/contexts/FavoritesContextDefinition";
 
 export const useFavorites = (): FavoritesContextType => {
   const context = useContext(FavoritesContext);

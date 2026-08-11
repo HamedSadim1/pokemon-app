@@ -1,5 +1,5 @@
 import SearchBar from "./SearchBar";
-import { FORMAT_CONFIG, SEARCH_CONFIG } from "../config";
+import { FORMAT_CONFIG, SEARCH_CONFIG } from "@/config";
 
 interface CatalogToolbarProps {
   isSearching: boolean;

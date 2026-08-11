@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useFavorites, useTheme } from "../hooks";
+import { useFavorites, useTheme } from "@/hooks";
 import Icon from "./Icon";
 import {
   ICON_CONFIG,
@@ -9,7 +9,7 @@ import {
   RESPONSIVE_CONFIG,
   ROUTES,
   UI_COPY,
-} from "../config";
+} from "@/config";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();

@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createAppQueryClient } from "./query";
+import { createAppQueryClient } from "@/query";
 import {
   createBrowserRouter,
   Navigate,
@@ -7,16 +7,16 @@ import {
   useParams,
 } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import HomePage from "./components/HomePage";
-import Root from "./components/Root";
-import NotFound from "./components/NotFound";
-import RouteErrorBoundary from "./components/RouteErrorBoundary";
-import { FavoritesProvider, ThemeProvider } from "./contexts";
-import { LEGACY_ROUTES, ROUTES } from "./config";
+import HomePage from "@/components/HomePage";
+import Root from "@/components/Root";
+import NotFound from "@/components/NotFound";
+import RouteErrorBoundary from "@/components/RouteErrorBoundary";
+import { FavoritesProvider, ThemeProvider } from "@/contexts";
+import { LEGACY_ROUTES, ROUTES } from "@/config";
 
-const Favorites = lazy(() => import("./components/Favorites"));
-const Pokemon = lazy(() => import("./components/Pokemon"));
-const PokemonDetail = lazy(() => import("./components/PokemonDetail"));
+const Favorites = lazy(() => import("@/components/Favorites"));
+const Pokemon = lazy(() => import("@/components/Pokemon"));
+const PokemonDetail = lazy(() => import("@/components/PokemonDetail"));
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then(({ ReactQueryDevtools: Devtools }) => ({
     default: Devtools,

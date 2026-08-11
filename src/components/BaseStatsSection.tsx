@@ -1,4 +1,4 @@
-import { FORMAT_CONFIG, POKEMON_CONFIG, UI_COPY } from "../config";
+import { FORMAT_CONFIG, POKEMON_CONFIG, UI_COPY } from "@/config";
 import type { Stat } from "./Services/IPokemon";
 import DetailChips from "./DetailChips";
 import DetailSection from "./DetailSection";

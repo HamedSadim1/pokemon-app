@@ -2,7 +2,7 @@ import type { Result } from "./Services/IPokemon";
 import { EmptyState, ErrorState } from "./FeedbackState";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
-import { UI_COPY } from "../config";
+import { UI_COPY } from "@/config";
 
 export interface CatalogCard {
   pokemon: Result;

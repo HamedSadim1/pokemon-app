@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   EvolutionDetail,
   EvolutionNode,
-} from "../components/Services/IPokemon";
+} from "@/components/Services/IPokemon";
 import { getEvolutionPaths, getEvolutionRequirement } from "./evolution";
 
 const makeNode = (

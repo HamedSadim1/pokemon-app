@@ -3,7 +3,7 @@ import {
   readStorage,
   writeStorage,
   type StorageAdapter,
-} from "../utils";
+} from "@/utils";
 
 export const usePersistentState = <T>(
   key: string,

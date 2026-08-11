@@ -1,5 +1,5 @@
 import type { ReactNode, SVGProps } from "react";
-import { ICON_CONFIG } from "../config";
+import { ICON_CONFIG } from "@/config";
 
 export type IconName =
   | "arrow-left"

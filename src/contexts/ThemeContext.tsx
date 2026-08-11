@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { ThemeContext } from "./ThemeContextDefinition";
-import { usePersistentState } from "../hooks/usePersistentState";
+import { usePersistentState } from "@/hooks/usePersistentState";
 import {
   applyTheme,
   getInitialTheme,
   isAppTheme,
   type AppTheme,
   type StorageAdapter,
-} from "../utils";
-import { STORAGE_KEYS } from "../config";
+} from "@/utils";
+import { STORAGE_KEYS } from "@/config";
 
 export type { AppTheme as Theme };
 

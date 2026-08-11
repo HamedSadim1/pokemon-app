@@ -1,6 +1,6 @@
 import type { PokemonSpecies } from "./Services/IPokemon";
 import DetailSection from "./DetailSection";
-import { FORMAT_CONFIG } from "../config";
+import { FORMAT_CONFIG } from "@/config";
 
 interface AtAGlanceSectionProps {
   height: number;

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { FavoritePokemon } from "../components/Services/IPokemon";
+import type { FavoritePokemon } from "@/components/Services/IPokemon";
 
 export interface FavoritesContextType {
   favorites: FavoritePokemon[];

@@ -2,7 +2,7 @@
  * Evolution chain traversal and requirement formatting.
  */
 
-import type { EvolutionNode } from "../components/Services/IPokemon";
+import type { EvolutionNode } from "@/components/Services/IPokemon";
 import { humanizeSlug } from "./format";
 
 export const getEvolutionPaths = (

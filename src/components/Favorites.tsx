@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useFavorites } from "../hooks";
+import { useFavorites } from "@/hooks";
 import Icon from "./Icon";
 import PokemonCard from "./PokemonCard";
 import { EmptyState } from "./FeedbackState";
-import { ICON_CONFIG, ROUTES, UI_COPY } from "../config";
+import { ICON_CONFIG, ROUTES, UI_COPY } from "@/config";
 
 const Favorites = () => {
   const { favorites } = useFavorites();

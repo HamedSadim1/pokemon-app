@@ -19,7 +19,7 @@ import {
   UI_COPY,
   resolveTotalSpecies,
 } from "./constants";
-import { THEME_COLOR_VARIABLES } from "../utils";
+import { THEME_COLOR_VARIABLES } from "@/utils";
 
 describe("application constants", () => {
   it("keeps domain and search settings coherent", () => {

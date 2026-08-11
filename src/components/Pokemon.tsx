@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { usePokemonCatalogSearch, usePokemonList } from "../hooks";
-import { getIdFromUrl } from "../utils";
+import { usePokemonCatalogSearch, usePokemonList } from "@/hooks";
+import { getIdFromUrl } from "@/utils";
 import { PokemonPageSkeleton } from "./LoadingSkeletons";
 import CatalogResults, { type CatalogCard } from "./CatalogResults";
 import CatalogToolbar from "./CatalogToolbar";
-import { POKEMON_CONFIG, SEARCH_CONFIG, UI_COPY, resolveTotalSpecies } from "../config";
+import { POKEMON_CONFIG, SEARCH_CONFIG, UI_COPY, resolveTotalSpecies } from "@/config";
 
 const itemsPerPage = POKEMON_CONFIG.itemsPerPage;
 

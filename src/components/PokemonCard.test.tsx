@@ -2,9 +2,9 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import PokemonCard from "./PokemonCard";
-import { FavoritesContext } from "../contexts";
+import { FavoritesContext } from "@/contexts";
 import type { FavoritePokemon, Result } from "./Services/IPokemon";
-import { API_CONFIG } from "../config";
+import { API_CONFIG } from "@/config";
 
 const pokemon: FavoritePokemon = {
   id: 25,

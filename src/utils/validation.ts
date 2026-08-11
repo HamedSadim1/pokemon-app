@@ -2,7 +2,7 @@
  * Shared runtime type guards and value validators.
  */
 
-import type { FavoritePokemon } from "../components/Services/IPokemon";
+import type { FavoritePokemon } from "@/components/Services/IPokemon";
 
 export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;

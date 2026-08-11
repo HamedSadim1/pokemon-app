@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { EmptyState } from "./FeedbackState";
-import { ROUTES, UI_COPY } from "../config";
+import { ROUTES, UI_COPY } from "@/config";
 
 const NotFound = () => (
   <section className="not-found-page">

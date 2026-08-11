@@ -2,7 +2,7 @@
  * Pokémon data and URL helpers.
  */
 
-import { API_CONFIG, FORMAT_CONFIG } from "../config";
+import { API_CONFIG, FORMAT_CONFIG } from "@/config";
 
 export const getEnglishText = <T extends { language: { name: string } }>(
   entries: T[] | undefined,

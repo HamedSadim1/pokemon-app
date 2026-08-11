@@ -1,6 +1,6 @@
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
 import { ErrorState } from "./FeedbackState";
-import { ROUTES, UI_COPY } from "../config";
+import { ROUTES, UI_COPY } from "@/config";
 
 const getErrorMessage = (error: unknown) => {
   if (isRouteErrorResponse(error)) {

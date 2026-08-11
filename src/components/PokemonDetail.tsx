@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useFavorites, usePokemonDetail } from "../hooks";
+import { useFavorites, usePokemonDetail } from "@/hooks";
 import { PokemonDetailSkeleton } from "./LoadingSkeletons";
 import { ErrorState } from "./FeedbackState";
 import AbilitiesSection from "./AbilitiesSection";
@@ -10,7 +10,7 @@ import Icon from "./Icon";
 import MovesSection from "./MovesSection";
 import PokemonDetailHero from "./PokemonDetailHero";
 import SpeciesProfileSection from "./SpeciesProfileSection";
-import { ICON_CONFIG, POKEMON_CONFIG, ROUTES } from "../config";
+import { ICON_CONFIG, POKEMON_CONFIG, ROUTES } from "@/config";
 
 const PokemonDetail = () => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();

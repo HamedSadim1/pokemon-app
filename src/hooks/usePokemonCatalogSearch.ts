@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { pokemonCatalogOptions } from "../query";
-import { type PokemonResult, type Result } from "../components/Services/IPokemon";
+import { pokemonCatalogOptions } from "@/query";
+import { type PokemonResult, type Result } from "@/components/Services/IPokemon";
 import { useQueryState, type QueryState } from "./useQueryState";
-import { SEARCH_CONFIG } from "../config";
+import { SEARCH_CONFIG } from "@/config";
 
 interface UsePokemonCatalogSearchResult {
   results: Result[];

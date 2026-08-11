@@ -3,8 +3,8 @@ import {
   type EvolutionChain,
   type PokemonDex,
   type PokemonSpecies,
-} from "../components/Services/IPokemon";
-import { pokemonDetailOptions, type PokemonDetailData } from "../query";
+} from "@/components/Services/IPokemon";
+import { pokemonDetailOptions, type PokemonDetailData } from "@/query";
 import { useQueryState, type QueryState } from "./useQueryState";
 
 interface UsePokemonDetailResult {

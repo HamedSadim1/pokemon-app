@@ -5,11 +5,11 @@ import {
   getPokemonArtworkUrl,
   getPokemonSpriteUrl,
   getPokemonTypeClass,
-} from "../utils";
+} from "@/utils";
 import type { PokemonDex, PokemonSpecies } from "./Services/IPokemon";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
-import { ICON_CONFIG, ROUTES } from "../config";
+import { ICON_CONFIG, ROUTES } from "@/config";
 
 interface PokemonDetailHeroProps {
   pokemon: PokemonDex;

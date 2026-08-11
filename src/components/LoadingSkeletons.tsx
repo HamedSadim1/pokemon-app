@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { POKEMON_CONFIG, SKELETON_CONFIG, UI_COPY } from "../config";
+import { POKEMON_CONFIG, SKELETON_CONFIG, UI_COPY } from "@/config";
 
 interface SkeletonBlockProps {
   className?: string;

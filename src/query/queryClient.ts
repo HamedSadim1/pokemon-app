@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { ERROR_CONFIG, QUERY_CONFIG } from "../config";
-import { isRequestCancellation } from "../utils";
+import { ERROR_CONFIG, QUERY_CONFIG } from "@/config";
+import { isRequestCancellation } from "@/utils";
 
 export const isNonRetryableQueryError = (error: unknown): boolean => {
   if (isRequestCancellation(error)) return true;

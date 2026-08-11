@@ -1,5 +1,5 @@
 import { readRawStorage, type StorageAdapter } from "./storage";
-import { STORAGE_KEYS } from "../config";
+import { STORAGE_KEYS } from "@/config";
 
 export type AppTheme = "light" | "dark";
 

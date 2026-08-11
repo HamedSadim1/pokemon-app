@@ -5,7 +5,7 @@ import {
   PokemonListSkeleton,
   PokemonPageSkeleton,
 } from "./LoadingSkeletons";
-import { POKEMON_CONFIG, SKELETON_CONFIG } from "../config";
+import { POKEMON_CONFIG, SKELETON_CONFIG } from "@/config";
 
 describe("loading skeletons", () => {
   it("reserves a card-shaped placeholder per catalog page item", () => {

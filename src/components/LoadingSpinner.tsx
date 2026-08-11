@@ -1,5 +1,5 @@
 import React from "react";
-import { UI_COPY } from "../config";
+import { UI_COPY } from "@/config";
 
 interface LoadingSpinnerProps {
   message?: string;

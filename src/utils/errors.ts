@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ERROR_CONFIG } from "../config";
+import { ERROR_CONFIG } from "@/config";
 import { isRecord } from "./validation";
 
 export const isRequestCancellation = (error: unknown): boolean => {

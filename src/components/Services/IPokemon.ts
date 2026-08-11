@@ -1,6 +1,6 @@
 import axios from "axios";
-import { API_CONFIG, ERROR_CONFIG, POKEMON_CONFIG } from "../../config";
-import { isRecord } from "../../utils";
+import { API_CONFIG, ERROR_CONFIG, POKEMON_CONFIG } from "@/config";
+import { isRecord } from "@/utils";
 
 export interface PokemonResult {
   count: number;

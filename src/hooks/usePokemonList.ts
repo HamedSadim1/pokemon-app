@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { type PokemonResult } from "../components/Services/IPokemon";
-import { pokemonListOptions } from "../query";
+import { type PokemonResult } from "@/components/Services/IPokemon";
+import { pokemonListOptions } from "@/query";
 import { useQueryState, type QueryState } from "./useQueryState";
-import { POKEMON_CONFIG } from "../config";
+import { POKEMON_CONFIG } from "@/config";
 
 interface UsePokemonListResult {
   pokemon: PokemonResult;
