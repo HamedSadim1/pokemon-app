@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { usePokemonCatalogSearch } from "../hooks/usePokemonCatalogSearch";
 import { usePokemonList } from "../hooks/usePokemonList";
 import { getPokemonIdFromUrl } from "../utils/helpers";
@@ -9,14 +10,22 @@ import SearchBar from "./SearchBar";
 import Icon from "./Icon";
 
 const itemsPerPage = 20;
+const maxPage = Math.ceil(1025 / itemsPerPage);
+
+const parsePage = (value: string | null) => {
+  const page = Number.parseInt(value || "1", 10);
+  if (!Number.isInteger(page) || page < 1) return 1;
+  return Math.min(page, maxPage);
+};
 
 const Pokemon = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const { pokemon, loading, error } = usePokemonList(
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = (searchParams.get("q") || "").trim();
+  const currentPage = parsePage(searchParams.get("page"));
+  const { pokemon, loading, error, retry: retryList } = usePokemonList(
     currentPage,
     itemsPerPage,
-    !searchTerm.trim()
+    !searchTerm.trim(),
   );
   const catalogSearch = usePokemonCatalogSearch(searchTerm);
   const pageResults = pokemon.results || [];
@@ -41,7 +50,7 @@ const Pokemon = () => {
   const visibleResults = isSearching
     ? searchedResults.slice(
         (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
+        currentPage * itemsPerPage,
       )
     : pageResults;
   const isLoading = loading || catalogSearch.loading;
@@ -51,10 +60,62 @@ const Pokemon = () => {
     : searchNeedsMoreCharacters
       ? ""
       : error;
+  const retryActiveQuery = isSearching ? catalogSearch.retry : retryList;
+
+  useEffect(() => {
+    const hasKnownTotal = isSearching
+      ? !catalogSearch.loading
+      : !loading && pokemon.count > 0;
+
+    if (hasKnownTotal && currentPage > totalPages) {
+      setSearchParams((previous) => {
+        const next = new URLSearchParams(previous);
+        next.set("page", String(totalPages));
+        return next;
+      }, { replace: true });
+    }
+  }, [
+    catalogSearch.loading,
+    currentPage,
+    isSearching,
+    loading,
+    pokemon.count,
+    setSearchParams,
+    totalPages,
+  ]);
+
+  const updateSearchParams = (nextValues: {
+    query?: string;
+    page?: number;
+  }) => {
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous);
+
+      const normalizedQuery = nextValues.query?.trim();
+      if (normalizedQuery) {
+        next.set("q", normalizedQuery);
+      } else if (nextValues.query !== undefined) {
+        next.delete("q");
+      }
+
+      if (nextValues.page !== undefined) {
+        if (nextValues.page > 1) {
+          next.set("page", String(nextValues.page));
+        } else {
+          next.delete("page");
+        }
+      }
+
+      return next;
+    }, { replace: true });
+  };
 
   const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
+    updateSearchParams({ query: value, page: 1 });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateSearchParams({ page: Math.max(1, page) });
   };
 
   return (
@@ -107,6 +168,13 @@ const Pokemon = () => {
             <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
             <h2>We lost the signal.</h2>
             <p>{activeError}</p>
+            <button
+              type="button"
+              className="button-secondary mt-lg"
+              onClick={() => void retryActiveQuery()}
+            >
+              Try again
+            </button>
           </div>
         )}
 
@@ -138,7 +206,7 @@ const Pokemon = () => {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              onPageChange={handlePageChange}
             />
           </>
         )}

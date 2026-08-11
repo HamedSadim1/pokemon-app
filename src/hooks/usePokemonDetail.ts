@@ -8,6 +8,8 @@ import {
   type PokemonDex,
   type PokemonSpecies,
 } from "../components/Services/IPokemon";
+import { queryPolicies } from "../query/queryClient";
+import { useQueryState, type QueryState } from "./useQueryState";
 
 interface UsePokemonDetailResult {
   pokemon: PokemonDex | null;
@@ -16,11 +18,19 @@ interface UsePokemonDetailResult {
   speciesUnavailable: boolean;
   evolutionUnavailable: boolean;
   loading: boolean;
+  fetching: boolean;
   error: string | null;
+  retry: QueryState<{
+    pokemon: PokemonDex;
+    species: PokemonSpecies | null;
+    evolution: EvolutionChain | null;
+    speciesUnavailable: boolean;
+    evolutionUnavailable: boolean;
+  }>["retry"];
 }
 
 export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
-  const { data, isLoading: loading, error } = useQuery({
+  const query = useQuery({
     queryKey: ["pokemon-detail", pokemonId],
     queryFn: async ({ signal }) => {
       const pokemon = await getPokemonById(pokemonId, signal);
@@ -55,17 +65,19 @@ export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
       };
     },
     enabled: pokemonId > 0,
-    staleTime: 1000 * 60 * 10,
-    gcTime: 1000 * 60 * 30,
+    ...queryPolicies.pokemonDetail,
   });
+  const state = useQueryState(query);
 
   return {
-    pokemon: data?.pokemon || null,
-    species: data?.species || null,
-    evolution: data?.evolution || null,
-    speciesUnavailable: data?.speciesUnavailable || false,
-    evolutionUnavailable: data?.evolutionUnavailable || false,
-    loading,
-    error: error?.message || null,
+    pokemon: state.data?.pokemon || null,
+    species: state.data?.species || null,
+    evolution: state.data?.evolution || null,
+    speciesUnavailable: state.data?.speciesUnavailable || false,
+    evolutionUnavailable: state.data?.evolutionUnavailable || false,
+    loading: state.loading,
+    fetching: state.fetching,
+    error: state.error || null,
+    retry: state.retry,
   };
 };

@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createAppQueryClient } from "./query/queryClient";
 import {
   createBrowserRouter,
   Navigate,
@@ -9,6 +10,7 @@ import { lazy, Suspense } from "react";
 import HomePage from "./components/HomePage";
 import Root from "./components/Root";
 import NotFound from "./components/NotFound";
+import RouteErrorBoundary from "./components/RouteErrorBoundary";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
@@ -33,16 +35,7 @@ const LegacyPokemonRedirect = () => {
  * - retry: 2 - pogingen bij falende requests
  * - refetchOnWindowFocus: false - geen refetch bij window focus
  */
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = createAppQueryClient();
 
 /**
  * Hoofdcomponent van de applicatie.
@@ -60,6 +53,7 @@ function App() {
     {
       path: "/",
       element: <Root />,
+      errorElement: <RouteErrorBoundary />,
       children: [
         {
           path: "",

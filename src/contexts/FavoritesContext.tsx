@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   FavoritesContext,
   type Pokemon,
 } from "./FavoritesContextDefinition";
-import { readStorage, writeStorage } from "../utils/storage";
+import { usePersistentState } from "../hooks/usePersistentState";
 
 const isPokemon = (value: unknown): value is Pokemon => {
   if (!value || typeof value !== "object") return false;
@@ -18,13 +18,11 @@ const isPokemonList = (value: unknown): value is Pokemon[] =>
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [favorites, setFavorites] = useState<Pokemon[]>(() =>
-    readStorage("pokemon-favorites", [], isPokemonList),
+  const [favorites, setFavorites] = usePersistentState(
+    "pokemon-favorites",
+    [],
+    isPokemonList,
   );
-
-  useEffect(() => {
-    writeStorage("pokemon-favorites", favorites);
-  }, [favorites]);
 
   const addFavorite = (pokemon: Pokemon) => {
     setFavorites((prev) => {

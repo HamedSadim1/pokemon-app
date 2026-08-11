@@ -46,9 +46,6 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
           >
             <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={16} />
           </button>
-          <span className="card-arrow" aria-hidden="true">
-            <Icon name="arrow-up-right" size={16} />
-          </span>
         </div>
       </div>
       <Link
@@ -69,6 +66,9 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
         <div className="pokemon-card-content">
           <h3>{pokemon.name}</h3>
           <p>View Pokémon profile</p>
+          <span className="card-arrow" aria-hidden="true">
+            <Icon name="arrow-up-right" size={16} />
+          </span>
         </div>
       </Link>
     </article>

@@ -89,6 +89,12 @@
   letter-spacing: 0.09em;
 }
 
+.pokemon-card-main .card-arrow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.1rem;
+}
+
 .card-arrow {
   display: grid;
   width: var(--control-sm);
@@ -145,6 +151,7 @@
 }
 
 .pokemon-card-content {
+  position: relative;
   margin-top: auto;
   padding: 0.85rem 1rem 1.1rem;
 }

@@ -74,6 +74,7 @@
   .pokemon-grid { gap: 0.5rem; }
   .pokemon-card-top { padding-inline: 0.65rem; }
   .pokemon-card-content { padding-inline: 0.65rem; }
+  .pokemon-card-main .card-arrow { right: 0.65rem; bottom: 0.85rem; }
   .pokemon-number { font-size: 0.65rem; }
   .card-actions { gap: 0.2rem; }
   .card-favorite,

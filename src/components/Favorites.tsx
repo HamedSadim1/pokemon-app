@@ -54,9 +54,6 @@ const Favorites = () => {
                 <span className="pokemon-number">
                   #{String(pokemon.id).padStart(4, "0")}
                 </span>
-                <span className="card-arrow" aria-hidden="true">
-                  <Icon name="arrow-up-right" size={16} />
-                </span>
               </div>
               <Link
                 to={`/pokemon/${pokemon.id}`}
@@ -88,6 +85,9 @@ const Favorites = () => {
                     </span>
                   ))}
                   </div>
+                  <span className="card-arrow" aria-hidden="true">
+                    <Icon name="arrow-up-right" size={16} />
+                  </span>
                 </div>
               </Link>
               <button

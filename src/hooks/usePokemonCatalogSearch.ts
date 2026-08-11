@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getPokemon, type Result } from "../components/Services/IPokemon";
+import { getPokemon, type PokemonResult, type Result } from "../components/Services/IPokemon";
+import { queryPolicies } from "../query/queryClient";
+import { useQueryState, type QueryState } from "./useQueryState";
 
 interface UsePokemonCatalogSearchResult {
   results: Result[];
   loading: boolean;
+  fetching: boolean;
   error: string;
   ready: boolean;
+  retry: QueryState<PokemonResult>["retry"];
 }
 
 const NATIONAL_DEX_LIMIT = 1025;
@@ -29,20 +33,22 @@ export const usePokemonCatalogSearch = (
 
   const ready = normalizedTerm.length >= MIN_SEARCH_LENGTH;
   const debouncedReady = debouncedTerm.length >= MIN_SEARCH_LENGTH;
-  const { data, isLoading, error } = useQuery({
+  const query = useQuery({
     queryKey: ["pokemon-catalog-search"],
     queryFn: ({ signal }) => getPokemon(0, NATIONAL_DEX_LIMIT, signal),
     enabled: debouncedReady,
-    staleTime: 1000 * 60 * 30,
-    gcTime: 1000 * 60 * 60,
+    ...queryPolicies.catalogSearch,
   });
-
-  const isCurrentSearchReady = ready && debouncedReady && debouncedTerm === normalizedTerm;
+  const state = useQueryState(query);
+  const isCurrentSearchReady =
+    ready && debouncedReady && debouncedTerm === normalizedTerm;
 
   return {
-    results: data?.results || [],
-    loading: ready && (!isCurrentSearchReady || isLoading),
-    error: isCurrentSearchReady ? error?.message || "" : "",
+    results: state.data?.results || [],
+    loading: ready && (!isCurrentSearchReady || state.loading),
+    fetching: ready && (!isCurrentSearchReady || state.fetching),
+    error: isCurrentSearchReady ? state.error : "",
     ready,
+    retry: state.retry,
   };
 };

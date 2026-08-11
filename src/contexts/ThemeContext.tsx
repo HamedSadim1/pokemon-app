@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ThemeContext, type Theme } from "./ThemeContextDefinition";
-import { readStorage, writeStorage } from "../utils/storage";
+import { usePersistentState } from "../hooks/usePersistentState";
 
 const isTheme = (value: unknown): value is Theme =>
   value === "light" || value === "dark";
@@ -11,13 +11,14 @@ const getSystemTheme = (): Theme =>
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<Theme>(() =>
-    readStorage("theme", getSystemTheme(), isTheme),
+  const [theme, setTheme] = usePersistentState(
+    "theme",
+    getSystemTheme(),
+    isTheme,
   );
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    writeStorage("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
