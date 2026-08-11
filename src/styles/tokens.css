@@ -63,6 +63,10 @@
   --shadow-lg: 0 24px 60px rgb(23 34 53 / 0.14);
   --animate-spin: spin 800ms linear infinite;
   --animate-float-art: float-art 5s ease-in-out infinite;
+  --evolution-card-size: 148px;
+  --evolution-art-size: 76px;
+  --evolution-list-height: 11.5rem;
+  --evolution-mobile-viewport-height: 13.25rem;
 
   @keyframes spin {
     to { transform: rotate(360deg); }

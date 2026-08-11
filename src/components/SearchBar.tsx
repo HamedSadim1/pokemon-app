@@ -18,6 +18,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <Icon name="search" />
       </span>
       <input
+        id="pokemon-search"
+        name="pokemon-search"
         className="search-input"
         type="search"
         value={value}

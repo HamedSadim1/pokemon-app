@@ -1,31 +1,28 @@
 import { Link } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
-import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
 import Icon from "./Icon";
-import ImageWithFallback from "./ImageWithFallback";
-
-const getTypeClass = (type?: string) =>
-  `type-pill type-${type?.toLowerCase() || "default"}`;
+import PokemonCard from "./PokemonCard";
+import { EmptyState } from "./FeedbackState";
 
 const Favorites = () => {
-  const { favorites, removeFavorite } = useFavorites();
+  const { favorites } = useFavorites();
 
   if (favorites.length === 0) {
     return (
       <section className="favorites-page">
         <div className="page-container">
-          <div className="empty-state">
-            <div className="empty-state-icon"><Icon name="heart" size={24} /></div>
-            <div className="page-kicker">Your collection</div>
-            <h1 className="page-title">Nothing saved yet.</h1>
-            <p>
-              Keep the Pokémon that catch your eye close by saving them from a
-              profile page.
-            </p>
-            <Link to="/pokemon" className="button-primary mt-lg">
-              Start exploring <Icon name="arrow-right" size={17} />
-            </Link>
-          </div>
+          <EmptyState
+            icon="heart"
+            kicker="Your collection"
+            title="Nothing saved yet."
+            headingLevel="h1"
+            description="Keep the Pokémon that catch your eye close by saving them from a profile page."
+            action={(
+              <Link to="/pokemon" className="button-primary">
+                Start exploring <Icon name="arrow-right" size={17} />
+              </Link>
+            )}
+          />
         </div>
       </section>
     );
@@ -49,56 +46,13 @@ const Favorites = () => {
 
         <div className="pokemon-grid">
           {favorites.map((pokemon) => (
-            <article key={pokemon.id} className="pokemon-card">
-              <div className="pokemon-card-top">
-                <span className="pokemon-number">
-                  #{String(pokemon.id).padStart(4, "0")}
-                </span>
-              </div>
-              <Link
-                to={`/pokemon/${pokemon.id}`}
-                className="pokemon-card-main"
-                aria-label={`View ${pokemon.name} details`}
-              >
-                <div className="pokemon-art-wrap">
-                  <ImageWithFallback
-                    key={pokemon.id}
-                    className="pokemon-art"
-                    src={getPokemonArtworkUrl(pokemon.id)}
-                    fallbackSrc={
-                      pokemon.sprites?.front_default ||
-                      getPokemonSpriteUrl(pokemon.id)
-                    }
-                    alt=""
-                    loading="lazy"
-                  />
-                </div>
-                <div className="pokemon-card-content">
-                  <h3>{pokemon.name}</h3>
-                  <div className="type-list mt-sm">
-                  {pokemon.types?.slice(0, 2).map((type) => (
-                    <span
-                      key={type.type?.name}
-                      className={getTypeClass(type.type?.name)}
-                    >
-                      {type.type?.name}
-                    </span>
-                  ))}
-                  </div>
-                  <span className="card-arrow" aria-hidden="true">
-                    <Icon name="arrow-up-right" size={16} />
-                  </span>
-                </div>
-              </Link>
-              <button
-                type="button"
-                className="button-danger w-full mt-md"
-                onClick={() => removeFavorite(pokemon.id)}
-                aria-label={`Remove ${pokemon.name} from favorites`}
-              >
-                Remove from favorites
-              </button>
-            </article>
+            <PokemonCard
+              key={pokemon.id}
+              pokemon={pokemon}
+              id={pokemon.id}
+              variant="favorite"
+              action="remove"
+            />
           ))}
         </div>
       </div>

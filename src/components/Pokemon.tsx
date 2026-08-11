@@ -7,7 +7,7 @@ import { PokemonPageSkeleton } from "./LoadingSkeletons";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 import SearchBar from "./SearchBar";
-import Icon from "./Icon";
+import { EmptyState, ErrorState } from "./FeedbackState";
 
 const itemsPerPage = 20;
 const maxPage = Math.ceil(1025 / itemsPerPage);
@@ -175,33 +175,37 @@ const Pokemon = () => {
         )}
 
         {activeError && (
-          <div className="error-state" role="alert">
-            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
-            <h2>We lost the signal.</h2>
-            <p>{activeError}</p>
-            <button
-              type="button"
-              className="button-secondary mt-lg"
-              onClick={() => void retryActiveQuery()}
-            >
-              Try again
-            </button>
-          </div>
+          <ErrorState
+            icon="warning"
+            title="We lost the signal."
+            description={activeError}
+            action={(
+              <button
+                type="button"
+                className="button-secondary"
+                onClick={() => void retryActiveQuery()}
+              >
+                Try again
+              </button>
+            )}
+          />
         )}
 
         {!activeError && !searchNeedsMoreCharacters && visibleResults.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-state-icon"><Icon name="search" size={24} /></div>
-            <h2>No Pokémon found.</h2>
-            <p>Try another name or number, or clear the search to browse again.</p>
-            <button
-              type="button"
-              className="button-secondary mt-lg"
-              onClick={() => handleSearchChange("")}
-            >
-              Clear search
-            </button>
-          </div>
+          <EmptyState
+            icon="search"
+            title="No Pokémon found."
+            description="Try another name or number, or clear the search to browse again."
+            action={(
+              <button
+                type="button"
+                className="button-secondary"
+                onClick={() => handleSearchChange("")}
+              >
+                Clear search
+              </button>
+            )}
+          />
         )}
 
           {!activeError && visibleResults.length > 0 && (

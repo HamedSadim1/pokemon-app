@@ -1,3 +1,5 @@
+import { readRawStorage, type StorageAdapter } from "./storage";
+
 export type AppTheme = "light" | "dark";
 
 export const isAppTheme = (value: unknown): value is AppTheme =>
@@ -25,16 +27,10 @@ export const getSystemTheme = (prefersDark?: boolean): AppTheme => {
 export const getInitialTheme = (
   storedValue?: string | null,
   prefersDark?: boolean,
+  adapter?: StorageAdapter,
 ): AppTheme => {
-  let persistedValue = storedValue;
-
-  if (persistedValue === undefined && typeof window !== "undefined") {
-    try {
-      persistedValue = window.localStorage.getItem("theme");
-    } catch {
-      persistedValue = null;
-    }
-  }
+  const persistedValue =
+    storedValue === undefined ? readRawStorage("theme", null, adapter) : storedValue;
 
   return getStoredTheme(persistedValue ?? null) || getSystemTheme(prefersDark);
 };

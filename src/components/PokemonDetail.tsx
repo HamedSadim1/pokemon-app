@@ -2,16 +2,18 @@ import { Link, useParams } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { usePokemonDetail } from "../hooks/usePokemonDetail";
 import {
+  formatDexNumber,
   getPokemonArtworkUrl,
   getPokemonSpriteUrl,
+  getPokemonTypeClass,
+  humanizeSlug,
 } from "../utils/helpers";
 import { PokemonDetailSkeleton } from "./LoadingSkeletons";
 import type { EvolutionNode, Stat } from "./Services/IPokemon";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
-
-const getTypeClass = (type?: string) =>
-  `type-pill type-${type?.toLowerCase() || "default"}`;
+import { ErrorState } from "./FeedbackState";
+import DetailChips from "./DetailChips";
 
 const getEvolutionPaths = (
   node: EvolutionNode,
@@ -39,8 +41,8 @@ const getEvolutionRequirement = (node: EvolutionNode) => {
   const detail = node.evolution_details?.[0];
   if (!detail) return "Base form";
   if (detail.min_level) return `Level ${detail.min_level}`;
-  if (detail.item?.name) return detail.item.name.replace(/-/g, " ");
-  return detail.trigger?.name?.replace(/-/g, " ") || "Special condition";
+  if (detail.item?.name) return humanizeSlug(detail.item.name);
+  return humanizeSlug(detail.trigger?.name, "Special condition");
 };
 
 const getSpeciesId = (url: string) => {
@@ -68,7 +70,7 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
               className="evolution-list"
               key={path.map((node) => node.species.name).join("-")}
             >
-            {path.map((node, index) => {
+              {path.map((node, index) => {
               const evolutionId = getSpeciesId(node.species.url);
               if (!evolutionId) return null;
 
@@ -81,20 +83,20 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
                       src={getPokemonSpriteUrl(evolutionId)}
                       alt=""
                     />
-                    <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
+                    <span className="evolution-number">{formatDexNumber(evolutionId)}</span>
                     <strong>{node.species.name}</strong>
                     <small>{getEvolutionRequirement(node)}</small>
                   </Link>
                 </div>
               );
-            })}
-          </div>
+              })}
+            </div>
           ))}
         </div>
         <p className="evolution-swipe-hint">Swipe to view the full path</p>
       </div>
     ) : (
-      <span className="detail-chip">No evolution path listed</span>
+      <DetailChips items={[]} emptyLabel="No evolution path listed" />
     )}
   </section>
 );
@@ -126,7 +128,7 @@ const BaseStatsSection = ({ stats }: BaseStatsSectionProps) => (
           </div>
         </div>
       );
-    }) : <span className="detail-chip">No stats listed</span>}
+    }) : <DetailChips items={[]} emptyLabel="No stats listed" />}
   </section>
 );
 
@@ -149,14 +151,17 @@ const PokemonDetail = () => {
     return (
       <section className="detail-page">
         <div className="page-container">
-          <div className="error-state" role="alert">
-            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
-            <h1>Invalid Pokémon number.</h1>
-            <p>Use a positive National Dex number to open a profile.</p>
-            <Link to="/pokemon" className="button-secondary mt-lg">
-              Back to Pokédex
-            </Link>
-          </div>
+          <ErrorState
+            icon="warning"
+            title="Invalid Pokémon number."
+            headingLevel="h1"
+            description="Use a positive National Dex number to open a profile."
+            action={(
+              <Link to="/pokemon" className="button-secondary">
+                Back to Pokédex
+              </Link>
+            )}
+          />
         </div>
       </section>
     );
@@ -170,14 +175,16 @@ const PokemonDetail = () => {
     return (
       <section className="detail-page">
         <div className="page-container">
-          <div className="error-state" role="alert">
-            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
-            <h2>Profile unavailable.</h2>
-            <p>{error || "This Pokémon could not be found."}</p>
-            <Link to="/pokemon" className="button-secondary mt-lg">
-              Back to Pokédex
-            </Link>
-          </div>
+          <ErrorState
+            icon="warning"
+            title="Profile unavailable."
+            description={error || "This Pokémon could not be found."}
+            action={(
+              <Link to="/pokemon" className="button-secondary">
+                Back to Pokédex
+              </Link>
+            )}
+          />
         </div>
       </section>
     );
@@ -214,12 +221,12 @@ const PokemonDetail = () => {
             />
           </div>
           <div className="detail-info">
-            <div className="detail-number">NATIONAL DEX #{String(pokemon.id).padStart(4, "0")}</div>
+            <div className="detail-number">NATIONAL DEX {formatDexNumber(pokemon.id)}</div>
             <h1 className="detail-title">{pokemon.name}</h1>
             {genus && <p className="detail-genus">{genus}</p>}
             <div className="type-list">
               {pokemon.types?.map((type) => (
-                <span key={type.type?.name} className={getTypeClass(type.type?.name)}>
+                <span key={type.type?.name} className={getPokemonTypeClass(type.type?.name)}>
                   {type.type?.name}
                 </span>
               ))}
@@ -265,29 +272,35 @@ const PokemonDetail = () => {
           <section className="detail-section">
             <h2>Species profile</h2>
             <dl className="metadata-list">
-              <div><dt>Generation</dt><dd>{species?.generation?.name?.replace("generation-", "Gen ") || "—"}</dd></div>
-              <div><dt>Habitat</dt><dd>{species?.habitat?.name?.replace(/-/g, " ") || "Unknown"}</dd></div>
-              <div><dt>Growth rate</dt><dd>{species?.growth_rate?.name?.replace(/-/g, " ") || "—"}</dd></div>
-              <div><dt>Egg groups</dt><dd>{species?.egg_groups?.map((group) => group.name.replace(/-/g, " ")).join(", ") || "—"}</dd></div>
+              <div><dt>Generation</dt><dd>{species?.generation?.name ? `Gen ${species.generation.name.replace("generation-", "")}` : "—"}</dd></div>
+              <div><dt>Habitat</dt><dd>{humanizeSlug(species?.habitat?.name, "Unknown")}</dd></div>
+              <div><dt>Growth rate</dt><dd>{humanizeSlug(species?.growth_rate?.name)}</dd></div>
+              <div><dt>Egg groups</dt><dd>{species?.egg_groups?.map((group) => humanizeSlug(group.name)).join(", ") || "—"}</dd></div>
             </dl>
           </section>
 
           <section className="detail-section">
             <h2>Abilities</h2>
-            <div className="detail-list">
-              {pokemon.abilities?.length ? pokemon.abilities.map((ability) => (
-                <span className="detail-chip" key={ability.ability?.name}>{ability.ability?.name}</span>
-              )) : <span className="detail-chip">No abilities listed</span>}
-            </div>
+            <DetailChips
+              items={(pokemon.abilities || []).flatMap((ability) =>
+                ability.ability?.name
+                  ? [{ key: ability.ability.name, content: ability.ability.name }]
+                  : [],
+              )}
+              emptyLabel="No abilities listed"
+            />
           </section>
 
           <section className="detail-section">
             <h2>Known moves</h2>
-            <div className="detail-list">
-              {moves.length ? moves.map((move) => (
-                <span className="detail-chip" key={move.move?.name}>{move.move?.name}</span>
-              )) : <span className="detail-chip">No moves listed</span>}
-            </div>
+            <DetailChips
+              items={moves.flatMap((move) =>
+                move.move?.name
+                  ? [{ key: move.move.name, content: move.move.name }]
+                  : [],
+              )}
+              emptyLabel="No moves listed"
+            />
             {pokemon.moves && pokemon.moves.length > moves.length && (
               <p className="section-note">Showing {moves.length} of {pokemon.moves.length} moves.</p>
             )}

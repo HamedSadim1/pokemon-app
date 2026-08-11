@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom";
-import Icon from "./Icon";
+import { ErrorState } from "./FeedbackState";
 
 const getErrorMessage = (error: unknown) => {
   if (isRouteErrorResponse(error)) {
@@ -23,26 +23,28 @@ const RouteErrorBoundary = () => {
   return (
     <section className="not-found-page">
       <div className="page-container">
-        <div className="error-state" role="alert">
-          <div className="empty-state-icon">
-            <Icon name="warning" size={24} />
-          </div>
-          <div className="page-kicker">Something went wrong</div>
-          <h1 className="page-title">This page needs another try.</h1>
-          <p>{getErrorMessage(error)}</p>
-          <div className="detail-actions not-found-actions">
-            <button
-              type="button"
-              className="button-primary"
-              onClick={() => window.location.reload()}
-            >
-              Try again
-            </button>
-            <Link to="/pokemon" className="button-secondary">
-              Open Pokédex
-            </Link>
-          </div>
-        </div>
+        <ErrorState
+          icon="warning"
+          kicker="Something went wrong"
+          title="This page needs another try."
+          headingLevel="h1"
+          description={getErrorMessage(error)}
+          action={(
+            <>
+              <button
+                type="button"
+                className="button-primary"
+                onClick={() => window.location.reload()}
+              >
+                Try again
+              </button>
+              <Link to="/pokemon" className="button-secondary">
+                Open Pokédex
+              </Link>
+            </>
+          )}
+          actionClassName="not-found-actions"
+        />
       </div>
     </section>
   );

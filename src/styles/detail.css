@@ -209,7 +209,7 @@
 }
 
 .evolution-viewport {
-  height: 11.5rem;
+  height: var(--evolution-list-height);
   box-sizing: border-box;
 }
 
@@ -234,8 +234,8 @@
 
 .evolution-list {
   display: flex;
-  flex: 0 0 11.5rem;
-  min-height: 11.5rem;
+  flex: 0 0 var(--evolution-list-height);
+  min-height: var(--evolution-list-height);
   align-items: center;
   gap: 0.7rem;
   overflow-x: auto;
@@ -261,9 +261,9 @@
 
 .evolution-card {
   display: grid;
-  flex: 0 0 148px;
-  width: 148px;
-  min-height: 148px;
+  flex: 0 0 var(--evolution-card-size);
+  width: var(--evolution-card-size);
+  min-height: var(--evolution-card-size);
   justify-items: center;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -284,8 +284,8 @@
 
 .evolution-card img,
 .evolution-card .image-fallback {
-  width: 76px;
-  height: 76px;
+  width: var(--evolution-art-size);
+  height: var(--evolution-art-size);
   object-fit: contain;
 }
 

@@ -5,6 +5,7 @@ import {
   getSystemTheme,
   isAppTheme,
 } from "./theme";
+import { createMemoryStorage } from "./storage";
 
 describe("theme initialization", () => {
   beforeEach(() => {
@@ -30,6 +31,12 @@ describe("theme initialization", () => {
     expect(getInitialTheme(JSON.stringify("invalid"), false)).toBe("light");
     expect(getInitialTheme("invalid", false)).toBe("light");
     expect(getSystemTheme(true)).toBe("dark");
+  });
+
+  it("supports raw and encoded themes through the storage adapter", () => {
+    expect(getInitialTheme(undefined, false, createMemoryStorage({ theme: "dark" }))).toBe("dark");
+    expect(getInitialTheme(undefined, true, createMemoryStorage({ theme: JSON.stringify("light") }))).toBe("light");
+    expect(getInitialTheme(undefined, true, createMemoryStorage({ theme: "{invalid" }))).toBe("dark");
   });
 
   it("applies the class and color scheme before rendering", () => {

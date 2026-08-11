@@ -18,6 +18,8 @@
   background: var(--accent-soft);
 }
 
+.empty-state h1,
+.error-state h1,
 .empty-state h2,
 .error-state h2 {
   margin: 0;

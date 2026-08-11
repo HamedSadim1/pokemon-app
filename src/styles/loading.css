@@ -306,20 +306,33 @@
 
 .skeleton-evolution-list {
   display: flex;
-  flex: 0 0 11.5rem;
-  min-height: 11.5rem;
+  flex: 0 0 var(--evolution-list-height);
+  min-height: var(--evolution-list-height);
   gap: 0.7rem;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.3rem 0 0.5rem;
 }
 
+.skeleton-evolution-step {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.skeleton-evolution-arrow {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .skeleton-evolution-card {
   display: grid;
-  flex: 0 0 148px;
-  width: 148px;
-  min-width: 148px;
-  min-height: 148px;
+  flex: 0 0 var(--evolution-card-size);
+  width: var(--evolution-card-size);
+  min-width: var(--evolution-card-size);
+  min-height: var(--evolution-card-size);
   justify-items: center;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -328,8 +341,8 @@
 }
 
 .skeleton-evolution-art {
-  width: 76px;
-  height: 76px;
+  width: var(--evolution-art-size);
+  height: var(--evolution-art-size);
   border-radius: 50%;
 }
 
@@ -343,6 +356,12 @@
   width: 4.6rem;
   height: 0.8rem;
   margin-top: 0.35rem;
+}
+
+.skeleton-evolution-requirement {
+  width: 3.8rem;
+  height: 0.6rem;
+  margin-top: 0.25rem;
 }
 
 .skeleton-stat-row + .skeleton-stat-row {
@@ -407,15 +426,15 @@
   }
 
   .evolution-section-skeleton .evolution-viewport {
-    height: 13.25rem;
+    height: var(--evolution-mobile-viewport-height);
   }
 
   .evolution-section-skeleton .evolution-paths {
-    height: 11.5rem;
+    height: var(--evolution-list-height);
   }
 
   .skeleton-evolution-list {
-    min-height: 11.5rem;
+    min-height: var(--evolution-list-height);
     overflow-x: auto;
   }
 

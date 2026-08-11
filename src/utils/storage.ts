@@ -11,6 +11,18 @@ const browserStorage: StorageAdapter = {
 const getStorage = (adapter?: StorageAdapter): StorageAdapter =>
   adapter || browserStorage;
 
+export const readRawStorage = (
+  key: string,
+  fallback: string | null = null,
+  adapter?: StorageAdapter,
+): string | null => {
+  try {
+    return getStorage(adapter).getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 export const readStorage = <T>(
   key: string,
   fallback: T,

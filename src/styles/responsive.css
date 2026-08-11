@@ -24,11 +24,11 @@
   }
   .detail-section.full-width { grid-column: auto; }
   .evolution-viewport {
-    height: 13.25rem;
+    height: var(--evolution-mobile-viewport-height);
   }
 
   .evolution-paths {
-    height: 11.5rem;
+    height: var(--evolution-list-height);
     overflow-y: auto;
   }
 
