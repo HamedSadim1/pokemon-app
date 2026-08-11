@@ -6,7 +6,7 @@ import {
   getPokemonSpriteUrl,
 } from "../utils/helpers";
 import LoadingSpinner from "./LoadingSpinner";
-import type { EvolutionNode } from "./Services/IPokemon";
+import type { EvolutionNode, Stat } from "./Services/IPokemon";
 
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
@@ -35,6 +35,54 @@ const getSpeciesId = (url: string) => {
   const match = url.match(/\/pokemon-species\/(\d+)\/?$/);
   return match ? Number.parseInt(match[1], 10) : 0;
 };
+
+interface EvolutionPathsSectionProps {
+  paths: EvolutionNode[][];
+}
+
+const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
+  <section className="detail-section full-width">
+    <h2>Evolution paths</h2>
+    <div className="evolution-paths">
+      {paths.map((path) => (
+        <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
+          {path.map((node, index) => {
+            const evolutionId = getSpeciesId(node.species.url);
+            if (!evolutionId) return null;
+
+            return (
+              <div className="evolution-step" key={node.species.name}>
+                {index > 0 && <span className="evolution-arrow" aria-hidden="true">→</span>}
+                <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
+                  <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
+                  <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
+                  <strong>{node.species.name}</strong>
+                  <small>{getEvolutionRequirement(node)}</small>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+interface BaseStatsSectionProps {
+  stats: Stat[];
+}
+
+const BaseStatsSection = ({ stats }: BaseStatsSectionProps) => (
+  <section className="detail-section full-width">
+    <h2>Base stats</h2>
+    {stats.length ? stats.map((stat) => (
+      <div className="stat-row" key={stat.stat?.name}>
+        <div className="stat-label"><span>{stat.stat?.name}</span><strong>{stat.base_stat}</strong></div>
+        <div className="stat-track"><div className="stat-fill" style={{ width: `${Math.min(stat.base_stat || 0, 100)}%` }} /></div>
+      </div>
+    )) : <span className="detail-chip">No stats listed</span>}
+  </section>
+);
 
 const PokemonDetail = () => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
@@ -173,43 +221,8 @@ const PokemonDetail = () => {
             )}
           </section>
 
-          {evolutionPaths.length > 0 && (
-            <section className="detail-section full-width">
-              <h2>Evolution paths</h2>
-              <div className="evolution-paths">
-                {evolutionPaths.map((path) => (
-                  <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
-                    {path.map((node, index) => {
-                      const evolutionId = getSpeciesId(node.species.url);
-                      if (!evolutionId) return null;
-
-                      return (
-                        <div className="evolution-step" key={node.species.name}>
-                          {index > 0 && <span className="evolution-arrow" aria-hidden="true">→</span>}
-                          <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
-                            <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
-                            <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
-                            <strong>{node.species.name}</strong>
-                            <small>{getEvolutionRequirement(node)}</small>
-                          </Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section className="detail-section full-width">
-            <h2>Base stats</h2>
-            {pokemon.stats?.length ? pokemon.stats.map((stat) => (
-              <div className="stat-row" key={stat.stat?.name}>
-                <div className="stat-label"><span>{stat.stat?.name}</span><strong>{stat.base_stat}</strong></div>
-                <div className="stat-track"><div className="stat-fill" style={{ width: `${Math.min(stat.base_stat || 0, 100)}%` }} /></div>
-              </div>
-            )) : <span className="detail-chip">No stats listed</span>}
-          </section>
+          {evolutionPaths.length > 0 && <EvolutionPathsSection paths={evolutionPaths} />}
+          <BaseStatsSection stats={pokemon.stats || []} />
         </div>
       </div>
     </section>
