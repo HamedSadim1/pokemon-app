@@ -1,45 +1,44 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPokemonById, PokemonDex } from "../components/Services/IPokemon";
+import {
+  getEvolutionChain,
+  getPokemonById,
+  getPokemonSpecies,
+  type EvolutionChain,
+  type PokemonDex,
+  type PokemonSpecies,
+} from "../components/Services/IPokemon";
 
-/**
- * Interface voor het resultaat van de usePokemonDetail hook
- */
 interface UsePokemonDetailResult {
-  /** De opgehaalde Pokémon detail data */
   pokemon: PokemonDex;
-  /** Of de data nog wordt geladen */
+  species: PokemonSpecies | null;
+  evolution: EvolutionChain | null;
   loading: boolean;
-  /** Foutmelding indien er iets misging, of null bij geen fout */
   error: string | null;
 }
 
-/**
- * Custom hook voor het ophalen van gedetailleerde informatie over een specifieke Pokémon
- * gebruikmakend van TanStack Query voor caching en automatische refetching.
- *
- * @param pokemonId - Het ID van de Pokémon om details voor op te halen
- * @returns Object met pokemon detail data, loading state en error state
- *
- * @example
- * ```tsx
- * const { pokemon, loading, error } = usePokemonDetail(25); // Pikachu
- * ```
- */
 export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
-  const {
-    data: pokemon,
-    isLoading: loading,
-    error,
-  } = useQuery({
+  const { data, isLoading: loading, error } = useQuery({
     queryKey: ["pokemon-detail", pokemonId],
-    queryFn: () => getPokemonById(pokemonId),
-    enabled: pokemonId > 0, // Only run query if pokemonId is valid
-    staleTime: 1000 * 60 * 10, // 10 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
+    queryFn: async () => {
+      const [pokemon, speciesResult] = await Promise.all([
+        getPokemonById(pokemonId),
+        getPokemonSpecies(pokemonId).catch(() => null),
+      ]);
+      const evolution = speciesResult?.evolution_chain?.url
+        ? await getEvolutionChain(speciesResult.evolution_chain.url).catch(() => null)
+        : null;
+
+      return { pokemon, species: speciesResult, evolution };
+    },
+    enabled: pokemonId > 0,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30,
   });
 
   return {
-    pokemon: pokemon || ({} as PokemonDex),
+    pokemon: data?.pokemon || ({} as PokemonDex),
+    species: data?.species || null,
+    evolution: data?.evolution || null,
     loading,
     error: error?.message || null,
   };

@@ -986,6 +986,14 @@ input:focus-visible {
   text-transform: capitalize;
 }
 
+.detail-genus {
+  margin: 0.7rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
 .detail-description {
   max-width: 480px;
   margin: 1.25rem 0 0;
@@ -1067,6 +1075,113 @@ input:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
+}
+
+.metadata-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.metadata-list div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.55rem;
+}
+
+.metadata-list div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.metadata-list dt {
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.metadata-list dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-align: right;
+  text-transform: capitalize;
+}
+
+.section-note {
+  margin: 1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+.evolution-list {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  overflow-x: auto;
+  padding: 0.3rem 0 0.5rem;
+}
+
+.evolution-step {
+  display: flex;
+  min-width: 132px;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.evolution-arrow {
+  color: var(--accent);
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.evolution-card {
+  display: grid;
+  width: 132px;
+  justify-items: center;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  color: var(--ink);
+  background: var(--canvas-muted);
+  padding: 0.7rem;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.evolution-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-3px);
+}
+
+.evolution-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.evolution-card strong {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.evolution-number,
+.evolution-card small {
+  color: var(--ink-soft);
+  font-size: 0.65rem;
+  font-weight: 750;
+}
+
+.evolution-card small {
+  margin-top: 0.25rem;
+  text-transform: capitalize;
 }
 
 .detail-chip {

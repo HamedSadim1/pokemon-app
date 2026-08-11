@@ -12,6 +12,53 @@ export interface Result {
   url: string;
 }
 
+export interface FlavorTextEntry {
+  flavor_text: string;
+  language: Species;
+  version: Species;
+}
+
+export interface GenusEntry {
+  genus: string;
+  language: Species;
+}
+
+export interface PokemonSpecies {
+  id: number;
+  name: string;
+  base_happiness?: number;
+  capture_rate?: number;
+  gender_rate?: number;
+  hatch_counter?: number;
+  egg_groups?: Species[];
+  evolution_chain?: { url: string };
+  flavor_text_entries?: FlavorTextEntry[];
+  genera?: GenusEntry[];
+  generation?: Species;
+  growth_rate?: Species;
+  habitat?: Species | null;
+  is_baby?: boolean;
+  is_legendary?: boolean;
+  is_mythical?: boolean;
+}
+
+export interface EvolutionDetail {
+  min_level?: number | null;
+  trigger?: Species;
+  item?: Species | null;
+}
+
+export interface EvolutionNode {
+  species: Species;
+  evolves_to: EvolutionNode[];
+  evolution_details?: EvolutionDetail[];
+}
+
+export interface EvolutionChain {
+  id: number;
+  chain: EvolutionNode;
+}
+
 export interface PokemonDex {
   abilities: Ability[];
   baseExperience: number;
@@ -217,5 +264,17 @@ export const getPokemonById = async (id: number) => {
   const response = await axios.get<PokemonDex>(
     `https://pokeapi.co/api/v2/pokemon/${id}`
   );
+  return response.data;
+};
+
+export const getPokemonSpecies = async (id: number) => {
+  const response = await axios.get<PokemonSpecies>(
+    `https://pokeapi.co/api/v2/pokemon-species/${id}`
+  );
+  return response.data;
+};
+
+export const getEvolutionChain = async (url: string) => {
+  const response = await axios.get<EvolutionChain>(url);
   return response.data;
 };
