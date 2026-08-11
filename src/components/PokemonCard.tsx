@@ -7,6 +7,7 @@ import {
 } from "../utils/helpers";
 import { Result } from "./Services/IPokemon";
 import Icon from "./Icon";
+import ImageWithFallback from "./ImageWithFallback";
 
 interface PokemonCardProps {
   pokemon: Result;
@@ -55,15 +56,13 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
         </div>
       </div>
       <Link to={`/pokemon/${id}`} className="pokemon-art-wrap">
-        <img
+        <ImageWithFallback
+          key={catalogId}
           className="pokemon-art"
           src={getPokemonArtworkUrl(catalogId)}
+          fallbackSrc={getPokemonSpriteUrl(catalogId)}
           alt={`${pokemon.name} artwork`}
           loading="lazy"
-          onError={(event) => {
-            event.currentTarget.onerror = null;
-            event.currentTarget.src = getPokemonSpriteUrl(catalogId);
-          }}
         />
       </Link>
       <div className="pokemon-card-content">

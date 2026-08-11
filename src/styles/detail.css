@@ -43,12 +43,21 @@
   content: "";
 }
 
-.detail-art img {
+.detail-art img,
+.detail-art .image-fallback {
   position: relative;
   z-index: 1;
   width: min(72%, 350px);
   filter: drop-shadow(0 24px 20px var(--color-ink-shadow));
   animation: var(--animate-float-art);
+}
+
+.detail-art .image-fallback {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  color: var(--ink-soft);
+  background: color-mix(in srgb, var(--canvas-muted) 70%, transparent);
 }
 
 .detail-info {
@@ -198,12 +207,21 @@
   gap: 0.9rem;
 }
 
+.evolution-paths::after {
+  color: var(--ink-soft);
+  content: "Swipe to view the full path";
+  font-size: 0.72rem;
+  font-weight: var(--font-weight-bold);
+}
+
 .evolution-list {
   display: flex;
   align-items: center;
   gap: 0.7rem;
   overflow-x: auto;
+  overscroll-behavior-inline: contain;
   padding: 0.3rem 0 0.5rem;
+  scrollbar-width: thin;
 }
 
 .evolution-step {
@@ -240,7 +258,8 @@
   transform: translateY(-3px);
 }
 
-.evolution-card img {
+.evolution-card img,
+.evolution-card .image-fallback {
   width: 72px;
   height: 72px;
   object-fit: contain;
@@ -262,6 +281,13 @@
 .evolution-card small {
   margin-top: 0.25rem;
   text-transform: capitalize;
+}
+
+.image-fallback {
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  background: var(--canvas-muted);
 }
 
 .detail-chip {

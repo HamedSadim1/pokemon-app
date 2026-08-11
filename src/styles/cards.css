@@ -119,7 +119,8 @@
   filter: blur(7px);
 }
 
-.pokemon-art {
+.pokemon-art,
+.image-fallback.pokemon-art {
   position: relative;
   z-index: 1;
   width: 142px;

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useFavorites } from "../hooks/useFavorites";
 import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
 import Icon from "./Icon";
+import ImageWithFallback from "./ImageWithFallback";
 
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
@@ -56,17 +57,16 @@ const Favorites = () => {
                 <span className="card-arrow"><Icon name="arrow-up-right" size={16} /></span>
               </Link>
               <Link to={`/pokemon/${pokemon.id}`} className="pokemon-art-wrap">
-                <img
+                <ImageWithFallback
+                  key={pokemon.id}
                   className="pokemon-art"
                   src={getPokemonArtworkUrl(pokemon.id)}
+                  fallbackSrc={
+                    pokemon.sprites?.front_default ||
+                    getPokemonSpriteUrl(pokemon.id)
+                  }
                   alt={`${pokemon.name} artwork`}
                   loading="lazy"
-                  onError={(event) => {
-                    event.currentTarget.onerror = null;
-                    event.currentTarget.src =
-                      pokemon.sprites?.front_default ||
-                      getPokemonSpriteUrl(pokemon.id);
-                  }}
                 />
               </Link>
               <div className="pokemon-card-content">

@@ -3,6 +3,7 @@ import {
   getEvolutionChain,
   getPokemonById,
   getPokemonSpecies,
+  isPokemonRequestCancellation,
   type EvolutionChain,
   type PokemonDex,
   type PokemonSpecies,
@@ -21,14 +22,15 @@ interface UsePokemonDetailResult {
 export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
   const { data, isLoading: loading, error } = useQuery({
     queryKey: ["pokemon-detail", pokemonId],
-    queryFn: async () => {
-      const pokemon = await getPokemonById(pokemonId);
+    queryFn: async ({ signal }) => {
+      const pokemon = await getPokemonById(pokemonId, signal);
       let species: PokemonSpecies | null = null;
       let speciesUnavailable = false;
 
       try {
-        species = await getPokemonSpecies(pokemonId);
-      } catch {
+        species = await getPokemonSpecies(pokemonId, signal);
+      } catch (speciesError) {
+        if (isPokemonRequestCancellation(speciesError)) throw speciesError;
         speciesUnavailable = true;
       }
 
@@ -37,8 +39,9 @@ export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
 
       if (species?.evolution_chain?.url) {
         try {
-          evolution = await getEvolutionChain(species.evolution_chain.url);
-        } catch {
+          evolution = await getEvolutionChain(species.evolution_chain.url, signal);
+        } catch (evolutionError) {
+          if (isPokemonRequestCancellation(evolutionError)) throw evolutionError;
           evolutionUnavailable = true;
         }
       }

@@ -69,6 +69,21 @@
   }
 }
 
+@media (max-width: 360px) {
+  .page-container { width: min(100% - 1rem, 680px); }
+  .pokemon-grid { gap: 0.5rem; }
+  .pokemon-card-top { padding-inline: 0.65rem; }
+  .pokemon-card-content { padding-inline: 0.65rem; }
+  .pokemon-number { font-size: 0.65rem; }
+  .card-actions { gap: 0.2rem; }
+  .card-favorite,
+  .card-arrow { width: 2rem; height: 2rem; }
+  .pokemon-art-wrap { min-height: 112px; }
+  .pokemon-art,
+  .image-fallback.pokemon-art { width: 96px; height: 96px; }
+  .pokemon-card h3 { font-size: 0.84rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -31,16 +31,18 @@ export const usePokemonCatalogSearch = (
   const debouncedReady = debouncedTerm.length >= MIN_SEARCH_LENGTH;
   const { data, isLoading, error } = useQuery({
     queryKey: ["pokemon-catalog-search"],
-    queryFn: () => getPokemon(0, NATIONAL_DEX_LIMIT),
+    queryFn: ({ signal }) => getPokemon(0, NATIONAL_DEX_LIMIT, signal),
     enabled: debouncedReady,
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
   });
 
+  const isCurrentSearchReady = ready && debouncedReady && debouncedTerm === normalizedTerm;
+
   return {
     results: data?.results || [],
-    loading: ready && (!debouncedReady || isLoading),
-    error: error?.message || "",
+    loading: ready && (!isCurrentSearchReady || isLoading),
+    error: isCurrentSearchReady ? error?.message || "" : "",
     ready,
   };
 };

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getPokemonArtworkUrl, getPokemonSpriteUrl } from "../utils/helpers";
 import Icon from "./Icon";
+import ImageWithFallback from "./ImageWithFallback";
 
 const heroArtwork = getPokemonArtworkUrl(25);
 
@@ -45,14 +46,12 @@ const HomePage = () => {
           <div className="hero-art-panel" aria-label="Featured Pokémon artwork">
             <div className="hero-art-grid" aria-hidden="true" />
             <span className="hero-art-label">Featured today / #025</span>
-            <img
+            <ImageWithFallback
+              key={heroArtwork}
               className="hero-art-image"
               src={heroArtwork}
+              fallbackSrc={getPokemonSpriteUrl(25)}
               alt="Pikachu official artwork"
-              onError={(event) => {
-                event.currentTarget.onerror = null;
-                event.currentTarget.src = getPokemonSpriteUrl(25);
-              }}
             />
           </div>
         </div>

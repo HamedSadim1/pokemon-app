@@ -8,15 +8,26 @@ import {
 import LoadingSpinner from "./LoadingSpinner";
 import type { EvolutionNode, Stat } from "./Services/IPokemon";
 import Icon from "./Icon";
+import ImageWithFallback from "./ImageWithFallback";
 
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
 
-const getEvolutionPaths = (node: EvolutionNode): EvolutionNode[][] => {
-  if (node.evolves_to.length === 0) return [[node]];
+const getEvolutionPaths = (
+  node: EvolutionNode,
+  visited = new Set<string>(),
+): EvolutionNode[][] => {
+  const nodeKey = `${node.species.name}:${node.species.url}`;
+  if (visited.has(nodeKey)) return [];
 
-  return node.evolves_to.flatMap((child) =>
-    getEvolutionPaths(child).map((path) => [node, ...path])
+  const nextVisited = new Set(visited).add(nodeKey);
+  const validChildren = node.evolves_to.filter(
+    (child) => child.species?.name && child.species?.url,
+  );
+  if (validChildren.length === 0) return [[node]];
+
+  return validChildren.flatMap((child) =>
+    getEvolutionPaths(child, nextVisited).map((path) => [node, ...path]),
   );
 };
 
@@ -55,7 +66,11 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
               <div className="evolution-step" key={node.species.name}>
                 {index > 0 && <span className="evolution-arrow"><Icon name="arrow-right" size={20} /></span>}
                 <Link to={`/pokemon/${evolutionId}`} className="evolution-card">
-                  <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
+                  <ImageWithFallback
+                    key={evolutionId}
+                    src={getPokemonSpriteUrl(evolutionId)}
+                    alt=""
+                  />
                   <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
                   <strong>{node.species.name}</strong>
                   <small>{getEvolutionRequirement(node)}</small>
@@ -103,7 +118,8 @@ const BaseStatsSection = ({ stats }: BaseStatsSectionProps) => (
 const PokemonDetail = () => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { id } = useParams();
-  const pokemonId = id && /^\d+$/.test(id) ? Number(id) : 0;
+  const hasValidPokemonId = Boolean(id && /^[1-9]\d*$/.test(id));
+  const pokemonId = hasValidPokemonId ? Number(id) : 0;
   const {
     pokemon,
     species,
@@ -113,6 +129,23 @@ const PokemonDetail = () => {
     loading,
     error,
   } = usePokemonDetail(pokemonId);
+
+  if (!hasValidPokemonId) {
+    return (
+      <section className="detail-page">
+        <div className="page-container">
+          <div className="error-state" role="alert">
+            <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
+            <h1>Invalid Pokémon number.</h1>
+            <p>Use a positive National Dex number to open a profile.</p>
+            <Link to="/pokemon" className="button-secondary mt-lg">
+              Back to Pokédex
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (loading) {
     return (
@@ -162,14 +195,13 @@ const PokemonDetail = () => {
 
         <div className="detail-hero">
           <div className="detail-art">
-            <img
+            <ImageWithFallback
+              key={artwork}
               src={artwork}
+              fallbackSrc={
+                pokemon.sprites?.front_default || getPokemonSpriteUrl(pokemon.id)
+              }
               alt={`${pokemon.name} official artwork`}
-              onError={(event) => {
-                event.currentTarget.onerror = null;
-                event.currentTarget.src =
-                  pokemon.sprites?.front_default || getPokemonSpriteUrl(pokemon.id);
-              }}
             />
           </div>
           <div className="detail-info">

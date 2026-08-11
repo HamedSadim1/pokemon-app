@@ -246,38 +246,134 @@ export interface Type {
 
 //! Pokemon
 
-export const getPokemon = async (offset: number = 0, limit: number = 20) => {
-  const response = await axios.get<PokemonResult>(
-    `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
-  );
-  return response.data;
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const isSpeciesReference = (value: unknown): value is Species =>
+  isRecord(value) && typeof value.name === "string" && typeof value.url === "string";
+
+const validatePokemonResult = (value: unknown): PokemonResult => {
+  if (
+    !isRecord(value) ||
+    typeof value.count !== "number" ||
+    !Array.isArray(value.results) ||
+    !value.results.every(
+      (result) =>
+        isRecord(result) &&
+        typeof result.name === "string" &&
+        typeof result.url === "string"
+    )
+  ) {
+    throw new Error("Invalid Pokémon list response");
+  }
+
+  return value as unknown as PokemonResult;
 };
 
-export const getPokemonByName = async (name: string) => {
-  const response = await axios.get<PokemonDex>(
-    `https://pokeapi.co/api/v2/pokemon/${name}`
-  );
-  return response.data;
+const validatePokemonDex = (value: unknown): PokemonDex => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    typeof value.name !== "string" ||
+    typeof value.height !== "number" ||
+    typeof value.weight !== "number" ||
+    !isRecord(value.sprites) ||
+    !Array.isArray(value.stats) ||
+    !value.stats.every(
+      (stat) => isRecord(stat) && typeof stat.base_stat === "number" && isSpeciesReference(stat.stat),
+    ) ||
+    !Array.isArray(value.types) ||
+    !value.types.every((type) => isRecord(type) && isSpeciesReference(type.type)) ||
+    !Array.isArray(value.abilities) ||
+    !value.abilities.every(
+      (ability) => isRecord(ability) && isSpeciesReference(ability.ability),
+    ) ||
+    !Array.isArray(value.moves) ||
+    !value.moves.every((move) => isRecord(move) && isSpeciesReference(move.move))
+  ) {
+    throw new Error("Invalid Pokémon detail response");
+  }
+
+  return value as unknown as PokemonDex;
 };
 
-export const getPokemonById = async (id: number) => {
-  const response = await axios.get<PokemonDex>(
-    `https://pokeapi.co/api/v2/pokemon/${id}`
-  );
-  return response.data;
+const validatePokemonSpecies = (value: unknown): PokemonSpecies => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    typeof value.name !== "string" ||
+    (value.evolution_chain !== undefined &&
+      (!isRecord(value.evolution_chain) ||
+        typeof value.evolution_chain.url !== "string"))
+  ) {
+    throw new Error("Invalid Pokémon species response");
+  }
+
+  return value as unknown as PokemonSpecies;
 };
 
-export const getPokemonSpecies = async (id: number) => {
-  const response = await axios.get<PokemonSpecies>(
-    `https://pokeapi.co/api/v2/pokemon-species/${id}`
-  );
-  return response.data;
+const isEvolutionNode = (value: unknown): value is EvolutionNode =>
+  isRecord(value) &&
+  isSpeciesReference(value.species) &&
+  Array.isArray(value.evolves_to) &&
+  value.evolves_to.every(isEvolutionNode);
+
+const validateEvolutionChain = (value: unknown): EvolutionChain => {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== "number" ||
+    !isEvolutionNode(value.chain)
+  ) {
+    throw new Error("Invalid evolution chain response");
+  }
+
+  return value as unknown as EvolutionChain;
 };
+
+export const getPokemon = async (
+  offset: number = 0,
+  limit: number = 20,
+  signal?: AbortSignal,
+) => {
+  const response = await axios.get<unknown>(
+    `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
+    { signal },
+  );
+  return validatePokemonResult(response.data);
+};
+
+export const getPokemonByName = async (name: string, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `https://pokeapi.co/api/v2/pokemon/${name}`,
+    { signal },
+  );
+  return validatePokemonDex(response.data);
+};
+
+export const getPokemonById = async (id: number, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `https://pokeapi.co/api/v2/pokemon/${id}`,
+    { signal },
+  );
+  return validatePokemonDex(response.data);
+};
+
+export const getPokemonSpecies = async (id: number, signal?: AbortSignal) => {
+  const response = await axios.get<unknown>(
+    `https://pokeapi.co/api/v2/pokemon-species/${id}`,
+    { signal },
+  );
+  return validatePokemonSpecies(response.data);
+};
+
+export const isPokemonRequestCancellation = (error: unknown): boolean =>
+  axios.isCancel(error) ||
+  (isRecord(error) && error.name === "CanceledError");
 
 const POKEAPI_ORIGIN = "https://pokeapi.co";
 const EVOLUTION_CHAIN_PATH = /^\/api\/v2\/evolution-chain\/\d+\/?$/;
 
-export const getEvolutionChain = async (url: string) => {
+export const getEvolutionChain = async (url: string, signal?: AbortSignal) => {
   let parsedUrl: URL;
 
   try {
@@ -294,6 +390,6 @@ export const getEvolutionChain = async (url: string) => {
     throw new Error("Invalid evolution chain URL");
   }
 
-  const response = await axios.get<EvolutionChain>(parsedUrl.toString());
-  return response.data;
+  const response = await axios.get<unknown>(parsedUrl.toString(), { signal });
+  return validateEvolutionChain(response.data);
 };

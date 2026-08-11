@@ -39,7 +39,7 @@ export const usePokemonList = (
     error,
   } = useQuery({
     queryKey: ["pokemon-list", currentPage, itemsPerPage],
-    queryFn: () => getPokemon(offset, itemsPerPage),
+    queryFn: ({ signal }) => getPokemon(offset, itemsPerPage, signal),
     enabled,
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes

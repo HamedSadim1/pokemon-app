@@ -46,7 +46,11 @@ const Pokemon = () => {
     : pageResults;
   const isLoading = loading || catalogSearch.loading;
   const searchNeedsMoreCharacters = searchTerm.trim().length === 1;
-  const activeError = error || (isSearching ? catalogSearch.error : "");
+  const activeError = isSearching
+    ? catalogSearch.error
+    : searchNeedsMoreCharacters
+      ? ""
+      : error;
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);

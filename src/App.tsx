@@ -8,6 +8,7 @@ import {
 import { lazy, Suspense } from "react";
 import HomePage from "./components/HomePage";
 import Root from "./components/Root";
+import NotFound from "./components/NotFound";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
@@ -87,6 +88,10 @@ function App() {
           path: "Pokemon/:id",
           caseSensitive: true,
           element: <LegacyPokemonRedirect />,
+        },
+        {
+          path: "*",
+          element: <NotFound />,
         },
       ],
     },
