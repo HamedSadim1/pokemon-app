@@ -39,7 +39,6 @@ const queryClient = new QueryClient({
  * 4. RouterProvider - React Router voor navigatie
  */
 function App() {
-  console.log("App rendering");
   const router = createBrowserRouter([
     {
       path: "/",

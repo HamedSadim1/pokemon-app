@@ -2,8 +2,8 @@ import axios from "axios";
 
 export interface PokemonResult {
   count: number;
-  next: null;
-  previous?: null;
+  next: string | null;
+  previous?: string | null;
   results: Result[];
 }
 
@@ -61,18 +61,18 @@ export interface EvolutionChain {
 
 export interface PokemonDex {
   abilities: Ability[];
-  baseExperience: number;
+  base_experience: number;
   forms: Species[];
-  gameIndices: GameIndex[];
+  game_indices: GameIndex[];
   height: number;
-  heldItems: HeldItem[];
+  held_items: HeldItem[];
   id: number;
-  isDefault: boolean;
-  locationAreaEncounters: string;
+  is_default: boolean;
+  location_area_encounters: string;
   moves: Move[];
   name: string;
   order: number;
-  pastTypes: unknown[];
+  past_types: unknown[];
   species: Species;
   sprites: Sprites;
   stats: Stat[];
@@ -203,10 +203,10 @@ export interface Emerald {
 }
 
 export interface Home {
-  frontDefault?: string;
-  frontFemale?: null;
-  frontShiny?: string;
-  frontShinyFemale?: null;
+  front_default?: string | null;
+  front_female?: string | null;
+  front_shiny?: string | null;
+  front_shiny_female?: string | null;
 }
 
 export interface GenerationVii {
@@ -215,8 +215,8 @@ export interface GenerationVii {
 }
 
 export interface DreamWorld {
-  frontDefault?: string;
-  frontFemale?: null;
+  front_default?: string | null;
+  front_female?: string | null;
 }
 
 export interface GenerationViii {
@@ -224,13 +224,13 @@ export interface GenerationViii {
 }
 
 export interface Other {
-  dreamWorld?: DreamWorld;
+  dream_world?: DreamWorld;
   home?: Home;
-  officialArtwork?: OfficialArtwork;
+  "official-artwork"?: OfficialArtwork;
 }
 
 export interface OfficialArtwork {
-  frontDefault?: string;
+  front_default?: string | null;
 }
 
 export interface Stat {
@@ -274,7 +274,26 @@ export const getPokemonSpecies = async (id: number) => {
   return response.data;
 };
 
+const POKEAPI_ORIGIN = "https://pokeapi.co";
+const EVOLUTION_CHAIN_PATH = /^\/api\/v2\/evolution-chain\/\d+\/?$/;
+
 export const getEvolutionChain = async (url: string) => {
-  const response = await axios.get<EvolutionChain>(url);
+  let parsedUrl: URL;
+
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    throw new Error("Invalid evolution chain URL");
+  }
+
+  if (
+    parsedUrl.protocol !== "https:" ||
+    parsedUrl.origin !== POKEAPI_ORIGIN ||
+    !EVOLUTION_CHAIN_PATH.test(parsedUrl.pathname)
+  ) {
+    throw new Error("Invalid evolution chain URL");
+  }
+
+  const response = await axios.get<EvolutionChain>(parsedUrl.toString());
   return response.data;
 };

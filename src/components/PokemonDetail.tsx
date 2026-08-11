@@ -11,10 +11,13 @@ import type { EvolutionNode } from "./Services/IPokemon";
 const getTypeClass = (type?: string) =>
   `type-pill type-${type?.toLowerCase() || "default"}`;
 
-const flattenEvolutionChain = (node: EvolutionNode): EvolutionNode[] => [
-  node,
-  ...node.evolves_to.flatMap(flattenEvolutionChain),
-];
+const getEvolutionPaths = (node: EvolutionNode): EvolutionNode[][] => {
+  if (node.evolves_to.length === 0) return [[node]];
+
+  return node.evolves_to.flatMap((child) =>
+    getEvolutionPaths(child).map((path) => [node, ...path])
+  );
+};
 
 const getEnglishText = <T extends { language: { name: string } }>(
   entries: T[] | undefined
@@ -25,13 +28,18 @@ const getEvolutionRequirement = (node: EvolutionNode) => {
   if (!detail) return "Base form";
   if (detail.min_level) return `Level ${detail.min_level}`;
   if (detail.item?.name) return detail.item.name.replace(/-/g, " ");
-  return detail.trigger?.name || "Special condition";
+  return detail.trigger?.name?.replace(/-/g, " ") || "Special condition";
+};
+
+const getSpeciesId = (url: string) => {
+  const match = url.match(/\/pokemon-species\/(\d+)\/?$/);
+  return match ? Number.parseInt(match[1], 10) : 0;
 };
 
 const PokemonDetail = () => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { id } = useParams();
-  const pokemonId = Number.parseInt(id || "0", 10);
+  const pokemonId = id && /^\d+$/.test(id) ? Number(id) : 0;
   const { pokemon, species, evolution, loading, error } =
     usePokemonDetail(pokemonId);
 
@@ -45,7 +53,7 @@ const PokemonDetail = () => {
     );
   }
 
-  if (error || !pokemon.id) {
+  if (error || !pokemon) {
     return (
       <section className="detail-page">
         <div className="page-container">
@@ -62,15 +70,15 @@ const PokemonDetail = () => {
     );
   }
 
-  const favorite = isFavorite(pokemonId);
+  const favorite = isFavorite(pokemon.id);
   const artwork =
-    pokemon.sprites?.other?.officialArtwork?.frontDefault ||
-    pokemon.sprites?.other?.home?.frontDefault ||
+    pokemon.sprites?.other?.["official-artwork"]?.front_default ||
+    pokemon.sprites?.other?.home?.front_default ||
     getPokemonArtworkUrl(pokemon.id);
   const genus = getEnglishText(species?.genera)?.genus;
   const flavorText = getEnglishText(species?.flavor_text_entries)
     ?.flavor_text.replace(/[\n\f]/g, " ");
-  const evolutionNodes = evolution ? flattenEvolutionChain(evolution.chain) : [];
+  const evolutionPaths = evolution ? getEvolutionPaths(evolution.chain) : [];
   const moves = pokemon.moves?.slice(0, 16) || [];
 
   return (
@@ -112,7 +120,7 @@ const PokemonDetail = () => {
                 type="button"
                 className={favorite ? "button-danger" : "button-primary"}
                 onClick={() =>
-                  favorite ? removeFavorite(pokemonId) : addFavorite(pokemon)
+                  favorite ? removeFavorite(pokemon.id) : addFavorite(pokemon)
                 }
               >
                 <span aria-hidden="true">{favorite ? "♥" : "♡"}</span>
@@ -165,27 +173,30 @@ const PokemonDetail = () => {
             )}
           </section>
 
-          {evolutionNodes.length > 0 && (
+          {evolutionPaths.length > 0 && (
             <section className="detail-section full-width">
-              <h2>Evolution path</h2>
-              <div className="evolution-list">
-                {evolutionNodes.map((node, index) => {
-                  const evolutionId = Number.parseInt(
-                    node.species.url.split("/").slice(-2, -1)[0] || "0",
-                    10
-                  );
-                  return (
-                    <div className="evolution-step" key={node.species.name}>
-                      {index > 0 && <span className="evolution-arrow" aria-hidden="true">→</span>}
-                      <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
-                        <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
-                        <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
-                        <strong>{node.species.name}</strong>
-                        <small>{getEvolutionRequirement(node)}</small>
-                      </Link>
-                    </div>
-                  );
-                })}
+              <h2>Evolution paths</h2>
+              <div className="evolution-paths">
+                {evolutionPaths.map((path) => (
+                  <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
+                    {path.map((node, index) => {
+                      const evolutionId = getSpeciesId(node.species.url);
+                      if (!evolutionId) return null;
+
+                      return (
+                        <div className="evolution-step" key={node.species.name}>
+                          {index > 0 && <span className="evolution-arrow" aria-hidden="true">→</span>}
+                          <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
+                            <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
+                            <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
+                            <strong>{node.species.name}</strong>
+                            <small>{getEvolutionRequirement(node)}</small>
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
             </section>
           )}

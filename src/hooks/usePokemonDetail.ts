@@ -9,7 +9,7 @@ import {
 } from "../components/Services/IPokemon";
 
 interface UsePokemonDetailResult {
-  pokemon: PokemonDex;
+  pokemon: PokemonDex | null;
   species: PokemonSpecies | null;
   evolution: EvolutionChain | null;
   loading: boolean;
@@ -36,7 +36,7 @@ export const usePokemonDetail = (pokemonId: number): UsePokemonDetailResult => {
   });
 
   return {
-    pokemon: data?.pokemon || ({} as PokemonDex),
+    pokemon: data?.pokemon || null,
     species: data?.species || null,
     evolution: data?.evolution || null,
     loading,

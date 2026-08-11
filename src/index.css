@@ -1119,6 +1119,11 @@ input:focus-visible {
   font-size: 0.75rem;
 }
 
+.evolution-paths {
+  display: grid;
+  gap: 0.9rem;
+}
+
 .evolution-list {
   display: flex;
   align-items: center;
