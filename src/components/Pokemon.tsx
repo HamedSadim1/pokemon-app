@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { usePokemonCatalogSearch } from "../hooks/usePokemonCatalogSearch";
 import { usePokemonList } from "../hooks/usePokemonList";
 import { getPokemonIdFromUrl } from "../utils/helpers";
-import LoadingSpinner from "./LoadingSpinner";
+import { PokemonPageSkeleton } from "./LoadingSkeletons";
 import Pagination from "./Pagination";
 import PokemonCard from "./PokemonCard";
 import SearchBar from "./SearchBar";
@@ -54,7 +54,8 @@ const Pokemon = () => {
       )
     : pageResults;
   const isLoading = loading || catalogSearch.loading;
-  const isRefreshing = fetching || catalogSearch.fetching || placeholder;
+  const showListSkeleton = isLoading && visibleResults.length === 0;
+  const isRefreshing = fetching || catalogSearch.fetching || placeholder || (isLoading && visibleResults.length > 0);
   const searchNeedsMoreCharacters = searchTerm.trim().length === 1;
   const activeError = isSearching
     ? catalogSearch.error
@@ -119,6 +120,14 @@ const Pokemon = () => {
     updateSearchParams({ page: Math.max(1, page) });
   };
 
+  if (showListSkeleton) {
+    return (
+      <PokemonPageSkeleton
+        message={isSearching ? "Searching the full Pokédex" : "Loading the Pokémon list"}
+      />
+    );
+  }
+
   return (
     <section className="pokedex-page">
       <div className="page-container">
@@ -158,19 +167,14 @@ const Pokemon = () => {
           </div>
         </div>
 
-        {isLoading && (
-          <LoadingSpinner
-            message={isSearching ? "Searching the full Pokédex..." : "Loading the next set..."}
-          />
-        )}
-
-        {!isLoading && isRefreshing && (
+        <div className="pokemon-results-region">
+          {isRefreshing && (
           <p className="query-refresh-status" role="status" aria-live="polite">
             Updating results...
           </p>
         )}
 
-        {!isLoading && activeError && (
+        {activeError && (
           <div className="error-state" role="alert">
             <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
             <h2>We lost the signal.</h2>
@@ -185,7 +189,7 @@ const Pokemon = () => {
           </div>
         )}
 
-        {!isLoading && !activeError && !searchNeedsMoreCharacters && visibleResults.length === 0 && (
+        {!activeError && !searchNeedsMoreCharacters && visibleResults.length === 0 && (
           <div className="empty-state">
             <div className="empty-state-icon"><Icon name="search" size={24} /></div>
             <h2>No Pokémon found.</h2>
@@ -200,22 +204,23 @@ const Pokemon = () => {
           </div>
         )}
 
-        {!isLoading && !activeError && visibleResults.length > 0 && (
-          <>
-            <div className="pokemon-grid">
-              {visibleResults.map((pokemon, index) => {
-                const id = getPokemonIdFromUrl(pokemon.url) ||
-                  (currentPage * itemsPerPage - itemsPerPage + index + 1);
-                return <PokemonCard key={pokemon.name} pokemon={pokemon} id={id} />;
-              })}
-            </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+          {!activeError && visibleResults.length > 0 && (
+            <>
+              <div className="pokemon-grid">
+                {visibleResults.map((pokemon, index) => {
+                  const id = getPokemonIdFromUrl(pokemon.url) ||
+                    (currentPage * itemsPerPage - itemsPerPage + index + 1);
+                  return <PokemonCard key={pokemon.name} pokemon={pokemon} id={id} />;
+                })}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
       </div>
     </section>
   );

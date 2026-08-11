@@ -5,7 +5,7 @@ import {
   getPokemonArtworkUrl,
   getPokemonSpriteUrl,
 } from "../utils/helpers";
-import LoadingSpinner from "./LoadingSpinner";
+import { PokemonDetailSkeleton } from "./LoadingSkeletons";
 import type { EvolutionNode, Stat } from "./Services/IPokemon";
 import Icon from "./Icon";
 import ImageWithFallback from "./ImageWithFallback";
@@ -55,32 +55,36 @@ interface EvolutionPathsSectionProps {
 const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
   <section className="detail-section full-width">
     <h2>Evolution paths</h2>
-    <div className="evolution-paths">
-      {paths.map((path) => (
-        <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
-          {path.map((node, index) => {
-            const evolutionId = getSpeciesId(node.species.url);
-            if (!evolutionId) return null;
+    {paths.length ? (
+      <div className="evolution-paths">
+        {paths.map((path) => (
+          <div className="evolution-list" key={path.map((node) => node.species.name).join("-")}>
+            {path.map((node, index) => {
+              const evolutionId = getSpeciesId(node.species.url);
+              if (!evolutionId) return null;
 
-            return (
-              <div className="evolution-step" key={node.species.name}>
-                {index > 0 && <span className="evolution-arrow"><Icon name="arrow-right" size={20} /></span>}
-                <Link to={`/pokemon/${evolutionId}`} className="evolution-card">
-                  <ImageWithFallback
-                    key={evolutionId}
-                    src={getPokemonSpriteUrl(evolutionId)}
-                    alt=""
-                  />
-                  <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
-                  <strong>{node.species.name}</strong>
-                  <small>{getEvolutionRequirement(node)}</small>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
+              return (
+                <div className="evolution-step" key={node.species.name}>
+                  {index > 0 && <span className="evolution-arrow"><Icon name="arrow-right" size={20} /></span>}
+                  <Link to={`/pokemon/${evolutionId}`} className="evolution-card">
+                    <ImageWithFallback
+                      key={evolutionId}
+                      src={getPokemonSpriteUrl(evolutionId)}
+                      alt=""
+                    />
+                    <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
+                    <strong>{node.species.name}</strong>
+                    <small>{getEvolutionRequirement(node)}</small>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <span className="detail-chip">No evolution path listed</span>
+    )}
   </section>
 );
 
@@ -148,13 +152,7 @@ const PokemonDetail = () => {
   }
 
   if (loading) {
-    return (
-      <section className="detail-page">
-        <div className="page-container">
-          <LoadingSpinner message="Loading Pokémon profile..." />
-        </div>
-      </section>
-    );
+    return <PokemonDetailSkeleton />;
   }
 
   if (error || !pokemon) {
@@ -284,7 +282,7 @@ const PokemonDetail = () => {
             )}
           </section>
 
-          {evolutionPaths.length > 0 && <EvolutionPathsSection paths={evolutionPaths} />}
+          <EvolutionPathsSection paths={evolutionPaths} />
           <BaseStatsSection stats={pokemon.stats || []} />
         </div>
       </div>

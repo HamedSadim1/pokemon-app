@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
+import { PokemonDetailSkeleton, PokemonPageSkeleton } from "./LoadingSkeletons";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -17,6 +18,12 @@ const Root = () => {
     }
   }, [location.pathname]);
 
+  const routeLoadingFallback = location.pathname.startsWith("/pokemon/")
+    ? <PokemonDetailSkeleton />
+    : location.pathname === "/pokemon"
+      ? <PokemonPageSkeleton />
+      : <LoadingSpinner message="Loading Pokédex..." />;
+
   return (
     <div className="app-shell">
       <a href="#main-content" className="skip-link">Skip to main content</a>
@@ -27,7 +34,7 @@ const Root = () => {
         className="main-content"
         tabIndex={-1}
       >
-        <Suspense fallback={<LoadingSpinner message="Loading Pokédex..." />}>
+        <Suspense fallback={routeLoadingFallback}>
           <Outlet />
         </Suspense>
       </main>

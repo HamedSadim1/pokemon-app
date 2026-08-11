@@ -1,0 +1,487 @@
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skeleton-status {
+  display: block;
+}
+
+.skeleton-block {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    105deg,
+    var(--canvas-muted) 20%,
+    color-mix(in srgb, var(--surface) 72%, var(--accent-soft)) 38%,
+    var(--canvas-muted) 56%
+  );
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 140% 0; }
+  100% { background-position: -60% 0; }
+}
+
+.pokemon-results-region,
+.pokemon-grid-skeleton {
+  min-height: 1088px;
+}
+
+.pokemon-page-skeleton-heading {
+  min-height: 142px;
+}
+
+.skeleton-page-kicker {
+  width: 8rem;
+  height: 0.72rem;
+  margin-bottom: 0.55rem;
+}
+
+.skeleton-page-title {
+  width: min(36rem, 82%);
+  height: clamp(2.5rem, 4vw, 4rem);
+  border-radius: var(--radius-md);
+}
+
+.skeleton-page-intro {
+  width: min(40rem, 64%);
+  height: 0.95rem;
+  margin-top: 0.9rem;
+}
+
+.skeleton-page-intro-short {
+  width: min(30rem, 48%);
+  margin-top: 0.45rem;
+}
+
+.pokemon-toolbar-skeleton {
+  min-height: 82px;
+}
+
+.skeleton-toolbar-meta {
+  width: 10rem;
+  height: 0.85rem;
+}
+
+.skeleton-toolbar-search {
+  width: min(100%, 390px);
+  height: 48px;
+  border-radius: var(--radius-md);
+}
+
+.pokemon-card-skeleton {
+  width: 100%;
+  min-width: 0;
+  min-height: 260px;
+  pointer-events: none;
+}
+
+.pagination-skeleton {
+  pointer-events: none;
+}
+
+.skeleton-pagination-button {
+  width: 6.5rem;
+  height: var(--control-md);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-pagination-status {
+  width: 7.4rem;
+  height: 1rem;
+}
+
+.pokemon-card-skeleton .pokemon-card-top {
+  min-height: 44px;
+}
+
+.pokemon-card-skeleton .pokemon-art-wrap {
+  isolation: isolate;
+}
+
+.pokemon-card-skeleton .pokemon-art-wrap::after {
+  z-index: -1;
+}
+
+.skeleton-number {
+  width: 3.4rem;
+  height: 0.7rem;
+  border-radius: 999px;
+}
+
+.skeleton-icon,
+.skeleton-card-arrow {
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border-radius: 50%;
+}
+
+.skeleton-pokemon-art {
+  width: 142px;
+  height: 142px;
+  border-radius: 50%;
+  opacity: 0.78;
+}
+
+.skeleton-card-title {
+  width: 62%;
+  height: 1.26rem;
+  min-height: 1.26rem;
+}
+
+.skeleton-card-copy {
+  width: 48%;
+  height: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.skeleton-card-arrow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.1rem;
+}
+
+.detail-page-skeleton {
+  min-height: 0;
+}
+
+.skeleton-breadcrumb {
+  width: 8rem;
+  height: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-hero-skeleton {
+  min-height: 460px;
+}
+
+.detail-art-skeleton {
+  min-height: 460px;
+}
+
+.skeleton-detail-art {
+  width: min(52%, 270px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.72;
+}
+
+.skeleton-detail-number {
+  width: 10rem;
+  height: 0.8rem;
+}
+
+.skeleton-detail-title {
+  width: min(75%, 21rem);
+  height: clamp(3rem, 6vw, 5rem);
+  margin-top: 0.8rem;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-detail-genus {
+  width: 9rem;
+  height: 1rem;
+  margin-top: 0.9rem;
+}
+
+.skeleton-type-list {
+  margin-top: 1.35rem;
+}
+
+.skeleton-type-pill {
+  width: 4.4rem;
+  height: 1.8rem;
+  border-radius: 999px;
+}
+
+.skeleton-type-pill-short {
+  width: 3.7rem;
+}
+
+.skeleton-detail-description {
+  width: 100%;
+  max-width: 30rem;
+  height: 0.9rem;
+  margin-top: 0.55rem;
+}
+
+.skeleton-detail-description-first {
+  margin-top: 1.35rem;
+}
+
+.skeleton-detail-description-short {
+  width: 78%;
+}
+
+.skeleton-detail-actions {
+  margin-top: 2rem;
+}
+
+.skeleton-detail-button {
+  width: 10.3rem;
+  height: var(--control-lg);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-detail-button-quiet {
+  width: 7.2rem;
+}
+
+.detail-sections-skeleton {
+  min-height: 1020px;
+}
+
+.detail-section-skeleton {
+  min-height: 206px;
+}
+
+.detail-section-skeleton.full-width {
+  min-height: 420px;
+}
+
+.skeleton-section-title {
+  width: 8rem;
+  height: 1.1rem;
+  margin-bottom: 1.15rem;
+}
+
+.skeleton-measure-label {
+  width: 70%;
+  height: 0.65rem;
+}
+
+.skeleton-measure-value {
+  width: 42%;
+  height: 1.3rem;
+  margin-top: 0.35rem;
+}
+
+.skeleton-metadata-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.skeleton-metadata-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.55rem;
+}
+
+.skeleton-metadata-label {
+  width: 35%;
+  height: 0.7rem;
+}
+
+.skeleton-metadata-value {
+  width: 30%;
+  height: 0.7rem;
+}
+
+.skeleton-chip {
+  width: 4.6rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-chip:nth-child(2n) { width: 5.8rem; }
+.skeleton-chip:nth-child(3n) { width: 4rem; }
+
+.skeleton-evolution-list {
+  display: flex;
+  max-height: 8.7rem;
+  gap: 0.7rem;
+  overflow: hidden;
+  padding: 0.3rem 0 0.5rem;
+}
+
+.skeleton-evolution-card {
+  display: grid;
+  width: 132px;
+  min-width: 132px;
+  justify-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.7rem;
+  background: var(--canvas-muted);
+}
+
+.skeleton-evolution-art {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.skeleton-evolution-number {
+  width: 3rem;
+  height: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.skeleton-evolution-name {
+  width: 4.6rem;
+  height: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.skeleton-stat-row + .skeleton-stat-row {
+  margin-top: 0.9rem;
+}
+
+.skeleton-stat-label {
+  width: 6rem;
+  height: 0.7rem;
+}
+
+.skeleton-stat-value {
+  width: 2rem;
+  height: 0.7rem;
+}
+
+.skeleton-stat-track {
+  width: 100%;
+  height: 8px;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .pokemon-page-skeleton-heading {
+    min-height: 182px;
+  }
+
+  .skeleton-page-intro,
+  .skeleton-page-intro-short {
+    width: 100%;
+  }
+
+  .pokemon-toolbar-skeleton {
+    min-height: 122px;
+  }
+
+  .skeleton-toolbar-search {
+    width: 100%;
+  }
+
+  .pokemon-results-region,
+  .pokemon-grid-skeleton {
+    min-height: 1364px;
+  }
+
+  .detail-sections-skeleton {
+    min-height: 1450px;
+  }
+
+  .detail-hero-skeleton,
+  .detail-art-skeleton {
+    min-height: 330px;
+  }
+
+  .skeleton-detail-art {
+    width: min(58%, 230px);
+  }
+
+  .detail-section-skeleton {
+    min-height: 206px;
+  }
+
+  .skeleton-evolution-list {
+    max-height: 8.7rem;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .pokemon-page-skeleton-heading {
+    min-height: 205px;
+  }
+
+  .pokemon-toolbar-skeleton {
+    min-height: 122px;
+  }
+
+  .pokemon-card-skeleton {
+    width: 100%;
+    min-height: 226px;
+  }
+
+  .skeleton-card-title {
+    height: 1.29rem;
+    min-height: 1.29rem;
+  }
+
+  .pokemon-results-region,
+  .pokemon-grid-skeleton {
+    min-height: 2360px;
+  }
+
+  .pokemon-card-skeleton .pokemon-art-wrap {
+    min-height: 125px;
+  }
+
+  .skeleton-pokemon-art {
+    width: 112px;
+    height: 112px;
+  }
+
+  .detail-info {
+    min-height: 420px;
+  }
+
+  .detail-section-skeleton {
+    min-height: 220px;
+  }
+
+  .detail-section-skeleton.full-width {
+    min-height: 420px;
+  }
+
+  .skeleton-pagination-status {
+    width: 5.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .pokemon-page-skeleton-heading {
+    min-height: 220px;
+  }
+
+  .pokemon-results-region,
+  .pokemon-grid-skeleton {
+    min-height: 2212px;
+  }
+
+  .pokemon-card-skeleton .pokemon-art-wrap {
+    min-height: 112px;
+  }
+
+  .skeleton-card-title {
+    height: 1.18rem;
+    min-height: 1.18rem;
+  }
+
+  .skeleton-pokemon-art {
+    width: 96px;
+    height: 96px;
+  }
+
+  .skeleton-card-arrow {
+    right: 0.65rem;
+    bottom: 0.85rem;
+  }
+}
