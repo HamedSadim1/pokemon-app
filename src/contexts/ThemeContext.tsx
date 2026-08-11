@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeContext, type Theme } from "./ThemeContextDefinition";
+import { readStorage, writeStorage } from "../utils/storage";
+
+const isTheme = (value: unknown): value is Theme =>
+  value === "light" || value === "dark";
+
+const getSystemTheme = (): Theme =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    if (savedTheme === "light" || savedTheme === "dark") {
-      return savedTheme;
-    }
-
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+  const [theme, setTheme] = useState<Theme>(() =>
+    readStorage("theme", getSystemTheme(), isTheme),
+  );
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
+    writeStorage("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {

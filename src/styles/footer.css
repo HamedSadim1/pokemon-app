@@ -15,7 +15,7 @@
 .footer-brand {
   color: var(--ink);
   font-size: 0.95rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
 }
 
 .footer-copy {
@@ -33,7 +33,7 @@
 .footer-links a {
   color: var(--ink-soft);
   font-size: 0.78rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
@@ -46,7 +46,7 @@
   min-height: 280px;
   place-items: center;
   border: 1px solid var(--line);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
@@ -63,6 +63,6 @@
   margin-top: 0.8rem;
   color: var(--ink-soft);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 

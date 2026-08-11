@@ -45,10 +45,19 @@
   --color-type-bug-foreground: #253a1d;
   --color-type-steel-foreground: #233041;
   --color-type-fairy-foreground: #632b50;
+  --color-type-pill-foreground: #ffffff;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+  --control-sm: 28px;
+  --control-md: 42px;
+  --control-lg: 46px;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
   --shadow-sm: 0 2px 10px rgb(23 34 53 / 0.06);
   --shadow-md: 0 14px 35px rgb(23 34 53 / 0.1);
   --shadow-lg: 0 24px 60px rgb(23 34 53 / 0.14);
@@ -94,6 +103,7 @@
   --color-primary-strong: #f97316;
   --color-primary-soft: rgb(249 115 22 / 0.13);
   --color-on-primary: #172235;
+  --color-type-pill-foreground: #ffffff;
   --color-border: #2b3d52;
   --color-ring: rgb(249 115 22 / 0.42);
   --color-danger: #fb7185;

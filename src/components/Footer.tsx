@@ -11,7 +11,7 @@ const Footer = () => {
         </div>
         <nav className="footer-links" aria-label="Footer navigation">
           <Link to="/">Home</Link>
-          <Link to="/Pokemon">Pokédex</Link>
+          <Link to="/pokemon">Pokédex</Link>
           <Link to="/favorites">Favorites</Link>
           <a href="https://pokeapi.co/" target="_blank" rel="noreferrer">
             PokeAPI <Icon name="arrow-up-right" size={14} />

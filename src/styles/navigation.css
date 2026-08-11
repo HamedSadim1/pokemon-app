@@ -25,7 +25,7 @@
   gap: 0.7rem;
   color: var(--ink);
   font-size: 1.1rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: -0.04em;
   text-decoration: none;
 }
@@ -53,7 +53,8 @@
   content: "";
 }
 
-.brand:hover .brand-mark {
+.brand:hover .brand-mark,
+.brand:focus-visible .brand-mark {
   transform: rotate(12deg) translateY(-2px);
   box-shadow: 0 6px 0 var(--ink);
 }
@@ -73,7 +74,7 @@
   margin-top: 0.25rem;
   color: var(--ink-soft);
   font-size: 0.62rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -87,19 +88,20 @@
 .nav-link {
   position: relative;
   display: inline-flex;
-  min-height: 42px;
+  min-height: var(--control-md);
   align-items: center;
   gap: 0.45rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   color: var(--ink-soft);
   padding: 0.65rem 0.85rem;
   font-size: 0.88rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link:focus-visible {
   color: var(--ink);
   background: var(--surface);
   transform: translateY(-1px);
@@ -130,11 +132,11 @@
 .icon-button,
 .mobile-menu-button {
   display: inline-grid;
-  width: 42px;
-  height: 42px;
+  width: var(--control-md);
+  height: var(--control-md);
   place-items: center;
   border: 1px solid var(--line);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   color: var(--ink-soft);
   background: var(--surface);
   cursor: pointer;
@@ -142,7 +144,9 @@
 }
 
 .icon-button:hover,
-.mobile-menu-button:hover {
+.icon-button:focus-visible,
+.mobile-menu-button:hover,
+.mobile-menu-button:focus-visible {
   border-color: var(--accent);
   color: var(--accent-strong);
   box-shadow: var(--shadow-sm);

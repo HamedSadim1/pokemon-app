@@ -6,7 +6,7 @@ import Icon from "./Icon";
 
 const navigation = [
   { to: "/", label: "Home", end: true },
-  { to: "/Pokemon", label: "Pokédex" },
+  { to: "/pokemon", label: "Pokédex" },
   { to: "/favorites", label: "Favorites" },
 ];
 

@@ -5,11 +5,12 @@
   margin-bottom: 1.5rem;
   color: var(--ink-soft);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
-.detail-breadcrumb:hover {
+.detail-breadcrumb:hover,
+.detail-breadcrumb:focus-visible {
   color: var(--accent-strong);
 }
 
@@ -17,7 +18,7 @@
   display: grid;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 1.75rem;
+  border-radius: var(--radius-xl);
   background: var(--surface);
   box-shadow: var(--shadow-md);
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -57,14 +58,14 @@
 .detail-number {
   color: var(--accent-strong);
   font-size: 0.82rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: 0.12em;
 }
 
 .detail-title {
   margin: 0.55rem 0 0;
   font-size: clamp(2.6rem, 6vw, 5rem);
-  font-weight: 900;
+  font-weight: var(--font-weight-black);
   letter-spacing: -0.08em;
   line-height: 0.92;
   text-transform: capitalize;
@@ -74,7 +75,7 @@
   margin: 0.7rem 0 0;
   color: var(--ink-soft);
   font-size: 0.95rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-transform: capitalize;
 }
 
@@ -97,11 +98,19 @@
   align-items: center;
   border-radius: 999px;
   padding: 0.42rem 0.72rem;
-  color: var(--color-on-primary);
   font-size: 0.7rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.detail-notice {
+  margin: 0.8rem 0 0;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-soft);
+  padding-left: 0.7rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
 .detail-actions {
@@ -120,7 +129,7 @@
 
 .detail-section {
   border: 1px solid var(--line);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-lg);
   padding: 1.35rem;
   background: var(--surface);
   box-shadow: var(--shadow-sm);
@@ -133,7 +142,7 @@
 .detail-section h2 {
   margin: 0 0 1rem;
   font-size: 1.05rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
 }
 
 .detail-list {
@@ -165,7 +174,7 @@
 .metadata-list dt {
   color: var(--ink-soft);
   font-size: 0.76rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-transform: capitalize;
 }
 
@@ -173,7 +182,7 @@
   margin: 0;
   color: var(--ink);
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: var(--font-weight-extrabold);
   text-align: right;
   text-transform: capitalize;
 }
@@ -207,7 +216,7 @@
 .evolution-arrow {
   color: var(--accent);
   font-size: 1.3rem;
-  font-weight: 900;
+  font-weight: var(--font-weight-black);
 }
 
 .evolution-card {
@@ -215,7 +224,7 @@
   width: 132px;
   justify-items: center;
   border: 1px solid var(--line);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   color: var(--ink);
   background: var(--canvas-muted);
   padding: 0.7rem;
@@ -224,7 +233,8 @@
   transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
-.evolution-card:hover {
+.evolution-card:hover,
+.evolution-card:focus-visible {
   border-color: var(--accent);
   box-shadow: var(--shadow-sm);
   transform: translateY(-3px);
@@ -246,7 +256,7 @@
 .evolution-card small {
   color: var(--ink-soft);
   font-size: 0.65rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
 }
 
 .evolution-card small {
@@ -255,12 +265,12 @@
 }
 
 .detail-chip {
-  border-radius: 0.65rem;
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.7rem;
   color: var(--ink-soft);
   background: var(--canvas-muted);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: capitalize;
 }
 
@@ -271,7 +281,7 @@
 }
 
 .measure {
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   padding: 0.8rem;
   background: var(--canvas-muted);
 }
@@ -279,7 +289,7 @@
 .measure dt {
   color: var(--ink-soft);
   font-size: 0.7rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
 }
 
@@ -287,7 +297,7 @@
   margin: 0.15rem 0 0;
   color: var(--ink);
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: var(--font-weight-extrabold);
 }
 
 .stat-row + .stat-row {
@@ -300,7 +310,7 @@
   margin-bottom: 0.35rem;
   color: var(--ink-soft);
   font-size: 0.78rem;
-  font-weight: 750;
+  font-weight: var(--font-weight-bold);
   text-transform: capitalize;
 }
 

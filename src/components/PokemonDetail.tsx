@@ -54,7 +54,7 @@ const EvolutionPathsSection = ({ paths }: EvolutionPathsSectionProps) => (
             return (
               <div className="evolution-step" key={node.species.name}>
                 {index > 0 && <span className="evolution-arrow"><Icon name="arrow-right" size={20} /></span>}
-                <Link to={`/Pokemon/${evolutionId}`} className="evolution-card">
+                <Link to={`/pokemon/${evolutionId}`} className="evolution-card">
                   <img src={getPokemonSpriteUrl(evolutionId)} alt="" />
                   <span className="evolution-number">#{String(evolutionId).padStart(4, "0")}</span>
                   <strong>{node.species.name}</strong>
@@ -77,20 +77,22 @@ const BaseStatsSection = ({ stats }: BaseStatsSectionProps) => (
   <section className="detail-section full-width">
     <h2>Base stats</h2>
     {stats.length ? stats.map((stat) => {
-      const value = Math.min(stat.base_stat || 0, 100);
+      const statValue = stat.base_stat ?? 0;
+      const percentage = Math.min((statValue / 255) * 100, 100);
 
       return (
         <div className="stat-row" key={stat.stat?.name}>
-          <div className="stat-label"><span>{stat.stat?.name}</span><strong>{stat.base_stat}</strong></div>
+          <div className="stat-label"><span>{stat.stat?.name}</span><strong>{statValue}</strong></div>
           <div
             className="stat-track"
             role="progressbar"
             aria-label={`${stat.stat?.name || "Unknown"} base stat`}
-            aria-valuenow={value}
+            aria-valuenow={statValue}
             aria-valuemin={0}
-            aria-valuemax={100}
+            aria-valuemax={255}
+            aria-valuetext={`${statValue} base points`}
           >
-            <div className="stat-fill" style={{ width: `${value}%` }} />
+            <div className="stat-fill" style={{ width: `${percentage}%` }} />
           </div>
         </div>
       );
@@ -102,8 +104,15 @@ const PokemonDetail = () => {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { id } = useParams();
   const pokemonId = id && /^\d+$/.test(id) ? Number(id) : 0;
-  const { pokemon, species, evolution, loading, error } =
-    usePokemonDetail(pokemonId);
+  const {
+    pokemon,
+    species,
+    evolution,
+    speciesUnavailable,
+    evolutionUnavailable,
+    loading,
+    error,
+  } = usePokemonDetail(pokemonId);
 
   if (loading) {
     return (
@@ -123,7 +132,7 @@ const PokemonDetail = () => {
             <div className="empty-state-icon"><Icon name="warning" size={24} /></div>
             <h2>Profile unavailable.</h2>
             <p>{error || "This Pokémon could not be found."}</p>
-            <Link to="/Pokemon" className="button-secondary mt-lg">
+            <Link to="/pokemon" className="button-secondary mt-lg">
               Back to Pokédex
             </Link>
           </div>
@@ -142,11 +151,12 @@ const PokemonDetail = () => {
     ?.flavor_text.replace(/[\n\f]/g, " ");
   const evolutionPaths = evolution ? getEvolutionPaths(evolution.chain) : [];
   const moves = pokemon.moves?.slice(0, 16) || [];
+  const supplementalDataUnavailable = speciesUnavailable || evolutionUnavailable;
 
   return (
     <section className="detail-page">
       <div className="page-container">
-        <Link to="/Pokemon" className="detail-breadcrumb">
+        <Link to="/pokemon" className="detail-breadcrumb">
           <Icon name="arrow-left" size={16} /> Back to Pokédex
         </Link>
 
@@ -177,6 +187,13 @@ const PokemonDetail = () => {
               {flavorText ||
                 `Explore the profile of ${pokemon.name}, from its core abilities to the stats that define its battle style.`}
             </p>
+            {supplementalDataUnavailable && (
+              <p className="detail-notice" role="status">
+                {speciesUnavailable && "Species information is temporarily unavailable."}
+                {speciesUnavailable && evolutionUnavailable && " "}
+                {evolutionUnavailable && "Evolution information is temporarily unavailable."}
+              </p>
+            )}
             <div className="detail-actions">
               <button
                 type="button"
@@ -188,7 +205,7 @@ const PokemonDetail = () => {
                 <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={17} />
                 {favorite ? "Remove favorite" : "Save to favorites"}
               </button>
-              <Link to="/Pokemon" className="button-quiet">Browse more</Link>
+              <Link to="/pokemon" className="button-quiet">Browse more</Link>
             </div>
           </div>
         </div>

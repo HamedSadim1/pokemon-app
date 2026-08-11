@@ -21,7 +21,7 @@ const Favorites = () => {
               Keep the Pokémon that catch your eye close by saving them from a
               profile page.
             </p>
-            <Link to="/Pokemon" className="button-primary mt-lg">
+            <Link to="/pokemon" className="button-primary mt-lg">
               Start exploring <Icon name="arrow-right" size={17} />
             </Link>
           </div>
@@ -49,13 +49,13 @@ const Favorites = () => {
         <div className="pokemon-grid">
           {favorites.map((pokemon) => (
             <article key={pokemon.id} className="pokemon-card">
-              <Link to={`/Pokemon/${pokemon.id}`} className="pokemon-card-top">
+              <Link to={`/pokemon/${pokemon.id}`} className="pokemon-card-top">
                 <span className="pokemon-number">
                   #{String(pokemon.id).padStart(4, "0")}
                 </span>
                 <span className="card-arrow"><Icon name="arrow-up-right" size={16} /></span>
               </Link>
-              <Link to={`/Pokemon/${pokemon.id}`} className="pokemon-art-wrap">
+              <Link to={`/pokemon/${pokemon.id}`} className="pokemon-art-wrap">
                 <img
                   className="pokemon-art"
                   src={getPokemonArtworkUrl(pokemon.id)}

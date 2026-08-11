@@ -1,6 +1,6 @@
 {
-  "short_name": "Pokemon App",
-  "name": "Pokemon App - Pokedex",
+  "short_name": "Pokédex",
+  "name": "Pokédex - Explore Pokémon",
   "icons": [
     {
       "src": "favicon.png",
@@ -15,6 +15,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#dc2626",
-  "background_color": "#ffffff"
+  "theme_color": "#f97316",
+  "background_color": "#f6f7f9"
 }

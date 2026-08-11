@@ -11,7 +11,7 @@
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 1.35rem;
+  border-radius: var(--radius-xl);
   color: var(--ink);
   background: var(--surface);
   box-shadow: var(--shadow-sm);
@@ -19,7 +19,8 @@
   transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
-.pokemon-card:hover {
+.pokemon-card:hover,
+.pokemon-card:focus-within {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   box-shadow: var(--shadow-md);
   transform: translateY(-6px);
@@ -40,8 +41,8 @@
 
 .card-favorite {
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: var(--control-sm);
+  height: var(--control-sm);
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -52,6 +53,7 @@
 }
 
 .card-favorite:hover,
+.card-favorite:focus-visible,
 .card-favorite.is-favorite {
   color: var(--danger);
   background: var(--color-danger-soft);
@@ -68,20 +70,20 @@
   background: var(--accent);
   padding: 0 0.28rem;
   font-size: 0.65rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
 }
 
 .pokemon-number {
   color: var(--ink-soft);
   font-size: 0.73rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: 0.09em;
 }
 
 .card-arrow {
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: var(--control-sm);
+  height: var(--control-sm);
   place-items: center;
   border-radius: 50%;
   color: var(--ink-soft);
@@ -89,7 +91,8 @@
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
-.pokemon-card:hover .card-arrow {
+.pokemon-card:hover .card-arrow,
+.pokemon-card:focus-within .card-arrow {
   color: var(--color-on-primary);
   background: var(--accent);
   transform: translateX(2px);
@@ -126,7 +129,8 @@
   transition: transform 220ms ease;
 }
 
-.pokemon-card:hover .pokemon-art {
+.pokemon-card:hover .pokemon-art,
+.pokemon-card:focus-within .pokemon-art {
   transform: translateY(-5px) scale(1.07);
 }
 
@@ -138,7 +142,7 @@
 .pokemon-card h3 {
   margin: 0;
   font-size: 1.05rem;
-  font-weight: 850;
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: -0.025em;
   text-transform: capitalize;
 }
@@ -147,6 +151,6 @@
   margin: 0.3rem 0 0;
   color: var(--ink-soft);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 

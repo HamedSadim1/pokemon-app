@@ -19,7 +19,7 @@ const HomePage = () => {
               learn the details, and keep the ones you want close.
             </p>
             <div className="hero-actions">
-              <Link to="/Pokemon" className="button-primary">
+              <Link to="/pokemon" className="button-primary">
                 Explore the Pokédex <Icon name="arrow-right" size={17} />
               </Link>
               <Link to="/favorites" className="button-secondary">

@@ -32,7 +32,9 @@ const Pokemon = () => {
       );
     });
   }, [catalogSearch.results, searchTerm]);
-  const isSearching = searchTerm.trim().length > 0;
+  const normalizedSearchTerm = searchTerm.trim();
+  const isSearching = normalizedSearchTerm.length >= 2;
+  const hasSearchInput = normalizedSearchTerm.length > 0;
   const activeResults = isSearching ? searchedResults : pageResults;
   const activeTotal = isSearching ? searchedResults.length : pokemon.count || 0;
   const totalPages = Math.max(1, Math.ceil(activeTotal / itemsPerPage));
@@ -43,7 +45,8 @@ const Pokemon = () => {
       )
     : pageResults;
   const isLoading = loading || catalogSearch.loading;
-  const activeError = error || catalogSearch.error;
+  const searchNeedsMoreCharacters = searchTerm.trim().length === 1;
+  const activeError = error || (isSearching ? catalogSearch.error : "");
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -68,6 +71,8 @@ const Pokemon = () => {
               <>
                 Found <strong>{activeResults.length}</strong> matches
               </>
+            ) : hasSearchInput ? (
+              <>Keep typing to search the full Pokédex</>
             ) : (
               <>
                 Showing <strong>{pageResults.length || 0}</strong> of{" "}
@@ -75,11 +80,16 @@ const Pokemon = () => {
               </>
             )}
           </div>
-          <SearchBar
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search name or #number..."
-          />
+          <div className="search-field">
+            <SearchBar
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Search name or #number..."
+            />
+            {searchNeedsMoreCharacters && (
+              <p className="search-hint">Type at least 2 characters to search.</p>
+            )}
+          </div>
         </div>
 
         {isLoading && (
@@ -96,7 +106,7 @@ const Pokemon = () => {
           </div>
         )}
 
-        {!isLoading && !activeError && visibleResults.length === 0 && (
+        {!isLoading && !activeError && !searchNeedsMoreCharacters && visibleResults.length === 0 && (
           <div className="empty-state">
             <div className="empty-state-icon"><Icon name="search" size={24} /></div>
             <h2>No Pokémon found.</h2>

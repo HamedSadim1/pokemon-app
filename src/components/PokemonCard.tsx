@@ -46,7 +46,7 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
             <Icon name="heart" fill={favorite ? "currentColor" : "none"} size={16} />
           </button>
           <Link
-            to={`/Pokemon/${id}`}
+            to={`/pokemon/${id}`}
             className="card-arrow"
             aria-label={`View ${pokemon.name} details`}
           >
@@ -54,7 +54,7 @@ const PokemonCard = ({ pokemon, id }: PokemonCardProps) => {
           </Link>
         </div>
       </div>
-      <Link to={`/Pokemon/${id}`} className="pokemon-art-wrap">
+      <Link to={`/pokemon/${id}`} className="pokemon-art-wrap">
         <img
           className="pokemon-art"
           src={getPokemonArtworkUrl(catalogId)}

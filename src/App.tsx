@@ -1,5 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  useParams,
+} from "react-router-dom";
 import { lazy, Suspense } from "react";
 import HomePage from "./components/HomePage";
 import Root from "./components/Root";
@@ -14,6 +19,11 @@ const ReactQueryDevtools = lazy(() =>
     default: Devtools,
   }))
 );
+
+const LegacyPokemonRedirect = () => {
+  const { id } = useParams();
+  return <Navigate replace to={id ? `/pokemon/${id}` : "/pokemon"} />;
+};
 
 /**
  * Configureert TanStack Query client met optimale instellingen voor de Pokémon app.
@@ -55,16 +65,28 @@ function App() {
           element: <HomePage />,
         },
         {
-          path: "/Pokemon",
+          path: "pokemon",
+          caseSensitive: true,
           element: <Pokemon />,
         },
         {
-          path: "/Pokemon/:id",
+          path: "pokemon/:id",
+          caseSensitive: true,
           element: <PokemonDetail />,
         },
         {
-          path: "/favorites",
+          path: "favorites",
           element: <Favorites />,
+        },
+        {
+          path: "Pokemon",
+          caseSensitive: true,
+          element: <Navigate replace to="/pokemon" />,
+        },
+        {
+          path: "Pokemon/:id",
+          caseSensitive: true,
+          element: <LegacyPokemonRedirect />,
         },
       ],
     },
